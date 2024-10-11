@@ -1,0 +1,6 @@
+.btn-xl {
+    --bs-btn-padding-y: 1rem;
+    --bs-btn-padding-x: 2rem;
+    --bs-btn-font-size: 1.75rem;
+    --bs-btn-border-radius: var(--bs-border-radius-lg);
+}

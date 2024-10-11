@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Frontpage</title>
+  <title>Olsker Cupcakes</title>
   <!--link href="webjars/bootstrap/5.3.3/css/bootstrap.min-jsf.css" rel="stylesheet"-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -12,9 +12,9 @@
 <body class="">
 <div class="container">
   <div class="header mb-3 bg-primary-subtle text-center">
-    <img class="img-fluid" src="../public/images/header_image.png" th:src="@{/images/header_image.png}">
+    <img class="img-fluid" src="../public/images/header_image.png" th:src="@{/images/header_image.png}" alt="Olsker Logo">
   </div>
-  <nav class="navbar navbar-expand-lg mb-3 bg-body-tertiary">
+  <nav class="navbar navbar-expand-sm mb-3 bg-body-tertiary">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -30,7 +30,7 @@
         </ul>
         <ul class="navbar-nav mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="#">Bruger</a>
+            <a class="nav-link active" href="#">Bruger</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -38,7 +38,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item" href="#">6 x Chocolate/Crispy 120 kr</a></li>
-              <li><a class="dropdown-item" href="#">2 x Vanilla/Rasberry 60 kr</a></li>
+              <li><a class="dropdown-item" href="#">2 x Vanilla/Raspberry 60 kr</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="#">Betal nu 180 kr</a></li>
             </ul>
@@ -53,25 +53,34 @@
     <form>
       <div class="row px-3 g-5 mb-5">
         <div class="col-5">
-          <select class="form-select form-select-lg " name="chooseBottom" id="chooseBottom" required>
-            <option selected>Vælg bund</option>
-            <option value="vanilie">Vanilie</option>
-            <option value="chokolade">Chokolade</option>
-          </select>
+          <div class="form-floating">
+            <select class="form-select " name="chooseBottom" id="chooseBottom" required>
+              <option selected>Vælg bund</option>
+              <option value="vanilie">Vanilie</option>
+              <option value="chokolade">Chokolade</option>
+            </select>
+            <label for="chooseBottom">Vælg bund</label>
+          </div>
         </div>
         <div class="col-5">
-          <select class="form-select form-select-lg " name="chooseTop" id="chooseTop" required>
-            <option selected>Vælg topping</option>
-            <option value="smørcreme">Smørcreme</option>
-            <option value="bær">Skovbær</option>
-          </select>
+          <div class="form-floating">
+            <select class="form-select " name="chooseTop" id="chooseTop" required>
+              <option selected>Vælg topping</option>
+              <option value="smørcreme">Smørcreme</option>
+              <option value="bær">Skovbær</option>
+            </select>
+            <label for="chooseTop">Vælg topping</label>
+          </div>
         </div>
         <div class="col-2">
-          <select class="form-select form-select-lg " name="chooseAmount" id="chooseAmount" required>
-            <option selected>Vælg antal</option>
-            <option value="3">3</option>
-            <option value="6">6</option>
-          </select>
+          <div class="form-floating">
+            <select class="form-select" name="chooseAmount" id="chooseAmount" required>
+              <option selected>Vælg antal</option>
+              <option value="3">3</option>
+              <option value="6">6</option>
+            </select>
+            <label for="chooseAmount">Vælg antal</label>
+          </div>
         </div>
       </div>
       <div class="row px-3 ">

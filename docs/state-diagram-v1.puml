@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+[*] --> UregistreretBruger : Start
+
+UregistreretBruger --> RegistreretBruger : Opret konto (US-2)
+UregistreretBruger --> RegistreretBruger : Log ind som kunde (US-5)
+UregistreretBruger --> AdministratorLoggetInd : Log ind som administrator (US-5)
+
+RegistreretBruger --> Indkøbskurv : Tilføj varer til kurv (US-4)
+Indkøbskurv --> Indkøbskurv : Fjern varer fra kurv (US-8)
+Indkøbskurv --> BetaltOrdre : Betal for ordre (US-1)
+UbetaltOrdre --> OrdreFjernet : Fjern ordre (administrator) (US-9)
+
+RegistreretBruger --> BetaltOrdre : Betal for cupcakes (US-1)
+RegistreretBruger --> UbetaltOrdre : Gem ubetalt ordre (US-4)
+
+AdministratorLoggetInd --> SeKunderOgOrdrer : Se alle kunder og ordrer (US-6, US-7)
+AdministratorLoggetInd --> KontoOpdateret : Opdater kundes konto med penge (US-3)
+AdministratorLoggetInd --> OrdreFjernet : Fjern ordre (US-9)
+
+OrdreFjernet --> [*] : Ordre slettet
+KontoOpdateret --> AdministratorLoggetInd : Konto opdateret
+
+RegistreretBruger --> UregistreretBruger : Log ud (US-5)
+AdministratorLoggetInd --> UregistreretBruger : Log ud (US-5)
+
+@enduml

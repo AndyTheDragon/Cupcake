@@ -1,12 +1,12 @@
 package app.entities;
 
-public class Cupcake {
+public class CupcakeBottom {
 
     private int id;
     private String orderName;
     private int quantity;
 
-    public Cupcake(int id, String orderName, int quantity) {
+    public CupcakeBottom(int id, String orderName, int quantity) {
         this.id = id;
         this.orderName = orderName;
         this.quantity = quantity;

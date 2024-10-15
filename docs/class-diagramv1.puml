@@ -4,13 +4,44 @@
 class Main {
 }
 package entities {
-class Cupcake {
-- final int id
-- final String name
-+ int getId()
-+ String getName()
+class CupcakeBottom {
+- final int cupakeBottomId
+- final int priceBottom
+- final String flavour
+- final String cupcakeType;
++ int getCupcakeBottomId()
++ int getPrice()
++ String getFlavour()
++ String getCupcakeType()
 'override
 + String toString()
+}
+class CupcakeTop {
+- final int cupcakeTopId
+- final int priceTop
+- final String flavour
+- final String cupcakeType;
++ int getCupcakeTopId()
++ int getPrice()
++ String getFlavour()
++ String getCupcakeType()
+'override
++ String toString()
+}
+
+class Cupcake {
+- int price
+- CupcakeTop cupcakeTop
+- CupcakeBottom cupcakeBottom
++ Cupcake()
++ CupcakeBottom getCupcakeBottom()
++ CupcakeTop getCupcakeTop()
++ int getPrice()
+'override
++ String toString()
+
+
+
 }
 
 class User {
@@ -34,22 +65,21 @@ class UserController {
 - static void logout()
 
 }
-class CupcakeController {
+class OrderController {
 + static void addRoutes()
-- static newCupcake()
-- static void showCupcake()
-- static void showAllCupcakes()
+- static void addOrder()
+- static void showOrder()
+- static void removeOrder()
+
 }
 }
 
 package persistence {
-
-
-class CupcakeMapper {
-+ static void newCupcake()
-+ static Cupcake getCupcake()
-+ static Cupcake getFavoriteCupcake()
-+ static void removeCupcake()
+class OrderMapper {
++ static void newOrder()
++ static Cupcake getOrder()
++ static Cupcake getFavoriteOrder()
++ static void removeOrder()
 }
 
 class UserMapper {
@@ -58,5 +88,10 @@ class UserMapper {
 }
 }
 
+Main *-- OrderController
+OrderController o-- Cupcake
+Cupcake *-- CupcakeBottom
+Cupcake *-- CupcakeTop
+UserController o-- User
 
 @enduml

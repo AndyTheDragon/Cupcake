@@ -1,0 +1,62 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Main {
+}
+package entities {
+class Cupcake {
+- final int id
+- final String name
++ int getId()
++ String getName()
+'override
++ String toString()
+}
+
+class User {
+- int userId
+- String username
+- String password
+- String role
++ User()
++ int getUserId()
++ String getUsername()
++ String getPassword()
++ String getRole()
+}
+}
+
+package controllers {
+class UserController {
++ static void addRoutes()
+- static void createUser()
++ static void login()
+- static void logout()
+
+}
+class CupcakeController {
++ static void addRoutes()
+- static newCupcake()
+- static void showCupcake()
+- static void showAllCupcakes()
+}
+}
+
+package persistence {
+
+
+class CupcakeMapper {
++ static void newCupcake()
++ static Cupcake getCupcake()
++ static Cupcake getFavoriteCupcake()
++ static void removeCupcake()
+}
+
+class UserMapper {
++ static User login()
++ static void createUser()
+}
+}
+
+
+@enduml

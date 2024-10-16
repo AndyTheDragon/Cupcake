@@ -17,11 +17,11 @@ CREATE TABLE IF NOT EXISTS public.orders
     order_id serial NOT NULL,
     name character varying(64) NOT NULL,
     date_placed date NOT NULL,
-    date_paid date NOT NULL,
-    date_completed date NOT NULL,
+    date_paid date NULL,
+    date_completed date NULL,
     status character varying(64) NOT NULL,
     user_id integer NOT NULL,
-    CONSTRAINT pk PRIMARY KEY (order_id, status)
+    CONSTRAINT pk PRIMARY KEY (order_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.order_line

@@ -60,7 +60,7 @@ package entities {
         - String status
         - User user
         - List<OrderLine> orderLines
-        + getters
+        + getters()
         + updateStatus(String)
     }
     class OrderLine {
@@ -68,7 +68,7 @@ package entities {
         - int quantity
         - Cupcake cupcake
         - int price
-        + getters
+        + getters()
     }
 }
 

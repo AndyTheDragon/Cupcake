@@ -2,6 +2,11 @@
 -- Please log an issue at https://github.com/pgadmin-org/pgadmin4/issues/new/choose if you find any bugs, including reproduction steps.
 BEGIN;
 
+DROP TABLE IF EXISTS public.users;
+DROP TABLE IF EXISTS public.orders;
+DROP TABLE IF EXISTS public.order_lines;
+DROP TABLE IF EXISTS public.cupcake_flavours;
+
 
 CREATE TABLE IF NOT EXISTS public.users
 (
@@ -74,6 +79,20 @@ ALTER TABLE IF EXISTS public.order_lines
         ON DELETE NO ACTION
         NOT VALID;
 
+INSERT INTO cupcake_flavours (flavour_name, is_top_flavour, is_bottom_flavour, price) VALUES
+                             ('Chocolate',true,true,500),
+                             ('Vanilla',false,true,500),
+                             ('Nutmeg',false,true,500),
+                             ('Pistachio',false,true,600),
+                             ('Almond', false,true, 700),
+                             ('Blueberry', true,false,500),
+                             ('Raspberry', true,false,500),
+                             ('Crispy', true,false,600),
+                             ('Strawberry', true,false,600),
+                             ('Rum/Raisin', true,false,700),
+                             ('Orange', true,false,800),
+                             ('Lemon', true,false,800),
+                             ('Blue cheese', true,false,900);
 
 
 END;

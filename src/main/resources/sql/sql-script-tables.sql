@@ -24,10 +24,22 @@ CREATE TABLE IF NOT EXISTS public.orders
     CONSTRAINT pk PRIMARY KEY (order_id)
 );
 
-CREATE TABLE IF NOT EXISTS public.order_line
+CREATE TABLE IF NOT EXISTS public.cupcake_flavours
+(
+    flavour_id serial NOT NULL,
+    flavour_name character varying(64) NOT NULL,
+    is_top_flavour boolean NOT NULL,
+    is_bottom_flavour boolean NOT NULL,
+    price int NOT NULL,
+    CONSTRAINT pk PRIMARY KEY (flavour_id)
+);
+
+CREATE TABLE IF NOT EXISTS public.order_lines
 (
     order_line_id serial NOT NULL,
     quantity integer NOT NULL,
+    top_flavour integer NOT NULL,
+    bottom_flavour integer NOT NULL,
     price integer NOT NULL,
     order_id integer NOT NULL,
     CONSTRAINT pk PRIMARY KEY (order_line_id)
@@ -41,11 +53,27 @@ ALTER TABLE IF EXISTS public.orders
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.order_line
+ALTER TABLE IF EXISTS public.order_lines
     ADD CONSTRAINT fk FOREIGN KEY (order_id)
-    REFERENCES public.orders (order_id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
+        REFERENCES public.orders (order_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID;
+
+ALTER TABLE IF EXISTS public.order_lines
+    ADD CONSTRAINT fk_top FOREIGN KEY (top_flavour)
+        REFERENCES public.cupcake_flavours (flavour_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID;
+
+ALTER TABLE IF EXISTS public.order_lines
+    ADD CONSTRAINT fk_bot FOREIGN KEY (bottom_flavour)
+        REFERENCES public.cupcake_flavours (flavour_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID;
+
+
 
 END;

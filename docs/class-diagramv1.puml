@@ -3,95 +3,120 @@
 
 class Main {
 }
+
 package entities {
-class CupcakeBottom {
-- final int cupakeBottomId
-- final int priceBottom
-- final String flavour
-- final String cupcakeType;
-+ int getCupcakeBottomId()
-+ int getPrice()
-+ String getFlavour()
-+ String getCupcakeType()
-'override
-+ String toString()
-}
-class CupcakeTop {
-- final int cupcakeTopId
-- final int priceTop
-- final String flavour
-- final String cupcakeType;
-+ int getCupcakeTopId()
-+ int getPrice()
-+ String getFlavour()
-+ String getCupcakeType()
-'override
-+ String toString()
-}
+    enum CupcakeType {
+        TOP
+        BOTTOM
+    }
+    class CupcakeFlavour {
+        - final int cupakeFlavourId
+        - final int price
+        - final String flavourName
+        - final String flavourDesc
+        - final CupcakeType type;
+        + int getCupcakeBottomId()
+        + int getPrice()
+        + String getFlavour()
+        + CupcakeType getType()
+        + String getCupcakeType()
+        'override
+        + String toString()
+    }
 
-class Cupcake {
-- int price
-- CupcakeTop cupcakeTop
-- CupcakeBottom cupcakeBottom
-+ Cupcake()
-+ CupcakeBottom getCupcakeBottom()
-+ CupcakeTop getCupcakeTop()
-+ int getPrice()
-'override
-+ String toString()
+    class Cupcake {
+        - CupcakeFlavour top
+        - CupcakeFlavour bottom
+        + Cupcake(top, bottom)
+        + CupcakeFlavour getCupcakeBottom()
+        + CupcakeFlavour getCupcakeTop()
+        + int getPrice()
+        'override
+        + String toString()
+    }
 
+    class User {
+        - int userId
+        - String username
+        - String password
+        - String role
+        - int balance
+        + User()
+        + int getUserId()
+        + String getUsername()
+        + String getPassword()
+        + String getRole()
+        + int getBalance()
+        + void deposit()
+        + void buy()
+    }
 
-
-}
-
-class User {
-- int userId
-- String username
-- String password
-- String role
-+ User()
-+ int getUserId()
-+ String getUsername()
-+ String getPassword()
-+ String getRole()
-}
+    class Order {
+        - int orderId
+        - String name
+        - LocalDate datePlaced
+        - LocalDate datePaid
+        - LocalDate dateCompleted
+        - String status
+        - User user
+        - List<OrderLine> orderLines
+        + getters
+        + updateStatus(String)
+    }
+    class OrderLine {
+        - int orderId
+        - int quantity
+        - Cupcake cupcake
+        - int price
+        + getters
+    }
 }
 
 package controllers {
-class UserController {
-+ static void addRoutes()
-- static void createUser()
-+ static void login()
-- static void logout()
-
-}
-class OrderController {
-+ static void addRoutes()
-- static void addOrder()
-- static void showOrder()
-- static void removeOrder()
-
-}
+    class UserController {
+        + static void addRoutes()
+        - static void createUser()
+        + static void login()
+        - static void logout()
+    }
+    class OrderController {
+        + static void addRoutes()
+        - static void addOrder()
+        - static void showOrder()
+        - static void removeOrder()
+    }
 }
 
 package persistence {
-class OrderMapper {
-+ static void newOrder()
-+ static Cupcake getOrder()
-+ static Cupcake getFavoriteOrder()
-+ static void removeOrder()
+    class OrderMapper {
+        + static void newOrder()
+        + static Order getOrder()
+        + static List<Order> getOrders()
+        + static void removeOrder()
+    }
+
+    class UserMapper {
+        + static User login()
+        + static void createUser()
+    }
 }
 
-class UserMapper {
-+ static User login()
-+ static void createUser()
-}
+package Test {
+ class Test {
+    + userTestLoginValidLogin()
+    + userTestLoginInvalidLogin()
+    + orderTestNewOrderValidData()
+    + orderTestNewOrderInvalidData()
+
+
+ }
 }
 
 Main *-- OrderController
-OrderController o-- Cupcake
-Cupcake *-- CupcakeBottom
-Cupcake *-- CupcakeTop
-UserController o-- User
+Cupcake *-- CupcakeFlavour
+Order *-- OrderLine
+Order o-- User
+OrderLine *-- Cupcake
+CupcakeFlavour *- CupcakeType
 
 @enduml

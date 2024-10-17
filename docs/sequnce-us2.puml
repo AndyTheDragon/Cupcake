@@ -7,7 +7,7 @@ skinparam handwritten true
 actor Bruger
 participant View as V
 participant "UserController.createUser()" as C
-participant "UserMapper.createuser()" as M
+participant "UserMapper.createUser()" as M
 participant DB
 
 Bruger -> V: Opret ny bruger

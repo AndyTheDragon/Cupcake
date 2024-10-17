@@ -113,7 +113,10 @@ package Test {
  }
 }
 
-Main *-- OrderController
+Main -- OrderController
+Main -- UserController
+OrderController -- OrderMapper
+UserController -- UserMapper
 Cupcake *-- CupcakeFlavour
 Order *-- OrderLine
 Order o-- User

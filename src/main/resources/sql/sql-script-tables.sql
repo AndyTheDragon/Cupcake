@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS public.orders
     date_completed date NULL,
     status character varying(64) NOT NULL,
     user_id integer NOT NULL,
-    CONSTRAINT pk PRIMARY KEY (order_id)
+    PRIMARY KEY (order_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.cupcake_flavours
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS public.cupcake_flavours
     is_top_flavour boolean NOT NULL,
     is_bottom_flavour boolean NOT NULL,
     price int NOT NULL,
-    CONSTRAINT pk PRIMARY KEY (flavour_id)
+    PRIMARY KEY (flavour_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.order_lines
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS public.order_lines
     bottom_flavour integer NOT NULL,
     price integer NOT NULL,
     order_id integer NOT NULL,
-    CONSTRAINT pk PRIMARY KEY (order_line_id)
+    PRIMARY KEY (order_line_id)
 );
 
 ALTER TABLE IF EXISTS public.orders
@@ -80,19 +80,19 @@ ALTER TABLE IF EXISTS public.order_lines
         NOT VALID;
 
 INSERT INTO cupcake_flavours (flavour_name, is_top_flavour, is_bottom_flavour, price) VALUES
-                             ('Chocolate',true,true,500),
-                             ('Vanilla',false,true,500),
-                             ('Nutmeg',false,true,500),
-                             ('Pistachio',false,true,600),
-                             ('Almond', false,true, 700),
-                             ('Blueberry', true,false,500),
-                             ('Raspberry', true,false,500),
-                             ('Crispy', true,false,600),
-                             ('Strawberry', true,false,600),
-                             ('Rum/Raisin', true,false,700),
-                             ('Orange', true,false,800),
-                             ('Lemon', true,false,800),
-                             ('Blue cheese', true,false,900);
+                 ('Chocolate',true,true,500),
+                 ('Vanilla',false,true,500),
+                 ('Nutmeg',false,true,500),
+                 ('Pistachio',false,true,600),
+                 ('Almond', false,true, 700),
+                 ('Blueberry', true,false,500),
+                 ('Raspberry', true,false,500),
+                 ('Crispy', true,false,600),
+                 ('Strawberry', true,false,600),
+                 ('Rum/Raisin', true,false,700),
+                 ('Orange', true,false,800),
+                 ('Lemon', true,false,800),
+                 ('Blue cheese', true,false,900);
 
 
 END;

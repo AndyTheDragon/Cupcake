@@ -1,6 +1,7 @@
 package app.entities;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Order {
     private int orderId;
@@ -18,6 +19,8 @@ public class Order {
         this.status = status;
         this.user = user;
         this.orderLines = orderLines;
+
+        this.datePlaced = LocalDate.now();
     }
 
     public int getOrderId() {
@@ -53,6 +56,13 @@ public class Order {
     }
 
     public void updateStatus(String updatedStatus){
+
+        if(updatedStatus.equalsIgnoreCase("betalt")){
+            datePaid = LocalDate.now();
+        }else if(updatedStatus.equalsIgnoreCase("leveret")){
+            dateCompleted = LocalDate.now();
+        }
+
         status = updatedStatus;
     }
 }

@@ -4,7 +4,7 @@ public class OrderLine {
     private int orderId;
     private int quantity;
     private Cupcake cupcake;
-    int price;
+    private int price;
 
     public OrderLine(int orderId, int quantity, Cupcake cupcake, int price) {
         this.orderId = orderId;

@@ -33,7 +33,7 @@ public class CupcakeFlavour {
     }
 
     public String getCupcakeType(){
-        return "";
+        return type.toString();
     }
 
     @Override

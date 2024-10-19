@@ -1,30 +1,30 @@
 package app.entities;
 
 public class Cupcake {
-    private CupcakeFlavor top;
-    private CupcakeFlavor bottom;
+    private CupcakeFlavour top;
+    private CupcakeFlavour bottom;
 
-    public Cupcake(CupcakeFlavor top, CupcakeFlavor bottom) {
+    public Cupcake(CupcakeFlavour top, CupcakeFlavour bottom) {
         this.top = top;
         this.bottom = bottom;
     }
 
-    public CupcakeFlavor getCupcakeBottom() {
+    public CupcakeFlavour getCupcakeBottom() {
         return bottom;
     }
 
-    public CupcakeFlavor getCupcakeTop() {
+    public CupcakeFlavour getCupcakeTop() {
         return top;
     }
 
-    int getPrice(){
+    public int getPrice(){
         return bottom.getPrice() + top.getPrice();
     }
 
     @Override
     public String toString() {
-        return "Smag på øverste lag: " + top.getFlavourName() +
-                "\nSmag på nederste lag: " + bottom.getFlavourName() +
+        return "Smag på øverste lag: " + top.getFlavour() +
+                "\nSmag på nederste lag: " + bottom.getFlavour() +
                 "\nTotal pris: " + getPrice();
     }
 }

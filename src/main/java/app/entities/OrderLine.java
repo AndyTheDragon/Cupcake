@@ -1,12 +1,14 @@
 package app.entities;
 
-public class OrderLine {
+public class OrderLine
+{
     private int orderId;
     private int quantity;
     private Cupcake cupcake;
     private int price;
 
-    public OrderLine(int orderId, int quantity, Cupcake cupcake, int price) {
+    public OrderLine(int orderId, int quantity, Cupcake cupcake, int price)
+    {
         this.orderId = orderId;
         this.quantity = quantity;
         this.cupcake = cupcake;

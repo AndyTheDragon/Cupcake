@@ -3,10 +3,13 @@ package app.controllers;
 import app.persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import app.persistence.UserMapper;
 
 public class UserController {
         public static void addRoute(Javalin app, ConnectionPool pool) {
-                app.post("createuser", ctx -> createUser(ctx, pool));
+                //app.post("/createuser", ctx -> ctx.render("index.html") );
+                app.get("/createuser", ctx -> ctx.render("createuser.html") );
+                app.post("/createuser", ctx -> createUser(ctx, pool));
 
         }
 
@@ -16,11 +19,12 @@ public class UserController {
                 String confirmPassword = ctx.formParam("confirmpassword");
 
                 if (password.equals(confirmPassword)) {
-                        UserMapper.createUser(username, password, confirmPassword);
+                        UserMapper.createUser(username, password, pool);
                 } else {
                         ctx.attribute("message", "Dit kodeord stemmer ikke overens. Prøv igen");
                         ctx.render("createuser.html");
                 }
+                ctx.redirect("/");
 
         }
 

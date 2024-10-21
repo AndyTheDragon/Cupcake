@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.entities.CupcakeFlavour;
 import app.entities.CupcakeType;
+import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.CupcakeMapper;
 import io.javalin.Javalin;
@@ -18,10 +19,17 @@ public class CupcakeController
 
     private static void showFrontpage(Context ctx, ConnectionPool dbConnection)
     {
-        List<CupcakeFlavour> availableBottomFlavours = CupcakeMapper.getFlavours(CupcakeType.BOTTOM, dbConnection);
-        ctx.attribute("bottomflavours", availableBottomFlavours);
-        List<CupcakeFlavour> availableTopFlavours = CupcakeMapper.getFlavours(CupcakeType.TOP, dbConnection);
-        ctx.attribute("topflavours", availableTopFlavours);
+        try
+        {
+            List<CupcakeFlavour> availableBottomFlavours = CupcakeMapper.getFlavours(CupcakeType.BOTTOM, dbConnection);
+            ctx.attribute("bottomflavours", availableBottomFlavours);
+            List<CupcakeFlavour> availableTopFlavours = CupcakeMapper.getFlavours(CupcakeType.TOP, dbConnection);
+            ctx.attribute("topflavours", availableTopFlavours);
+        }
+        catch (DatabaseException e)
+        {
+            ctx.attribute("message", e.getMessage());
+        }
         ctx.render("index.html");
     }
 }

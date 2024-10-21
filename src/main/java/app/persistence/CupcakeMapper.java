@@ -40,7 +40,7 @@ public class CupcakeMapper
             }
         } catch (SQLException e)
         {
-            throw new DatabaseException(e.getMessage());
+            throw new DatabaseException("Could not get flavours from database.", e);
         }
 
         return flavours;

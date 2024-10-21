@@ -7,7 +7,6 @@ import app.persistence.UserMapper;
 
 public class UserController {
         public static void addRoute(Javalin app, ConnectionPool pool) {
-                //app.post("/createuser", ctx -> ctx.render("index.html") );
                 app.get("/createuser", ctx -> ctx.render("createuser.html") );
                 app.post("/createuser", ctx -> createUser(ctx, pool));
 

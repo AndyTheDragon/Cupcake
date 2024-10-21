@@ -57,8 +57,7 @@
           <div class="form-floating">
             <select class="form-select " name="chooseBottom" id="chooseBottom" required>
               <option selected>Vælg bund</option>
-              <option th:each="flavour : ${bottomflavours}" th:value="${flavour.name}" value="vanilie">Vanilie</option>
-              <option value="chokolade">Chokolade</option>
+              <option th:each="flavour : ${bottomflavours}" th:value="${flavour.cupcakeflavourid}" th:text="${flavour.name}" value="vanilie">Vanilie</option>
             </select>
             <label for="chooseBottom">Vælg bund</label>
           </div>
@@ -67,8 +66,7 @@
           <div class="form-floating">
             <select class="form-select " name="chooseTop" id="chooseTop" required>
               <option selected>Vælg topping</option>
-              <option value="smørcreme">Smørcreme</option>
-              <option value="bær">Skovbær</option>
+              <option th:each="flavour : ${topflavours}" th:value="${flavour.cupcakeflavourid}" th:text="${flavour.name}" value="vanilie">Vanilie</option>
             </select>
             <label for="chooseTop">Vælg topping</label>
           </div>

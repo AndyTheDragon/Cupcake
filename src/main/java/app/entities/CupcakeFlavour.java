@@ -23,6 +23,11 @@ public class CupcakeFlavour {
         return price;
     }
 
+    public String getName()
+    {
+        return flavourName;
+    }
+
     public String getFlavour(){
         return "Smag navn: " + flavourName +
                 "Beskrivelse: " + flavourDesc;

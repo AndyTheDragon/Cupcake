@@ -1,0 +1,24 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+state c <<choice>>
+
+[*] -> LoginDialog
+LoginDialog : exit/submit login info
+LoginDialog -> c : Login
+c ---> LoginDialog : [login incorrect] / show error msg
+c --> Authorized : [login correct]
+
+
+state Authorized {
+StudentProfile -> TestAssessmentWindow : TakeTest
+StudentProfile -> UserDetails : EditData
+UserDetails -> StudentProfile : OK
+StudentProfile --->  TestResultsWindow : GetTestResults
+TestResultsWindow ---> StudentProfile : OK
+TestAssessmentWindow -> TestResultsWindow : Finish
+TestAssessmentWindow -> TestResultsWindow : at (timeout)
+
+}
+
+@enduml

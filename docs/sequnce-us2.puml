@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+skinparam backgroundColor #EEEBDC
+skinparam handwritten true
+
+actor Bruger
+participant View as V
+participant "UserController.createUser()" as C
+participant "UserMapper.createUser()" as M
+participant DB
+
+Bruger -> V: Opret ny bruger
+activate V
+
+V -> C: Post request til /createuser
+activate C
+C -> C: Validate form data
+C -> M: createUser(username, pwd)
+activate M
+M --> DB: execute sql
+DB --> M: generated user_id
+M -> C: success/Exception
+deactivate M
+C -> C : sæt message attributten til\n success-message eller error-message
+C -> V: render /login  eller /createuser\n med message
+deactivate C
+
+
+deactivate V
+
+@enduml

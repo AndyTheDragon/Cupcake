@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+:Main Admin: as Admin
+(Add to basket) as (Add)
+(View basket) as (View)
+(Order for pickup) as (Order)
+(Pay with credit) as (Pay)
+(Login)
+(Create account) as (Account)
+
+Customer --> (Account)
+Customer --> (Login)
+(Login) --> (Add)
+Customer --> (Add)
+Customer --> (View)
+(Add) --> (View)
+(View) --> (Order)
+(View) --> (Pay)
+(View) --> (Remove item from basket)
+(Login) --> (Add credit)
+(Login) --> (See previous orders)
+Admin --> (Login)
+Admin --> (Add credit)
+Admin --> (See all orders)
+Admin --> (See all customers)
+
+
+note "Only if logged in" as L1
+(Pay) .. L1
+(Add credit) .. L1
+
+@enduml

@@ -16,6 +16,7 @@ public class UserController {
         private static void createUser(Context ctx, ConnectionPool pool) {
                 String username = ctx.formParam("username");
                 String password = ctx.formParam("password");
+                String email = ctx.formParam("email");
                 String confirmPassword = ctx.formParam("confirmpassword");
 
                 if (password.equals(confirmPassword)) {

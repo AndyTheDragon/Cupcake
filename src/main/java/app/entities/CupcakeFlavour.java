@@ -23,7 +23,7 @@ public class CupcakeFlavour {
         return price;
     }
 
-    public String getFlavourName()
+    public String getName()
     {
         return flavourName;
     }

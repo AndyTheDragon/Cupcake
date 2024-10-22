@@ -49,6 +49,7 @@
   </nav>
   <div class="content bg-light rounded-4 p-5">
     <h1 class="display-1">Opret din bruger</h1>
+    <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
     <!-- opret bruger formular-->
     <form method="post" action="/createuser">
       <label class="form-label" for="username">Brugernavn: </label>
@@ -59,7 +60,6 @@
       <input class="form-control form-control-lg" type="password" id="confirmpassword" name="confirmpassword"><br><br>
       <button class="btn btn-lg btn-primary" type="submit" value="submit">Opret bruger</button>
     </form>
-    <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

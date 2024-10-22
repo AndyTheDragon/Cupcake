@@ -4,3 +4,6 @@
     --bs-btn-font-size: 1.75rem;
     --bs-btn-border-radius: var(--bs-border-radius-lg);
 }
+.header {
+    background: linear-gradient(#9013FE,#6A10F3);
+}

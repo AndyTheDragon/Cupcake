@@ -14,7 +14,7 @@ public class UserController
                 app.post("/createuser", ctx -> createUser(ctx, pool));
         }
 
-        private static void createUser(Context ctx, ConnectionPool pool) throws DatabaseException
+        private static void createUser(Context ctx, ConnectionPool dbConnection)
         {
 
                 String username = ctx.formParam("username");
@@ -26,8 +26,16 @@ public class UserController
                     ctx.render("createuser.html");
             } else if (passwordCheck(ctx, password, confirmPassword))
             {
-                    UserMapper.createUser(username, password, pool);
-                    ctx.redirect("/");
+                    try
+                    {
+                            UserMapper.createUser(username, password, dbConnection);
+                            ctx.redirect("/");
+                    }
+                    catch (DatabaseException e)
+                    {
+                            ctx.attribute("message", e.getMessage());
+                            ctx.render("createuser.html");
+                    }
             } else
             {
                     ctx.render("createuser.html");

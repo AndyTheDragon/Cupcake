@@ -18,7 +18,7 @@ public class OrderController {
         List<Order> orders;
         try {
 
-            orders = OrderMapper.getOrders(pool);
+            orders = OrderMapper.getOrder(pool);
         } catch (DatabaseException e) {
 
             ctx.attribute("message","Noget gik galt. " + e.getMessage());

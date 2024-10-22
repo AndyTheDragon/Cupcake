@@ -41,7 +41,6 @@
               <li><a class="dropdown-item" href="#">2 x Vanilla/Raspberry 60 kr</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="#">Betal nu 180 kr</a></li>
-              <a href="/basket" th:href="@{/basket}">Gå til kurv</a>
             </ul>
           </li>
         </ul>
@@ -49,46 +48,10 @@
     </div>
   </nav>
   <div class="content bg-light rounded-4 p-5">
-    <h1 class="display-1">Velkommen ombord</h1>
+    <h1 class="display-1">Indkøbskurv</h1>
     <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
-    <p class="h2 mb-5">Øens bedste cupcakes. Vælg og bestil her:</p>
-    <form>
-      <div class="row px-3 g-5 mb-5">
-        <div class="col-5">
-          <div class="form-floating">
-            <select class="form-select " name="chooseBottom" id="chooseBottom" required>
-              <option selected>Vælg bund</option>
-              <option th:each="flavour : ${bottomflavours}" th:value="${flavour.cupcakeflavourid}" th:text="${flavour.name}" value="vanilie">Vanilie</option>
-            </select>
-            <label for="chooseBottom">Vælg bund</label>
-          </div>
-        </div>
-        <div class="col-5">
-          <div class="form-floating">
-            <select class="form-select " name="chooseTop" id="chooseTop" required>
-              <option selected>Vælg topping</option>
-              <option th:each="flavour : ${topflavours}" th:value="${flavour.cupcakeflavourid}" th:text="${flavour.name}" value="vanilie">Vanilie</option>
-            </select>
-            <label for="chooseTop">Vælg topping</label>
-          </div>
-        </div>
-        <div class="col-2">
-          <div class="form-floating">
-            <select class="form-select" name="chooseAmount" id="chooseAmount" required>
-              <option selected>Vælg antal</option>
-              <option value="3">3</option>
-              <option value="6">6</option>
-            </select>
-            <label for="chooseAmount">Vælg antal</label>
-          </div>
-        </div>
-      </div>
-      <div class="row px-3 ">
-        <div class="col-auto ms-auto">
-          <button class="btn btn-xl btn-primary" type="submit">Læg i kurv</button>
-        </div>
-      </div>
-    </form>
+    <!-- Indkøbskurv her-->
+    <button type="submit" value="submit" formaction="/checkout">Gå til betaling</button>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

@@ -12,7 +12,10 @@ public class UserController
         {
                 app.get("/createuser", ctx -> ctx.render("createuser.html") );
                 app.post("/createuser", ctx -> createUser(ctx, pool));
+
         }
+
+
 
         private static void createUser(Context ctx, ConnectionPool dbConnection)
         {

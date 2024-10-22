@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Olsker Cupcakes</title>
+    <!--link href="webjars/bootstrap/5.3.3/css/bootstrap.min-jsf.css" rel="stylesheet"-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body class="">
+<div class="container">
+    <div class="header mb-3 text-center">
+        <img class="img-fluid" src="../public/images/header_image.png" th:src="@{/images/header_image.png}" alt="Olsker Logo">
+    </div>
+    <nav class="navbar navbar-expand-sm mb-3 bg-body-tertiary">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav nav-underline me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#">Ordrer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Kunder</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav mb-2 me-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Bruger</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-basket2"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#">6 x Chocolate/Crispy 120 kr</a></li>
+                            <li><a class="dropdown-item" href="#">2 x Vanilla/Raspberry 60 kr</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Betal nu 180 kr</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="content bg-light rounded-4 p-5">
+        <h1 class="display-1">Ordreoversigt</h1>
+        <p th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="bg-warning bg-gradient">Fejlbeskeder vises her</p>
+        <div class="container mt-5">
+            <div class="d-flex justify-content-center row">
+                <div class="col-md-10">
+                    <div class="rounded">
+                        <div class="table-responsive table-borderless">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        <div class="toggle-btn">
+                                            <div class="inner-circle"></div>
+                                        </div>
+                                    </th>
+                                    <th>Order #</th>
+                                    <th>Company name</th>
+                                    <th>status</th>
+                                    <th>Total</th>
+                                    <th>Created</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody class="table-body">
+                                <tr class="cell-1" th:text="${order.orderid}">
+                                    <td class="text-center">
+                                        <div class="toggle-btn">
+                                            <div class="inner-circle"></div>
+                                        </div>
+                                    </td>
+                                    <td th:text="${order.orderid}></td>
+                                    <td>Gasper Antunes</td>
+                                    <td><span class="badge badge-success">Fullfilled</span></td>
+                                    <td></td>
+                                    <td>Today</td>
+                                    <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
+                                </tr>
+                                <tr class="cell-1">
+                                    <td class="text-center">
+                                        <div class="toggle-btn">
+                                            <div class="inner-circle"></div>
+                                        </div>
+                                    </td>
+                                    <td>#SO-13453</td>
+                                    <td>Aartsen van</td>
+                                    <td><span class="badge badge-info">Confirmed</span></td>
+                                    <td>$3454.00</td>
+                                    <td>Yesterday</td>
+                                    <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
+                                </tr>
+                                <tr class="cell-1">
+                                    <td class="text-center">
+                                        <div class="toggle-btn">
+                                            <div class="inner-circle"></div>
+                                        </div>
+                                    </td>
+                                    <td>#SO-13498</td>
+                                    <td>Trashes Habard</td>
+                                    <td><span class="badge badge-danger">Partially shipped</span></td>
+                                    <td>$6274.00</td>
+                                    <td>May 12,2020</td>
+                                    <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
+                                </tr>
+                                <tr class="cell-1">
+                                    <td class="text-center">
+                                        <div class="toggle-btn">
+                                            <div class="inner-circle"></div>
+                                        </div>
+                                    </td>
+                                    <td>#SO-16499</td>
+                                    <td>Samban Hubart</td>
+                                    <td><span class="badge badge-success">Fullfilled</span></td>
+                                    <td>$6375.00</td>
+                                    <td>May 11,2020</td>
+                                    <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

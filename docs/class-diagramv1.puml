@@ -75,7 +75,7 @@ package entities {
 package controllers {
     class CupcakeController {
         + static void addRoutes()
-        - static void showFrontpage()
+        + static void showFrontpage()
     }
     class UserController {
         + static void addRoutes()

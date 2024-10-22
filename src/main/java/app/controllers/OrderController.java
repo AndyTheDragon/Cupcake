@@ -27,35 +27,34 @@ public class OrderController {
 
         String topFlavourName = ctx.formParam("chooseTop");
         String bottomFlavourName = ctx.formParam("chooseBottom");
-        int quantity = Integer.parseInt(ctx.formParam("chooseAmount"));
 
-        CupcakeFlavour topFlavour = new CupcakeFlavour(
-                OrderMapper.getFlavourId(topFlavourName),
-                OrderMapper.getFlavourPrice(topFlavourName),
-                topFlavourName,
-                "",
-                CupcakeType.TOP);
-        CupcakeFlavour bottomFlavour = new CupcakeFlavour(
-                OrderMapper.getFlavourId(bottomFlavourName),
-                OrderMapper.getFlavourPrice(bottomFlavourName),
-                bottomFlavourName,
-                "",
-                CupcakeType.BOTTOM);
-
-        int orderLineId;
-        if(OrderMapper.getOrderId(bottomFlavourName) == null){
-            orderLineId = 1;
-        }else{
-            orderLineId = OrderMapper.getLastOrderId(bottomFlavourName)+1;
+        String quantityString = ctx.formParam("chooseAmount");
+        if (quantityString == null) {
+            ctx.sessionAttribute("error", "Please select a quantity.");
+            ctx.redirect("/");
+            return;
         }
+        int quantity = Integer.parseInt(quantityString);
 
-        orderLineList.add(new OrderLine(
-                orderLineId,
-                quantity,
-                new Cupcake(topFlavour,bottomFlavour),
-                (OrderMapper.getPrice(topFlavourName) + OrderMapper.getPrice(bottomFlavourName)) * quantity));
+        try {
+            CupcakeFlavour topFlavour = OrderMapper.getCupcakeFlavour(topFlavourName, CupcakeType.TOP);
+            CupcakeFlavour bottomFlavour = OrderMapper.getCupcakeFlavour(bottomFlavourName, CupcakeType.TOP);
+            Cupcake cupcake = new Cupcake(topFlavour, bottomFlavour);
 
-        ctx.sessionAttribute("orderlines", orderLineList);
+            int orderId = 0;
+            orderLineList.add(new OrderLine(
+                    orderId,
+                    quantity,
+                    cupcake,
+                    cupcake.getPrice()
+            ));
+
+            ctx.sessionAttribute("orderlines", orderLineList);
+            ctx.redirect("/");
+        } catch (DatabaseException e){
+            ctx.sessionAttribute("error", "Database error: " + e.getMessage());
+            ctx.redirect("/");
+        }
     }
 
     private static void addOrder(Context ctx, ConnectionPool pool){

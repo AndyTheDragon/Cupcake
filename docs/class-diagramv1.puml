@@ -73,6 +73,10 @@ package entities {
 }
 
 package controllers {
+    class CupcakeController {
+        + static void addRoutes()
+        - static void showFrontpage()
+    }
     class UserController {
         + static void addRoutes()
         - static void createUser()
@@ -89,6 +93,9 @@ package controllers {
 }
 
 package persistence {
+    class CupcakeMapper {
+        + static List<CupcakeFlavour> getFlavours()
+    }
     class OrderMapper {
         + static void newOrder()
         + static Order getOrder()
@@ -113,8 +120,10 @@ package Test {
  }
 }
 
+Main -- CupcakeController
 Main -- OrderController
 Main -- UserController
+CupcakeController -- CupcakeMapper
 OrderController -- OrderMapper
 UserController -- UserMapper
 Cupcake *-- CupcakeFlavour

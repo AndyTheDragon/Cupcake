@@ -27,6 +27,12 @@ public class CupcakeFlavour
 
     public String getFlavour()
     {
+    public String getName()
+    {
+        return flavourName;
+    }
+
+    public String getFlavour(){
         return "Smag navn: " + flavourName +
                 "Beskrivelse: " + flavourDesc;
     }

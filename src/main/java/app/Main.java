@@ -30,6 +30,6 @@ public class Main
         // Routing
 
         app.get("/", ctx ->  ctx.render("index.html"));
-        UserController.addRoute(app, connectionPool);
+        UserController.addRoutes(app, connectionPool);
     }
 }

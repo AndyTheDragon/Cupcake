@@ -19,7 +19,6 @@ public class OrderController
 
     private static void addOrder(Context ctx, ConnectionPool connectionPool) throws DatabaseException
     {
-       List<Order> orderLine = ctx.sessionAttribute("orderlines");
 
 
 

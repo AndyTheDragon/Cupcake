@@ -12,7 +12,6 @@ public class UserController
         {
                 app.get("/createuser", ctx -> ctx.render("createuser.html") );
                 app.post("/createuser", ctx -> createUser(ctx, pool));
-
         }
 
         private static void createUser(Context ctx, ConnectionPool pool) throws DatabaseException
@@ -62,4 +61,5 @@ public class UserController
         private static void customizeCupcake(Context ctx, ConnectionPool pool) {
 
         }
+
 }

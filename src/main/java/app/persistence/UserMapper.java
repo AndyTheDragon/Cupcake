@@ -28,7 +28,7 @@ public class UserMapper {
                 throw new DatabaseException("Fejl ved oprettelse af bruger");
             }
         } catch (SQLException e) {
-            throw new DatabaseException(e);
+            throw new DatabaseException(e.getMessage());
         }
 
     }

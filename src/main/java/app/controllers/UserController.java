@@ -44,10 +44,11 @@ public class UserController
 
         private static boolean passwordCheck(Context ctx, String password, String confirmPassword)
         {
-                CharSequence specialCharacters = "!#¤%&/()=?";
-                CharSequence numbers = "1234567890";
-
-                if(password.length() >= 8 && password.contains(specialCharacters) && password.contains(numbers) && password.equals(confirmPassword))
+                String specialCharacters = "!#¤%&/()=?";
+                String numbers = "1234567890";
+                boolean hasSpecialChar = password.chars().anyMatch(ch -> specialCharacters.indexOf(ch) >= 0);
+                boolean hasNumber = password.chars().anyMatch(ch -> numbers.indexOf(ch) >= 0);
+                if(password.length() >= 8 && hasNumber && hasSpecialChar && password.equals(confirmPassword))
                 {
                         return true;
                 } else

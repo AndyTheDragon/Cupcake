@@ -6,6 +6,7 @@ import app.entities.CupcakeType;
 import app.entities.OrderLine;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
+import app.persistence.OrderMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -16,9 +17,23 @@ public class OrderController {
 
     public static void addRoutes(Javalin app, ConnectionPool pool){
         app.post("/addcupcake", ctx -> addCupcakeToOrder(ctx, pool));
+        app.get("/", ctx -> {
+            List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
+            if (orderLineList == null) {
+                orderLineList = new ArrayList<>();
+            }
+
+            Integer ordersum = ctx.sessionAttribute("ordersum");
+            ctx.attribute("orderlines", orderLineList);
+            if (ordersum != null && !orderLineList.isEmpty()) {
+                ctx.attribute("ordersum", ordersum);
+            }
+
+            ctx.render("index.html");
+        });
     }
 
-    private static void addCupcakeToOrder(Context ctx, ConnectionPool pool){
+    private static void addCupcakeToOrder(Context ctx, ConnectionPool pool) {
         List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
 
         if (orderLineList == null) {
@@ -37,8 +52,8 @@ public class OrderController {
         int quantity = Integer.parseInt(quantityString);
 
         try {
-            CupcakeFlavour topFlavour = OrderMapper.getCupcakeFlavour(topFlavourName, CupcakeType.TOP);
-            CupcakeFlavour bottomFlavour = OrderMapper.getCupcakeFlavour(bottomFlavourName, CupcakeType.TOP);
+            CupcakeFlavour topFlavour = OrderMapper.getCupcakeFlavour(topFlavourName, CupcakeType.TOP, pool);
+            CupcakeFlavour bottomFlavour = OrderMapper.getCupcakeFlavour(bottomFlavourName, CupcakeType.BOTTOM, pool);
             Cupcake cupcake = new Cupcake(topFlavour, bottomFlavour);
 
             int orderId = 0;
@@ -49,6 +64,12 @@ public class OrderController {
                     cupcake.getPrice()
             ));
 
+            int ordersum = 0;
+            for (OrderLine ol : orderLineList) {
+                ordersum += ol.getPrice() * ol.getQuantity();
+            }
+
+            ctx.sessionAttribute("ordersum", ordersum);
             ctx.sessionAttribute("orderlines", orderLineList);
             ctx.redirect("/");
         } catch (DatabaseException e){

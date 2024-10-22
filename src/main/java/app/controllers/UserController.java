@@ -17,31 +17,32 @@ public class UserController
 
         private static void createUser(Context ctx, ConnectionPool pool) throws DatabaseException
         {
+
                 String username = ctx.formParam("username");
                 String password = ctx.formParam("password");
                 String confirmPassword = ctx.formParam("confirmpassword");
             if (password == null || confirmPassword == null)
             {
                     ctx.attribute("message", "Venligst udfyld dit kodeord i begge felter.");
+                    ctx.render("createuser.html");
+            } else if (passwordCheck(ctx, password, confirmPassword))
+            {
+                    UserMapper.createUser(username, password, pool);
+                    ctx.redirect("/");
             } else
             {
-                    passwordCheck(ctx, password, confirmPassword);
+                    ctx.render("createuser.html");
             }
-
-            UserMapper.createUser(username, password, pool);
-            ctx.redirect("/");
-
-
         }
 
-        private static void passwordCheck(Context ctx, String password, String confirmPassword)
+        private static boolean passwordCheck(Context ctx, String password, String confirmPassword)
         {
                 CharSequence specialCharacters = "!#¤%&/()=?";
                 CharSequence numbers = "1234567890";
 
                 if(password.length() >= 8 && password.contains(specialCharacters) && password.contains(numbers) && password.equals(confirmPassword))
                 {
-                        System.out.println();
+                        return true;
                 } else
                 {
                         ctx.attribute("message", "Kodeordet følger ikke op til krav. Check venligst: \n" +
@@ -49,6 +50,7 @@ public class UserController
                                 "Minimumslængde på 8 tegn," +
                                 "Inkluder et tal i dit kodeord," +
                                 "Inkluder et specielt tegn} ");
+                        return false;
 
                 }
         }

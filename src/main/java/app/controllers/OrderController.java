@@ -17,25 +17,10 @@ public class OrderController {
 
     public static void addRoutes(Javalin app, ConnectionPool pool){
         app.post("/addcupcake", ctx -> addCupcakeToOrder(ctx, pool));
-        app.get("/", ctx -> {
-            List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
-            if (orderLineList == null) {
-                orderLineList = new ArrayList<>();
-            }
-
-            Integer ordersum = ctx.sessionAttribute("ordersum");
-            ctx.attribute("orderlines", orderLineList);
-            if (ordersum != null && !orderLineList.isEmpty()) {
-                ctx.attribute("ordersum", ordersum);
-            }
-
-            ctx.render("index.html");
-        });
     }
 
     private static void addCupcakeToOrder(Context ctx, ConnectionPool pool) {
         List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
-
         if (orderLineList == null) {
             orderLineList = new ArrayList<>();
         }

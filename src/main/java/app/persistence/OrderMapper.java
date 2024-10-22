@@ -3,10 +3,7 @@ package app.persistence;
 import app.entities.Order;
 import app.exceptions.DatabaseException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import app.persistence.ConnectionPool;
 
@@ -17,11 +14,12 @@ public class OrderMapper {
 
         public static Order getOrder(){
             String sql = "SELECT order_id, name, status FROM orders ORDER BY date_placed ASC";
-            String cupcake_flavours;
-            String order_lines;
-            String imageURL;
-            int authorId;
-            int motivationId;
+            int order_id;
+            String name;
+            Date date_placed;
+            Date date_paid;
+            Date date_completed;
+
 
             try (Connection connection = connectionPool.getConnection())
             {
@@ -30,12 +28,12 @@ public class OrderMapper {
                     ResultSet rs = ps.executeQuery();
                     if (rs.next())
                     {
-                        motivationId = rs.getInt("id");
-                        title = rs.getString("title");
-                        text = rs.getString("text");
-                        imageURL = rs.getString("image_url");
-                        authorId = rs.getInt("author_id");
-                        return new Motivation(motivationId, title, text, imageURL, authorId);
+                        order_id = rs.getInt("Order_id");
+                        name = rs.getString("Name");
+                        date_placed = rs.getString("Date placed");
+                        date_paid = rs.getString("Date paid");
+                        date_completed = rs.getInt("Date completed");
+                        return new Order(order_id, name, date_placed, date_paid, date_completed);
                     }
                 }
             } catch (SQLException e)

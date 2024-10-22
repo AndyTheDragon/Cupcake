@@ -49,7 +49,7 @@
   </nav>
   <div class="content bg-light rounded-4 p-5">
     <h1 class="display-1">Velkommen ombord</h1>
-    <p th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="bg-warning bg-gradient">Fejlbeskeder vises her</p>
+    <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
     <p class="h2 mb-5">Øens bedste cupcakes. Vælg og bestil her:</p>
     <form>
       <div class="row px-3 g-5 mb-5">

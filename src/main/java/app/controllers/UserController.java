@@ -15,7 +15,8 @@ public class UserController
 
         }
 
-        private static void createUser(Context ctx, ConnectionPool pool) throws DatabaseException {
+        private static void createUser(Context ctx, ConnectionPool pool) throws DatabaseException
+        {
                 String username = ctx.formParam("username");
                 String password = ctx.formParam("password");
                 String confirmPassword = ctx.formParam("confirmpassword");

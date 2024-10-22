@@ -51,14 +51,14 @@
     <h1 class="display-1">Opret din bruger</h1>
     <!-- opret bruger formular-->
     <form method="post" action="/createuser">
-      <label class="form-label for="username">Brugernavn: </label>
-      <input class="form-control form-control-lg" type="text" for="username" id="username" name="username"></br></br>
-      <label class="form-label for="email">Email: </label>
-      <input class="form-control form-control-lg" type="text" for="email" id="email" name="email"></br></br>
-      <label class="form-label for="password">Password: </label>
-      <input class="form-control form-control-lg" type="text" for="password" id="password" name="password"></br></br>
-      <label class="form-label for="confirmpassword">Confirm Password: </label>
-      <input class="form-control form-control-lg" type="text" for="confirmpassword" id="confirmpassword" name="confirmpassword"></br></br>
+      <label class="form-label" for="username">Brugernavn: </label>
+      <input class="form-control form-control-lg" type="text" id="username" name="username"><br><br>
+      <label class="form-label" for="email">Email: </label>
+      <input class="form-control form-control-lg" type="text"  id="email" name="email"><br><br>
+      <label class="form-label" for="password">Password: </label>
+      <input class="form-control form-control-lg" type="text"  id="password" name="password"><br><br>
+      <label class="form-label" for="confirmpassword">Confirm Password: </label>
+      <input class="form-control form-control-lg" type="text" id="confirmpassword" name="confirmpassword"><br><br>
       <button class="btn btn-lg btn-primary" type="submit" value="submit">Opret bruger</button>
     </form>
     <p th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="bg-warning bg-gradient">Fejlbeskeder vises her</p>

@@ -12,13 +12,7 @@ import java.sql.SQLException;
 public class OrderMapper {
 
     public static CupcakeFlavour getCupcakeFlavour(String flavourName, CupcakeType cupcakeType, ConnectionPool connectionPool) throws DatabaseException {
-        String sql = "SELECT * FROM cupcake_flavours WHERE flavour_name = ? AND ";
-
-        if (cupcakeType == CupcakeType.TOP) {
-            sql += "if_top_flavour = true";
-        } else {
-            sql += "is_bottom_flavour = true";
-        }
+        String sql = "SELECT * FROM cupcake_flavours WHERE flavour_name = ?";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {

@@ -51,8 +51,8 @@
     <h1 class="display-1">Indkøbskurv</h1>
     <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
     <!-- Indkøbskurv her-->
-    <table th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
-      <thead>
+    <table >
+      <thead th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
         <tr>
           <td>Antal</td>
           <td>Cupcake top flavour</td>
@@ -61,7 +61,7 @@
           <td>Total pris</td>
         </tr>
       </thead>
-      <tbody >
+      <tbody th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
       <tr th:each="order : ${session.orderlines}">
         <td th:text="${order.quantity}">Antal cupcake(s)</td>
         <a class="dropdown-item" href="#"
@@ -71,6 +71,14 @@
         <td th:text="${order.price * order.quantity}">Total pris</td>
       </tr>
       </tbody>
+
+      <!-- Hvis kurven er tom-->
+      <tbody>
+        <tr th:if="${session.orderlines != null and #lists.size(session.orderlines) < 1}">
+          <td>Din kurv er tom.</td>
+        </tr>
+      </tbody>
+
     </table>
     <!-- -->
     <br>

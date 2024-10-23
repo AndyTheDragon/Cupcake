@@ -10,18 +10,24 @@ import io.javalin.http.Context; // Den korrekte Context import fra Javalin
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderController {
+public class OrderController
+{
 
-    public static void addRoutes(Javalin app, ConnectionPool pool) {
+    public static void addRoutes(Javalin app, ConnectionPool pool)
+    {
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, pool));
     }
 
-    private static void showOrderHistory(Context ctx, ConnectionPool pool) {
+    private static void showOrderHistory(Context ctx, ConnectionPool pool)
+    {
         List<Order> orders = new ArrayList<>();
-        try {
+        try
+        {
 
             orders = OrderMapper.getOrders(pool);
-        } catch (DatabaseException e) {
+        }
+        catch (DatabaseException e)
+        {
 
             ctx.attribute("message","Noget gik galt. " + e.getMessage());
         }

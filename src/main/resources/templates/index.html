@@ -31,6 +31,7 @@
         <ul class="navbar-nav mb-2 me-2 mb-lg-0">
           <li class="nav-item">
             <a href="/createuser" th:href="@{/createuser}" class="nav-link active" >Opret bruger</a>
+            <a href="/basket" th:href="@{/basket}" class="nav-link active">Gå til kurv</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -90,8 +91,8 @@
         </div>
       </div>
       <div class="row px-3 ">
-        <div class="col-auto ms-auto">
-          <button class="btn btn-xl btn-primary" type="submit">Læg i kurv</button>
+        <div class="col-auto ms-auto" method="post" formaction="/index">
+          <button class="btn btn-xl btn-primary" type="submit" formaction="/addcupcake">Læg i kurv</button>
         </div>
       </div>
     </form>

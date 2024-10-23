@@ -17,11 +17,16 @@ import java.util.List;
 public class OrderController
 {
 
-    public static void addRoutes(Javalin app, ConnectionPool pool){
+    public static void addRoutes(Javalin app, ConnectionPool pool)
+    {
         app.post("/addcupcake", ctx -> addCupcakeToOrder(ctx, pool));
+        app.get("/basket", ctx -> ctx.render("basket.html") );
+        app.get("/checkout", ctx -> ctx.render("checkout.html") );
+
     }
 
-    private static void addCupcakeToOrder(Context ctx, ConnectionPool pool) {
+    private static void addCupcakeToOrder(Context ctx, ConnectionPool pool)
+    {
         List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
         if (orderLineList == null) {
             orderLineList = new ArrayList<>();
@@ -52,7 +57,8 @@ public class OrderController
             ));
 
             int ordersum = 0;
-            for (OrderLine ol : orderLineList) {
+            for (OrderLine ol : orderLineList)
+            {
                 ordersum += ol.getPrice() * ol.getQuantity();
             }
 

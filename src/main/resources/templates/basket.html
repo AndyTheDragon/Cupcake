@@ -51,29 +51,30 @@
     <h1 class="display-1">Indkøbskurv</h1>
     <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
     <!-- Indkøbskurv her-->
-    <table th:if="${orderlines != null and #lists.size(orderlines)}">
+    <table th:if="${orderlines != null and #lists.size(orderlines) > 0}">
       <thead>
-        <tr>
-          <th>Odre</th>
-          <th>Odre</th>
-          <th>Odre</th>
+        <tr th:each="order : ${orderlines}">
+          <th th:text="${orderlines.quantity}"></th>
+          <th th:text="${orderlines.cupcake.getTopFlavour().name()}"></th>
+          <th th:text="${orderlines.cupcake.getBottomFlavour().name()}"></th>
+          <th th:text="${orderlines.price}"></th>
+          <td th:text="${order.price * orderline.quantity}">Total pris</td>
+
         </tr>
       </thead>
       <tbody >
       <tr th:each="order : ${orderlines}">
-        <td th:text="${order.name}">Odrenavn</td>
-        <td th:text="${order.datePlaced}">Bestilte dato</td>
-        <td th:text="${order.datePaid}">Dato betalt</td>
-        <td th:text="${order.dateCompleted}">ordre gennemført</td>
-        <td th:text="${order.status}">Status for odre</td>
-        <td th:text="${order.user}"> Bruger</td>
-        <td th:text="${order.orderLines}">Ordre linjer</td>
+        <td th:text="${order.quantity}">Antal cupcake(s)</td>
+        <td th:text="${order.cupcake.getTopFlavour().name() + ' / '
+         + ${orderline.cupcake.getBottomFlavour().name()}}">Cupcake</td>
+        <td th:text="${order.price}">Pris pr. stk</td>
+        <td th:text="${order.price * orderline.quantity}">Total pris</td>
       </tr>
       </tbody>
 
 
     </table>
-    <button type="submit" value="submit" formaction="/checkout">Gå til betaling</button>
+    <a href="/checkout" th:href="@{/checkout}">Gå til betaling</a>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

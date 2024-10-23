@@ -53,13 +53,12 @@
     <!-- Indkøbskurv her-->
     <table th:if="${orderlines != null and #lists.size(orderlines) > 0}">
       <thead>
-        <tr th:each="order : ${orderlines}">
-          <th th:text="${orderlines.quantity}"></th>
-          <th th:text="${orderlines.cupcake.getTopFlavour().name()}"></th>
-          <th th:text="${orderlines.cupcake.getBottomFlavour().name()}"></th>
-          <th th:text="${orderlines.price}"></th>
-          <td th:text="${order.price * orderline.quantity}">Total pris</td>
-
+        <tr>
+          <td>Antal</td>
+          <td>Cupcake top flavour</td>
+          <td>Cupcake bottom flavour</td>
+          <td>pris</td>
+          <td>Total pris</td>
         </tr>
       </thead>
       <tbody >

@@ -42,7 +42,7 @@
                    th:text="${orderline.quantity} + ' x ' + ${orderline.cupcake} + ' ' + (${orderline.price * orderline.quantity}) + ' kr'">
                 </a>
               </li>
-              <li th:if="${orderlines != null and #lists.size(orderlines) > 0}">
+              <li th:if="${orderlines != null and #lists.size(orderlines)}">
                 <hr class="dropdown-divider">
               </li>
               <li th:if="${ordersum != null}">

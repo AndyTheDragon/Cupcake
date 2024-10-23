@@ -51,6 +51,27 @@
     <h1 class="display-1">Indkøbskurv</h1>
     <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
     <!-- Indkøbskurv her-->
+    <table>
+      <thead>
+        <tr>
+          <th>Odre</th>
+          <th>Odre</th>
+          <th>Odre</th>
+        </tr>
+      </thead>
+      <tbody th:if="${orderlines != null and #lists.size(orderlines)}">
+      <tr th:each="order : ${orderlines}">
+        <td th:text="${}">Odrenavn</td>
+        <td th:text="${}">Bestilte dato</td>
+        <td th:text="${}">Dato betalt</td>
+        <td th:text="${}">ordre gennemført</td>
+        <td th:text="${}">Status for odre</td>
+        <td th:text="${}">Bruger ID</td>
+      </tr>
+      </tbody>
+
+
+    </table>
     <button type="submit" value="submit" formaction="/checkout">Gå til betaling</button>
   </div>
 </div>

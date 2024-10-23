@@ -6,6 +6,8 @@ import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper; // Sørg for at du har importeret din OrderMapper
 import io.javalin.Javalin;
 import io.javalin.http.Context; // Den korrekte Context import fra Javalin
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderController {
@@ -15,10 +17,10 @@ public class OrderController {
     }
 
     private static void showOrderHistory(Context ctx, ConnectionPool pool) {
-        List<Order> orders;
+        List<Order> orders = new ArrayList<>();
         try {
 
-            orders = OrderMapper.getOrder(pool);
+            orders = OrderMapper.getOrders(pool);
         } catch (DatabaseException e) {
 
             ctx.attribute("message","Noget gik galt. " + e.getMessage());

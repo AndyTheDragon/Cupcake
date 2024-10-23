@@ -22,7 +22,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav nav-underline me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#">Ordrer</a>
+            <a class="nav-link" aria-current="page" href="/ordrehistory" th:href="@{/ordrehistory}">Ordrer</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Kunder</a>
@@ -38,9 +38,9 @@
               <i class="bi bi-basket2"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li th:each="orderline : ${orderlines}">
+              <li th:each="orderline : ${session.orderlines}">
                 <a class="dropdown-item" href="#"
-                   th:text="${orderline.quantity} + ' x ' + ${orderline.cupcake} + ' ' + (${orderline.price * orderline.quantity}) + ' kr'">
+                   th:text="${orderline.quantity} + ' x ' + ${orderline.cupcake} + ' ' + (${(orderline.price/100) * orderline.quantity}) + ' kr'">
                 </a>
               </li>
               <li th:if="${orderlines != null and #lists.size(orderlines)}">
@@ -65,7 +65,7 @@
           <div class="form-floating">
             <select class="form-select " name="chooseBottom" id="chooseBottom" required>
               <option selected>Vælg bund</option>
-              <option th:each="flavour : ${bottomflavours}" th:value="${flavour.cupcakeflavourid}" th:text="${flavour.name}" value="vanilie">Vanilie</option>
+              <option th:each="flavour : ${bottomflavours}" th:value="${flavour.name}" th:text="${flavour.name}" value="vanilie">Vanilie</option>
             </select>
             <label for="chooseBottom">Vælg bund</label>
           </div>
@@ -74,7 +74,7 @@
           <div class="form-floating">
             <select class="form-select " name="chooseTop" id="chooseTop" required>
               <option selected>Vælg topping</option>
-              <option th:each="flavour : ${topflavours}" th:value="${flavour.cupcakeflavourid}" th:text="${flavour.name}" value="vanilie">Vanilie</option>
+              <option th:each="flavour : ${topflavours}" th:value="${flavour.name}" th:text="${flavour.name}" value="vanilie">Vanilie</option>
             </select>
             <label for="chooseTop">Vælg topping</label>
           </div>

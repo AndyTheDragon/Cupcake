@@ -31,7 +31,6 @@ public class Main
 
         // Routing
 
-        OrderController.addRoutes(app, connectionPool);
         CupcakeController.addRoutes(app, connectionPool);
         UserController.addRoutes(app, connectionPool);
         OrderController.addRoutes(app, connectionPool);

@@ -87,7 +87,7 @@ package controllers {
         + static void addRoutes()
         - static void addCupcakeToOrder()
         - static void addOrder()
-        - static void showOrder()
+        - static void showOrderHistory()
         - static void removeOrder()
     }
 }

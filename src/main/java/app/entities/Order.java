@@ -1,5 +1,6 @@
 package app.entities;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,6 +24,17 @@ public class Order
         this.orderLines = orderLines;
 
         this.datePlaced = LocalDate.now();
+    }
+
+    public  Order (int order_id, String name, Date date_placed, Date date_paid, Date date_completed, String status, int user_id){
+        this.orderId = order_id;
+        this.name = name;
+        this.datePlaced = LocalDate.now();
+        this.datePaid = LocalDate.now();
+        this.dateCompleted = LocalDate.now();
+        this.status = status;
+
+
     }
 
     public int getOrderId() {

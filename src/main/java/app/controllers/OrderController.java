@@ -18,6 +18,7 @@ public class OrderController
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, pool));
         app.post("/addcupcake", ctx -> addCupcakeToOrder(ctx, pool));
         app.get("/basket", ctx -> ctx.render("basket.html") );
+        app.get("/checkout", ctx -> ctx.render("checkout.html") );
     }
 
 

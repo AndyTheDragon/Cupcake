@@ -59,7 +59,7 @@
     <h1 class="display-1">Velkommen ombord</h1>
     <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
     <p class="h2 mb-5">Øens bedste cupcakes. Vælg og bestil her:</p>
-    <form>
+    <form action="/addcupcake" method="post">
       <div class="row px-3 g-5 mb-5">
         <div class="col-5">
           <div class="form-floating">

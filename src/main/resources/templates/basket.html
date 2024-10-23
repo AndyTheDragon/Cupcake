@@ -51,7 +51,7 @@
     <h1 class="display-1">Indkøbskurv</h1>
     <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
     <!-- Indkøbskurv her-->
-    <table th:if="${orderlines != null and #lists.size(orderlines) > 0}">
+    <table th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
       <thead>
         <tr>
           <td>Antal</td>
@@ -62,12 +62,13 @@
         </tr>
       </thead>
       <tbody >
-      <tr th:each="order : ${orderlines}">
+      <tr th:each="order : ${session.orderlines}">
         <td th:text="${order.quantity}">Antal cupcake(s)</td>
-        <td th:text="${order.cupcake.getTopFlavour().name() + ' / '
-         + ${orderline.cupcake.getBottomFlavour().name()}}">Cupcake</td>
+        <a class="dropdown-item" href="#"
+           th:text="${order.quantity} + ' x ' + ${order.cupcake} + ' ' + (${(order.price/100) * order.quantity}) + ' kr'">
+        </a>
         <td th:text="${order.price}">Pris pr. stk</td>
-        <td th:text="${order.price * orderline.quantity}">Total pris</td>
+        <td th:text="${order.price * order.quantity}">Total pris</td>
       </tr>
       </tbody>
 

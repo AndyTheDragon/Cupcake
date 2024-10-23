@@ -3,7 +3,8 @@ package app.entities;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Order {
+public class Order
+{
     private int orderId;
     private String name;
     private LocalDate datePlaced;
@@ -13,7 +14,8 @@ public class Order {
     private User user;
     private List<OrderLine> orderLines;
 
-    public Order(int orderId, String name, String status, User user, List<OrderLine> orderLines) {
+    public Order(int orderId, String name, String status, User user, List<OrderLine> orderLines)
+    {
         this.orderId = orderId;
         this.name = name;
         this.status = status;
@@ -55,11 +57,15 @@ public class Order {
         return orderLines;
     }
 
-    public void updateStatus(String updatedStatus){
+    public void updateStatus(String updatedStatus)
+    {
 
-        if(updatedStatus.equalsIgnoreCase("betalt")){
+        if(updatedStatus.equalsIgnoreCase("betalt"))
+        {
             datePaid = LocalDate.now();
-        }else if(updatedStatus.equalsIgnoreCase("leveret")){
+        }
+        else if(updatedStatus.equalsIgnoreCase("leveret"))
+        {
             dateCompleted = LocalDate.now();
         }
 

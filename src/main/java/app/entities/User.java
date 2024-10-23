@@ -1,13 +1,15 @@
 package app.entities;
 
-public class User {
+public class User
+{
     private int userId;
     private String username;
     private String password;
     private String role;
     private int balance;
 
-    public User(int userId, String username, String password, String role, int balance) {
+    public User(int userId, String username, String password, String role, int balance)
+    {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -35,11 +37,13 @@ public class User {
         return balance;
     }
 
-    public void deposit(){
+    public void deposit()
+    {
 
     }
 
-    public void buy(){
+    public void buy()
+    {
 
     }
 }

@@ -1,13 +1,15 @@
 package app.entities;
 
-public class CupcakeFlavour {
+public class CupcakeFlavour
+{
     private final int cupcakeFlavourId;
     private final int price;
     private final String flavourName;
     private final String flavourDesc;
     private final CupcakeType type;
 
-    public CupcakeFlavour(int cupcakeFlavourId, int price, String flavourName, String flavourDesc, CupcakeType type) {
+    public CupcakeFlavour(int cupcakeFlavourId, int price, String flavourName, String flavourDesc, CupcakeType type)
+    {
         this.cupcakeFlavourId = cupcakeFlavourId;
         this.price = price;
         this.flavourName = flavourName;
@@ -23,21 +25,30 @@ public class CupcakeFlavour {
         return price;
     }
 
-    public String getFlavour(){
+    public String getName()
+    {
+        return flavourName;
+    }
+
+    public String getFlavour()
+    {
         return "Smag navn: " + flavourName +
                 "Beskrivelse: " + flavourDesc;
     }
 
-    public CupcakeType getType() {
+    public CupcakeType getType()
+    {
         return type;
     }
 
-    public String getCupcakeType(){
+    public String getCupcakeType()
+    {
         return type.toString();
     }
 
     @Override
-    public String toString(){
+    public String toString()
+    {
         return cupcakeFlavourId + ", " +
                 type + ", " +
                 flavourName + ", " +

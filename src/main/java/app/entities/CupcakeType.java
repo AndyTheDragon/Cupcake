@@ -1,6 +1,7 @@
 package app.entities;
 
-public enum CupcakeType {
+public enum CupcakeType
+{
     TOP,
     BOTTOM
 }

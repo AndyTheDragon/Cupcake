@@ -4,15 +4,15 @@ import app.entities.Order;
 import app.exceptions.DatabaseException;
 
 import java.sql.*;
-
-import app.persistence.ConnectionPool;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderMapper {
 
 
 
 
-        public static Order getOrder(ConnectionPool pool){
+        public static List<Order> getOrders(ConnectionPool pool)throws DatabaseException{
             String sql = "SELECT order_id, name, date_placed, date_paid, date_completed, status, user_id FROM orders ORDER BY date_placed ASC\n";
             int order_id;
             String name;
@@ -28,7 +28,8 @@ public class OrderMapper {
                 try (PreparedStatement ps = connection.prepareStatement(sql))
                 {
                     ResultSet rs = ps.executeQuery();
-                    if (rs.next())
+                    List<Order> orders = new ArrayList<Order>();
+                    while (rs.next())
                     {
                         order_id = rs.getInt("Order_id");
                         name = rs.getString("Name");
@@ -37,18 +38,18 @@ public class OrderMapper {
                         date_completed = rs.getDate("Date completed");
                         status = rs.getString("Status");
                         user_id = rs.getInt("User_id");
-                        return new Order(order_id, name, date_placed, date_paid, date_completed,status, user_id);
-                    }
+                        orders.add(new Order(order_id, name, date_placed, date_paid, date_completed,status, user_id));
+
+                    } return orders;
                 }
             } catch (SQLException e)
+
             {
 
                 throw new DatabaseException(e.getMessage());
 
 
             }
-
-            return null;
 
         }
 

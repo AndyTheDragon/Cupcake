@@ -27,11 +27,18 @@
           <li class="nav-item">
             <a class="nav-link" href="#">Kunder</a>
           </li>
-          <li class="nav-item">
+          <!-- Check if user is authenticated -->
+          <li class="nav-item" th:if="${session.currentUser == null}">
             <a class="nav-link" href="/login">Login</a>
+          <li class="nav-item" th:if="${session.currentUser != null}">
+            <a class="nav-link" href="/logout">Logout</a>
           </li>
         </ul>
         <ul class="navbar-nav mb-2 me-2 mb-lg-0">
+          </li>
+          <li class="nav-item" th:if="${session.currentUser != null}">
+            <span class="nav-link">Hello, <span th:text="${session.currentUser.username}"></span></span>
+          </li>
           <li class="nav-item">
             <a href="/createuser" th:href="@{/createuser}" class="nav-link active" >Opret bruger</a>
           </li>

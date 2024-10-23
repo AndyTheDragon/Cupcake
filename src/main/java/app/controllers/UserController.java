@@ -90,7 +90,8 @@ public class UserController
                 }
         }
         public static void logout(Context ctx, ConnectionPool pool){
-                ctx.sessionAttribute("currentUser",null);
+                //Invalidate session
+                ctx.req().getSession().invalidate();
                 ctx.redirect("/");
         }
 }

@@ -19,6 +19,14 @@ public class OrderLine
         this.bottomFlavour = bottomFlavour;
     }
 
+    public OrderLine(int orderId, int quantity, Cupcake cupcake, int price)
+    {
+        this.orderId = orderId;
+        this.quantity = quantity;
+        this.cupcake = cupcake;
+        this.price = price;
+    }
+
     public int getOrderId() {
         return orderId;
     }

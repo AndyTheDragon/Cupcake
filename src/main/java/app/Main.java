@@ -5,7 +5,6 @@ import app.config.ThymeleafConfig;
 import app.controllers.OrderController;
 import app.controllers.UserController;
 import app.controllers.CupcakeController;
-import app.controllers.OrderController;
 import app.persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;

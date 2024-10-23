@@ -2,7 +2,6 @@ package app.persistence;
 
 import app.exceptions.DatabaseException;
 import app.entities.User;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -29,26 +28,26 @@ public class UserMapper {
         }
     }
 
-}
-                public static User login(String name, String password, ConnectionPool connectionPool) throws DataBaseException {
 
-                    String sql = "Select * from \"user\" where name=? and password=?";
-                    try (Connection connection = connectionPool.getConnection()) {
-                        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                            ps.setString(1, name);
-                            ps.setString(2, password);
-                            ResultSet rs = ps.executeQuery();
-                            if (rs.next()) {
-                                int id = rs.getInt("id");
-                                return new User(id, name, password);
-                            } else {
-                                throw new DataBaseException("fejl i login. Prøv igen");
-                            }
-                        }
+    public static User login(String username, String password, ConnectionPool connectionPool) throws DatabaseException {
 
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-
+        String sql = "Select * from \"users\" where username=? and password=?";
+        try (Connection connection = connectionPool.getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, username);
+                ps.setString(2, password);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    int id = rs.getInt("user_id");
+                    String role = rs.getString("role");
+                    int balance = rs.getInt("balance");
+                    return new User(id, username, password,role,balance);
+                } else {
+                    throw new DatabaseException("fejl i login. Prøv igen");
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

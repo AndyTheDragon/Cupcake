@@ -31,7 +31,7 @@ public class OrderController {
         String quantityString = ctx.formParam("chooseAmount");
         if (quantityString == null) {
             ctx.sessionAttribute("error", "Please select a quantity.");
-            ctx.redirect("/");
+            CupcakeController.showFrontpage(ctx,pool);
             return;
         }
         int quantity = Integer.parseInt(quantityString);
@@ -58,8 +58,8 @@ public class OrderController {
             ctx.sessionAttribute("orderlines", orderLineList);
             ctx.redirect("/");
         } catch (DatabaseException e){
-            ctx.sessionAttribute("error", "Database error: " + e.getMessage());
-            ctx.redirect("/");
+            ctx.attribute("message","Database error: " + e.getMessage());
+            CupcakeController.showFrontpage(ctx,pool);
         }
     }
 

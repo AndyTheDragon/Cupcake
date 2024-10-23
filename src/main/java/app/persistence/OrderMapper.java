@@ -12,7 +12,7 @@ public class OrderMapper {
 
 
 
-        public static Order getOrder(){
+        public static Order getOrder(ConnectionPool pool){
             String sql = "SELECT order_id, name, status FROM orders ORDER BY date_placed ASC";
             int order_id;
             String name;
@@ -21,7 +21,7 @@ public class OrderMapper {
             Date date_completed;
 
 
-            try (Connection connection = connectionPool.getConnection())
+            try (Connection connection = pool.getConnection())
             {
                 try (PreparedStatement ps = connection.prepareStatement(sql))
                 {
@@ -30,9 +30,9 @@ public class OrderMapper {
                     {
                         order_id = rs.getInt("Order_id");
                         name = rs.getString("Name");
-                        date_placed = rs.getString("Date placed");
-                        date_paid = rs.getString("Date paid");
-                        date_completed = rs.getInt("Date completed");
+                        date_placed = rs.getDate("Date placed");
+                        date_paid = rs.getDate("Date paid");
+                        date_completed = rs.getDate("Date completed");
                         return new Order(order_id, name, date_placed, date_paid, date_completed);
                     }
                 }

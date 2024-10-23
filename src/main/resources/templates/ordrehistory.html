@@ -72,13 +72,13 @@
                                 </tr>
                                 </thead>
                                 <tbody class="table-body">
-                                <tr class="cell-1" th:text="${order.orderid}">
+                                <tr class="cell-1" th:each="order : ${orders}">
                                     <td class="text-center">
                                         <div class="toggle-btn">
                                             <div class="inner-circle"></div>
                                         </div>
                                     </td>
-                                    <td th:text="${order.orderid}></td>
+                                    <td th:text="${order.orderid}"></td>
                                     <td>Gasper Antunes</td>
                                     <td><span class="badge badge-success">Fullfilled</span></td>
                                     <td></td>

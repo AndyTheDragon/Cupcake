@@ -36,12 +36,6 @@
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-basket2"></i>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#">6 x Chocolate/Crispy 120 kr</a></li>
-              <li><a class="dropdown-item" href="#">2 x Vanilla/Raspberry 60 kr</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Betal nu 180 kr</a></li>
-            </ul>
           </li>
         </ul>
       </div>
@@ -50,7 +44,12 @@
   <div class="content bg-light rounded-4 p-5">
     <h1 class="display-1">Checkout</h1>
     <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
-    <button type="submit" value="submit">
+
+    <form method="post" action="/checkout">
+      <button class="btn btn-lg btn-primary" type="submit" value="submit"> Betal med store credit</button>
+      <button class="btn btn-lg btn-primary" type="submit" value="submit"> Afhent din ordre i butikken</button>
+    </form>
+
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

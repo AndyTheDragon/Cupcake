@@ -16,13 +16,23 @@ public class OrderController
     public static void addRoutes(Javalin app, ConnectionPool pool)
     {
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, pool));
-        app.post("/addcupcake", ctx -> addCupcakeToOrder(ctx, pool));
+        app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, pool));
         app.get("/basket", ctx -> ctx.render("basket.html") );
         app.get("/checkout", ctx -> ctx.render("checkout.html") );
+        app.post("/checkout", ctx -> checkout(ctx, pool) );
     }
 
+    private static void checkout(Context ctx, ConnectionPool pool)
+    {
 
-    private static void addCupcakeToOrder(Context ctx, ConnectionPool pool) {
+        try
+        {
+            OrderMapper.newOrderToOrderLines(orderId, orderLines, pool);
+            OrderMapper.newOrdersToOrdersTable();
+        }
+    }
+
+    private static void addCupcakeToBasket(Context ctx, ConnectionPool pool) {
         List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
         if (orderLineList == null) {
             orderLineList = new ArrayList<>();

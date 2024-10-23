@@ -25,17 +25,24 @@ public class CupcakeFlavour
         return price;
     }
 
+    public String getName()
+    {
+        return flavourName;
+    }
+
     public String getFlavour()
     {
         return "Smag navn: " + flavourName +
                 "Beskrivelse: " + flavourDesc;
     }
 
-    public CupcakeType getType() {
+    public CupcakeType getType()
+    {
         return type;
     }
 
-    public String getCupcakeType(){
+    public String getCupcakeType()
+    {
         return type.toString();
     }
 

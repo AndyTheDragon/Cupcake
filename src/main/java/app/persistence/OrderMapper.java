@@ -15,7 +15,7 @@ import java.util.Locale;
 public class OrderMapper
 {
     public static void newOrder(String name, Date datePlaced, Date datePaid, Date dateCompleted,
-                                String status, int userId, ConnectionPool connectionPool) throws DatabaseException
+                                String status, int userId, ConnectionPool connectionPool) throws DatabaseException, SQLException
     {
         String sql = "insert into orders (name, date_placed, date_paid, date_completed, status, user_id)" +
                 " values (?,?,?,?,?,?)";
@@ -29,19 +29,13 @@ public class OrderMapper
             ps.setDate(4, dateCompleted);
             ps.setString(5, status);
             ps.setInt(6, userId);
+
+
+
+        }
+    }
     public static CupcakeFlavour getCupcakeFlavour(String flavourName, CupcakeType cupcakeType, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "SELECT * FROM cupcake_flavours WHERE flavour_name = ? AND ";
-
-            int rowsAffected = ps.executeUpdate();
-            if (rowsAffected != 1)
-            {
-                throw new DatabaseException("Fejl ved oprettelse af ny ordre");
-            }
-        if (cupcakeType == CupcakeType.TOP) {
-            sql += "if_top_flavour = true";
-        } else {
-            sql += "is_bottom_flavour = true";
-        }
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -62,4 +56,3 @@ public class OrderMapper
             throw new DatabaseException("Error getting cupcake flavour from database", e);
         }
     }
-}

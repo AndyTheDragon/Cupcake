@@ -39,7 +39,8 @@ public class OrderController
         }
         int quantity = Integer.parseInt(quantityString);
 
-        try {
+        try
+        {
             CupcakeFlavour topFlavour = OrderMapper.getCupcakeFlavour(topFlavourName, CupcakeType.TOP, pool);
             CupcakeFlavour bottomFlavour = OrderMapper.getCupcakeFlavour(bottomFlavourName, CupcakeType.BOTTOM, pool);
             Cupcake cupcake = new Cupcake(topFlavour, bottomFlavour);
@@ -60,7 +61,8 @@ public class OrderController
             ctx.sessionAttribute("ordersum", ordersum);
             ctx.sessionAttribute("orderlines", orderLineList);
             ctx.redirect("/");
-        } catch (DatabaseException e){
+        } catch (DatabaseException e)
+        {
             ctx.attribute("message","Database error: " + e.getMessage());
             CupcakeController.showFrontpage(ctx,pool);
         }

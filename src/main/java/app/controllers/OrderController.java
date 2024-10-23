@@ -8,6 +8,7 @@ import io.javalin.http.Context;
 import app.entities.OrderLine;
 import app.entities.Cupcake;
 import app.entities.CupcakeFlavour;
+import app.entities.CupcakeType;
 import app.persistence.ConnectionPool;
 
 import java.util.ArrayList;

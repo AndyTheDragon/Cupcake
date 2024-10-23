@@ -17,7 +17,7 @@ public class CupcakeController
         app.get("/", ctx ->  showFrontpage(ctx,dbConnection));
     }
 
-    private static void showFrontpage(Context ctx, ConnectionPool dbConnection)
+    public static void showFrontpage(Context ctx, ConnectionPool dbConnection)
     {
         try
         {

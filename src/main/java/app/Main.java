@@ -31,6 +31,8 @@ public class Main
 
         // Routing
 
+        app.get("/", ctx ->  ctx.render("index.html"));
+        OrderController.addRoutes(app, connectionPool);
         CupcakeController.addRoutes(app, connectionPool);
         UserController.addRoutes(app, connectionPool);
         OrderController.addRoutes(app, connectionPool);

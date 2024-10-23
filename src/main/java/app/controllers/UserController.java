@@ -47,7 +47,7 @@ public class UserController
 
         private static boolean passwordCheck(Context ctx, String password, String confirmPassword)
         {
-                String specialCharacters = "!#¤%&/()=?";
+                String specialCharacters = "!#¤%&/()=?$§£€-_[]{}";
                 String numbers = "1234567890";
                 boolean hasSpecialChar = password.chars().anyMatch(ch -> specialCharacters.indexOf(ch) >= 0);
                 boolean hasNumber = password.chars().anyMatch(ch -> numbers.indexOf(ch) >= 0);

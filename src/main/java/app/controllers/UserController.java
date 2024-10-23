@@ -7,8 +7,6 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import app.persistence.UserMapper;
 
-import java.util.List;
-
 public class UserController
         {
         public static void addRoutes(Javalin app, ConnectionPool pool)
@@ -80,8 +78,11 @@ public class UserController
                         User user = UserMapper.login(name, password, connectionPool);
                         ctx.sessionAttribute("currentUser", user);
                         ctx.render("tasks.html");
-                } catch (DataBaseException e) {
+                } catch (DatabaseException e) {
                         ctx.attribute("message", e.getMessage());
+                        ctx.render("index.html");
+                } catch (Exception e){
+                        ctx.attribute("message", "An unexpected error occurred. Please try again.");
                         ctx.render("index.html");
                 }
         }

@@ -26,8 +26,6 @@ public class Cupcake
     @Override
     public String toString()
     {
-        return "Smag på øverste lag: " + top.getFlavour() +
-                "\nSmag på nederste lag: " + bottom.getFlavour() +
-                "\nTotal pris: " + getPrice();
+        return top.getName() + "-" + bottom.getName() + " Cupcake";
     }
 }

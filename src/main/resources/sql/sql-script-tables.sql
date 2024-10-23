@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS public.orders
     date_paid date NULL,
     date_completed date NULL,
     status character varying(64) NOT NULL,
-    user_id integer NOT NULL,
+    user_id integer NULL,
     PRIMARY KEY (order_id)
 );
 

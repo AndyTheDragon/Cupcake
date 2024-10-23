@@ -30,7 +30,7 @@
         </ul>
         <ul class="navbar-nav mb-2 me-2 mb-lg-0">
           <li class="nav-item">
-            <a href="/createuser" th:href="@{/createuser}" class="nav-link active" >Opret bruger</a>
+            <a class="nav-link active" href="#">Bruger</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -48,45 +48,17 @@
     </div>
   </nav>
   <div class="content bg-light rounded-4 p-5">
-    <h1 class="display-1">Velkommen ombord</h1>
+    <h1 class="display-1">Opret din bruger</h1>
     <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
-    <p class="h2 mb-5">Øens bedste cupcakes. Vælg og bestil her:</p>
-    <form>
-      <div class="row px-3 g-5 mb-5">
-        <div class="col-5">
-          <div class="form-floating">
-            <select class="form-select " name="chooseBottom" id="chooseBottom" required>
-              <option selected>Vælg bund</option>
-              <option th:each="flavour : ${bottomflavours}" th:value="${flavour.cupcakeflavourid}" th:text="${flavour.name}" value="vanilie">Vanilie</option>
-            </select>
-            <label for="chooseBottom">Vælg bund</label>
-          </div>
-        </div>
-        <div class="col-5">
-          <div class="form-floating">
-            <select class="form-select " name="chooseTop" id="chooseTop" required>
-              <option selected>Vælg topping</option>
-              <option th:each="flavour : ${topflavours}" th:value="${flavour.cupcakeflavourid}" th:text="${flavour.name}" value="vanilie">Vanilie</option>
-            </select>
-            <label for="chooseTop">Vælg topping</label>
-          </div>
-        </div>
-        <div class="col-2">
-          <div class="form-floating">
-            <select class="form-select" name="chooseAmount" id="chooseAmount" required>
-              <option selected>Vælg antal</option>
-              <option value="3">3</option>
-              <option value="6">6</option>
-            </select>
-            <label for="chooseAmount">Vælg antal</label>
-          </div>
-        </div>
-      </div>
-      <div class="row px-3 ">
-        <div class="col-auto ms-auto">
-          <button class="btn btn-xl btn-primary" type="submit">Læg i kurv</button>
-        </div>
-      </div>
+    <!-- opret bruger formular-->
+    <form method="post" action="/createuser">
+      <label class="form-label" for="username">Brugernavn: </label>
+      <input class="form-control form-control-lg" type="text" id="username" name="username"><br><br>
+      <label class="form-label" for="password">Password: </label>
+      <input class="form-control form-control-lg" type="password"  id="password" name="password"><br><br>
+      <label class="form-label" for="confirmpassword">Confirm Password: </label>
+      <input class="form-control form-control-lg" type="password" id="confirmpassword" name="confirmpassword"><br><br>
+      <button class="btn btn-lg btn-primary" type="submit" value="submit">Opret bruger</button>
     </form>
   </div>
 </div>

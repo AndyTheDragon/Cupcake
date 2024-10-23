@@ -2,10 +2,10 @@
 -- Please log an issue at https://github.com/pgadmin-org/pgadmin4/issues/new/choose if you find any bugs, including reproduction steps.
 BEGIN;
 
-DROP TABLE IF EXISTS public.users;
-DROP TABLE IF EXISTS public.orders;
-DROP TABLE IF EXISTS public.order_lines;
-DROP TABLE IF EXISTS public.cupcake_flavours;
+DROP TABLE IF EXISTS public.cupcake_flavours CASCADE;
+DROP TABLE IF EXISTS public.order_lines CASCADE;
+DROP TABLE IF EXISTS public.orders CASCADE;
+DROP TABLE IF EXISTS public.users CASCADE;
 
 
 CREATE TABLE IF NOT EXISTS public.users
@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS public.users
     user_id serial NOT NULL,
     username character varying(64) NOT NULL,
     password character varying(64) NOT NULL,
+    balance integer default 0,
     role character varying(12) NOT NULL,
     PRIMARY KEY (user_id)
 );

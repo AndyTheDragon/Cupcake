@@ -41,13 +41,13 @@ public class UserMapper {
                     int id = rs.getInt("user_id");
                     String role = rs.getString("role");
                     int balance = rs.getInt("balance");
-                    return new User(id, username, password,role,balance);
+                    return new User(id, username, password, role, balance);
                 } else {
                     throw new DatabaseException("Fejl ved login. Prøv igen");
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException("Ukendt fejl, kontakt Olker cupcakes, Hvis problemet forbliver");
         }
     }
 }

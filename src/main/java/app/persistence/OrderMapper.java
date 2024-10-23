@@ -28,6 +28,7 @@ public class OrderMapper {
             ps.setInt(6, userId);
 
 
+
         }
     }
 
@@ -49,6 +50,7 @@ public class OrderMapper {
                 if (rs.next()) {
                     int flavourId = rs.getInt("flavour_id");
                     int price = rs.getInt("price");
+                    LocalDate d = rs.getObject("tabelnavn", LocalDate.class);
                     String flavourDesc = "";
                     return new CupcakeFlavour(flavourId, price, flavourName, flavourDesc, cupcakeType);
                 } else {

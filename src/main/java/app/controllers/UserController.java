@@ -13,6 +13,8 @@ public class UserController
         {
                 app.get("/createuser", ctx -> ctx.render("createuser.html") );
                 app.post("/createuser", ctx -> createUser(ctx, pool));
+                app.get("/login", ctx -> ctx.render("login.html"));
+                app.post("/login", ctx -> login(ctx, pool));
         }
 
         private static void createUser(Context ctx, ConnectionPool dbConnection)
@@ -77,7 +79,7 @@ public class UserController
                 try {
                         User user = UserMapper.login(name, password, connectionPool);
                         ctx.sessionAttribute("currentUser", user);
-                        ctx.render("tasks.html");
+                        ctx.render("index.html");
                 } catch (DatabaseException e) {
                         ctx.attribute("message", e.getMessage());
                         ctx.render("index.html");

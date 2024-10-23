@@ -15,6 +15,7 @@ public class UserController
                 app.post("/createuser", ctx -> createUser(ctx, pool));
                 app.get("/login", ctx -> ctx.render("login.html"));
                 app.post("/login", ctx -> login(ctx, pool));
+                app.get("/logout", ctx -> logout(ctx, pool));
         }
 
         private static void createUser(Context ctx, ConnectionPool dbConnection)
@@ -87,5 +88,9 @@ public class UserController
                         ctx.attribute("message", "An unexpected error occurred. Please try again.");
                         ctx.render("index.html");
                 }
+        }
+        public static void logout(Context ctx, ConnectionPool pool){
+                ctx.sessionAttribute("currentUser",null);
+                ctx.redirect("/");
         }
 }

@@ -43,7 +43,7 @@ public class UserMapper {
                     int balance = rs.getInt("balance");
                     return new User(id, username, password,role,balance);
                 } else {
-                    throw new DatabaseException("fejl i login. Prøv igen");
+                    throw new DatabaseException("Fejl ved login. Prøv igen");
                 }
             }
         } catch (SQLException e) {

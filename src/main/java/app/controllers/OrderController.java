@@ -30,6 +30,6 @@ public class OrderController {
         ctx.attribute("orders", orders);
 
         // Render Thymeleaf-skabelonen
-        ctx.render("/orderhistory/ordrehistory.html");
+        ctx.render("/ordrehistory.html");
     }
 }

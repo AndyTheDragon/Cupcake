@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.exceptions.DatabaseException;
+import app.entities.User;
 import app.persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -12,6 +13,9 @@ public class UserController
         {
                 app.get("/createuser", ctx -> ctx.render("createuser.html") );
                 app.post("/createuser", ctx -> createUser(ctx, pool));
+                app.get("/login", ctx -> ctx.render("login.html"));
+                app.post("/login", ctx -> login(ctx, pool));
+                app.get("/logout", ctx -> logout(ctx, pool));
         }
 
         private static void createUser(Context ctx, ConnectionPool dbConnection)
@@ -69,5 +73,25 @@ public class UserController
 
         private static void customizeCupcake(Context ctx, ConnectionPool pool) {
 
+        }
+        public static void login(Context ctx, ConnectionPool connectionPool) {
+                String name = ctx.formParam("username");
+                String password = ctx.formParam("password");
+                try {
+                        User user = UserMapper.login(name, password, connectionPool);
+                        ctx.sessionAttribute("currentUser", user);
+                        ctx.render("index.html");
+                } catch (DatabaseException e) {
+                        ctx.attribute("message", e.getMessage());
+                        ctx.render("index.html");
+                } catch (Exception e){
+                        ctx.attribute("message", "An unexpected error occurred. Please try again.");
+                        ctx.render("index.html");
+                }
+        }
+        public static void logout(Context ctx, ConnectionPool pool){
+                //Invalidate session
+                ctx.req().getSession().invalidate();
+                ctx.redirect("/");
         }
 }

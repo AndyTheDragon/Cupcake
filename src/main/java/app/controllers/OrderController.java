@@ -7,6 +7,8 @@ import app.persistence.OrderMapper; // Sørg for at du har importeret din OrderM
 import io.javalin.Javalin;
 import io.javalin.http.Context; // Den korrekte Context import fra Javalin
 
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,13 +24,29 @@ public class OrderController
         app.post("/checkout", ctx -> checkout(ctx, pool) );
     }
 
-    private static void checkout(Context ctx, ConnectionPool pool)
+    private static void checkout(Context ctx, ConnectionPool pool) throws DatabaseException
     {
+        List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
+        String username = ctx.formParam("username");
+        String password = ctx.formParam("password");
+        String currentUser = ctx.sessionAttribute("session.currentUser");
+
+
+
+        LocalDate datePlaced = LocalDate.now();
+        LocalDate datePaid = LocalDate.now();
+        LocalDate dateCompleted = LocalDate.now().plusDays(2);
+
+        String status = "betalt";
+        int orderId = Integer.parseInt(currentUser);
 
         try
         {
-            OrderMapper.newOrderToOrderLines(orderId, orderLines, pool);
-            OrderMapper.newOrdersToOrdersTable();
+            OrderMapper.newOrdersToOrdersTable(username, datePlaced, datePaid, dateCompleted, status, pool);
+            OrderMapper.newOrderToOrderLines(orderId, orderLineList, pool);
+        } catch (DatabaseException e)
+        {
+            throw new DatabaseException(e.getMessage());
         }
     }
 

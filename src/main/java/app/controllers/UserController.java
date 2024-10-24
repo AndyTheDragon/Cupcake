@@ -7,16 +7,14 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import app.persistence.UserMapper;
 
-public class UserController
-        {
-        public static void addRoutes(Javalin app, ConnectionPool pool)
-        {
-                app.get("/createuser", ctx -> ctx.render("createuser.html") );
-                app.post("/createuser", ctx -> createUser(ctx, pool));
-                app.get("/login", ctx -> ctx.render("login.html"));
-                app.post("/login", ctx -> doLogin(ctx, pool));
-                app.get("/logout", ctx -> doLogout(ctx, pool));
-        }
+public class UserController {
+    public static void addRoutes(Javalin app, ConnectionPool pool) {
+        app.get("/createuser", ctx -> ctx.render("createuser.html"));
+        app.post("/createuser", ctx -> createUser(ctx, pool));
+        app.get("/login", ctx -> ctx.render("login.html"));
+        app.post("/login", ctx -> doLogin(ctx, pool));
+        app.get("/logout", ctx -> doLogout(ctx, pool));
+    }
 
     private static void createUser(Context ctx, ConnectionPool dbConnection) {
         String username = ctx.formParam("username");
@@ -34,7 +32,7 @@ public class UserController
             try {
                 UserMapper.createUser(username, password, dbConnection);
                 ctx.attribute("message", "du er nu oprettet");
-                CupcakeController.showFrontpage(ctx,dbConnection);
+                CupcakeController.showFrontpage(ctx, dbConnection);
             } catch (DatabaseException e) {
                 if (e.getMessage().contains("duplicate key value violates unique constraint")) {
                     ctx.attribute("message", "Brugernavnet er allerede i brug. Prøv et andet.");
@@ -73,30 +71,26 @@ public class UserController
         return false;
     }
 
-        private static void orderCupcake(Context ctx, ConnectionPool pool) {
+    private static void orderCupcake(Context ctx, ConnectionPool pool) {
 
-        }
+    }
 
-        public static void doLogin(Context ctx, ConnectionPool dbConnection)
-        {
-                String name = ctx.formParam("username");
-                String password = ctx.formParam("password");
-                try
-                {
-                        User user = UserMapper.login(name, password, dbConnection);
-                        ctx.sessionAttribute("currentUser", user);
-                }
-                catch (DatabaseException e)
-                {
-                        ctx.attribute("message", e.getMessage());
-                }
-                CupcakeController.showFrontpage(ctx,dbConnection);
+    public static void doLogin(Context ctx, ConnectionPool dbConnection) {
+        String name = ctx.formParam("username");
+        String password = ctx.formParam("password");
+        try {
+            User user = UserMapper.login(name, password, dbConnection);
+            ctx.sessionAttribute("currentUser", user);
+        } catch (DatabaseException e) {
+            ctx.attribute("message", e.getMessage());
+        }
+        CupcakeController.showFrontpage(ctx, dbConnection);
 
-        }
-        public static void doLogout(Context ctx, ConnectionPool pool)
-        {
-                //Invalidate session
-                ctx.req().getSession().invalidate();
-                ctx.redirect("/");
-        }
+    }
+
+    public static void doLogout(Context ctx, ConnectionPool pool) {
+        //Invalidate session
+        ctx.req().getSession().invalidate();
+        ctx.redirect("/");
+    }
 }

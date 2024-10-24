@@ -27,32 +27,43 @@ public class OrderMapper
             ps.setInt(4, user.getUserId());
 
             int rowsAffected = ps.executeUpdate();
+
             if (rowsAffected != 1)
             {
                 throw new DatabaseException("fejl........");
             }
 
+            try (ResultSet rs = ps.getGeneratedKeys())
+            {
+                if (rs.next())
+                {
+                    // Return the generated orderId
+                    return rs.getInt(1);  // assuming orderId is in the first column
+                }
+                else
+                {
+                    throw new DatabaseException("Kunne ikke hente genereret ordre-id.");
+                }
+            }
         } catch (SQLException e)
         {
             throw new DatabaseException(e.getMessage());
         }
-        return user.getUserId();
     }
 
-    public static void newOrderToOrderLines(int orderId, List<OrderLine> orderLines, ConnectionPool pool) throws DatabaseException
+    public static void newOrderToOrderLines(List<OrderLine> orderLines, ConnectionPool pool) throws DatabaseException
     {
-        String sql = "INSERT INTO order_lines (order_line_id, quantity, top_flavour, bottom_flavour, price, order_id) VALUES (?,?,?,?,?,?)";
+        String sql = "INSERT INTO order_lines (quantity, top_flavour, bottom_flavour, price, order_id) VALUES (?,?,?,?,?)";
         try (Connection connection = pool.getConnection())
         {
             for (OrderLine order : orderLines)
             {
                 PreparedStatement ps = connection.prepareStatement(sql);
-                ps.setInt(1, orderId);
-                ps.setInt(2, order.getQuantity());
-                ps.setInt(3, order.getTopFlavorId());
-                ps.setInt(4, order.getBottomFlavourId());
-                ps.setInt(5, order.getPrice());
-                ps.setInt(6, order.getOrderId());
+                ps.setInt(1, order.getQuantity());
+                ps.setInt(2, order.getCupcake().getCupcakeTop().getCupcakeFlavourId());
+                ps.setInt(3, order.getCupcake().getCupcakeBottom().getCupcakeFlavourId());
+                ps.setInt(4, order.getPrice());
+                ps.setInt(5, order.getOrderId());
 
                 int rowsAffected = ps.executeUpdate();
 

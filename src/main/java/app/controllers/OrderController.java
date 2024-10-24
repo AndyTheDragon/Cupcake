@@ -60,8 +60,8 @@ public class OrderController
             ctx.render("checkout.html");
 
             // opretter ordren i orders & orderlines
-            int orderId = OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, user, pool); // egentlig er det user_id
-            OrderMapper.newOrderToOrderLines(orderId, orderLineList, pool);
+            OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, user, pool); // egentlig er det user_id
+            OrderMapper.newOrderToOrderLines(orderLineList, pool);
 
         } catch (DatabaseException e)
         {

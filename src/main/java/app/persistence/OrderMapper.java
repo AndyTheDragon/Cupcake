@@ -51,7 +51,7 @@ public class OrderMapper
         }
     }
 
-    public static void newOrderToOrderLines(List<OrderLine> orderLines, ConnectionPool pool) throws DatabaseException
+    public static void newOrderToOrderLines(int orderId, List<OrderLine> orderLines, ConnectionPool pool) throws DatabaseException
     {
         String sql = "INSERT INTO order_lines (quantity, top_flavour, bottom_flavour, price, order_id) VALUES (?,?,?,?,?)";
         try (Connection connection = pool.getConnection())
@@ -63,7 +63,7 @@ public class OrderMapper
                 ps.setInt(2, order.getCupcake().getCupcakeTop().getCupcakeFlavourId());
                 ps.setInt(3, order.getCupcake().getCupcakeBottom().getCupcakeFlavourId());
                 ps.setInt(4, order.getPrice());
-                ps.setInt(5, order.getOrderId());
+                ps.setInt(5, orderId);
 
                 int rowsAffected = ps.executeUpdate();
 

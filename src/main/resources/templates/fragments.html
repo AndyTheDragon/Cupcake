@@ -64,7 +64,7 @@
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li th:if="${session.ordersum != null}">
-                                    <a class="dropdown-item" href="#" th:href="@{/basket}" th:text="'Bestil nu ' + ${(session.ordersum)/100} + ' kr'"></a>
+                                    <a class="dropdown-item"  href="/#" th:href="@{/basket}" th:text="'Bestil nu ' + ${(session.ordersum)/100} + ' kr'"></a>
                                 </li>
                             </ul>
                         </li>

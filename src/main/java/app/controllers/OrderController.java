@@ -21,7 +21,7 @@ public class OrderController
     public static void addRoutes(Javalin app, ConnectionPool pool)
     {
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, pool));
-        app.post("/addcupcake", ctx -> addCupcakeToOrder(ctx, pool));
+        app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, pool));
         app.get("/order/delete", ctx -> deleteOrder(ctx,pool));
         app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, pool));
         app.get("/basket", ctx -> ctx.render("basket.html") );
@@ -63,8 +63,8 @@ public class OrderController
             ctx.render("checkout.html");
 
             // opretter ordren i orders & orderlines
-            OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, user, pool); // egentlig er det user_id
-            OrderMapper.newOrderToOrderLines(orderLineList, pool);
+            int orderId = OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, user, pool);
+            OrderMapper.newOrderToOrderLines(orderId, orderLineList, pool);
 
         } catch (DatabaseException e)
         {

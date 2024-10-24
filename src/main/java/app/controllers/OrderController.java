@@ -21,7 +21,6 @@ public class OrderController
     public static void addRoutes(Javalin app, ConnectionPool pool)
     {
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, pool));
-        app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, pool));
         app.get("/order/delete", ctx -> deleteOrder(ctx,pool));
         app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, pool));
         app.get("/basket", ctx -> ctx.render("basket.html") );
@@ -77,9 +76,11 @@ public class OrderController
 
     }
 
-    private static void addCupcakeToBasket(Context ctx, ConnectionPool pool) {
+    private static void addCupcakeToBasket(Context ctx, ConnectionPool pool)
+    {
         List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
-        if (orderLineList == null) {
+        if (orderLineList == null)
+        {
             orderLineList = new ArrayList<>();
         }
 
@@ -87,14 +88,16 @@ public class OrderController
         String bottomFlavourName = ctx.formParam("chooseBottom");
 
         String quantityString = ctx.formParam("chooseAmount");
-        if (quantityString == null) {
+        if (quantityString == null)
+        {
             ctx.sessionAttribute("error", "Please select a quantity.");
             CupcakeController.showFrontpage(ctx,pool);
             return;
         }
         int quantity = Integer.parseInt(quantityString);
 
-        try {
+        try
+        {
             CupcakeFlavour topFlavour = OrderMapper.getCupcakeFlavour(topFlavourName, CupcakeType.TOP, pool);
             CupcakeFlavour bottomFlavour = OrderMapper.getCupcakeFlavour(bottomFlavourName, CupcakeType.BOTTOM, pool);
             Cupcake cupcake = new Cupcake(topFlavour, bottomFlavour);
@@ -115,7 +118,9 @@ public class OrderController
             ctx.sessionAttribute("ordersum", ordersum);
             ctx.sessionAttribute("orderlines", orderLineList);
             ctx.redirect("/");
-        } catch (DatabaseException e){
+        }
+        catch (DatabaseException e)
+        {
             ctx.attribute("message","Database error: " + e.getMessage());
             CupcakeController.showFrontpage(ctx,pool);
         }

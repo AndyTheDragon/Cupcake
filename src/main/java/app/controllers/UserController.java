@@ -9,13 +9,13 @@ import app.persistence.UserMapper;
 
 public class UserController
         {
-        public static void addRoutes(Javalin app, ConnectionPool pool)
+        public static void addRoutes(Javalin app, ConnectionPool dbConnection)
         {
                 app.get("/createuser", ctx -> ctx.render("createuser.html") );
-                app.post("/createuser", ctx -> createUser(ctx, pool));
+                app.post("/createuser", ctx -> createUser(ctx, dbConnection));
                 app.get("/login", ctx -> ctx.render("login.html"));
-                app.post("/login", ctx -> doLogin(ctx, pool));
-                app.get("/logout", ctx -> doLogout(ctx, pool));
+                app.post("/login", ctx -> doLogin(ctx, dbConnection));
+                app.get("/logout", ctx -> doLogout(ctx));
         }
 
         private static void createUser(Context ctx, ConnectionPool dbConnection)
@@ -69,10 +69,6 @@ public class UserController
                 }
         }
 
-        private static void orderCupcake(Context ctx, ConnectionPool pool) {
-
-        }
-
         public static void doLogin(Context ctx, ConnectionPool dbConnection)
         {
                 String name = ctx.formParam("username");
@@ -89,7 +85,7 @@ public class UserController
                 CupcakeController.showFrontpage(ctx,dbConnection);
 
         }
-        public static void doLogout(Context ctx, ConnectionPool pool)
+        public static void doLogout(Context ctx)
         {
                 //Invalidate session
                 ctx.req().getSession().invalidate();

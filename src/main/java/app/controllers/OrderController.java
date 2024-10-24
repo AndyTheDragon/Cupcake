@@ -7,10 +7,6 @@ import app.persistence.OrderMapper; // Sørg for at du har importeret din OrderM
 import app.persistence.UserMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context; // Den korrekte Context import fra Javalin
-import org.jetbrains.annotations.NotNull;
-
-import javax.xml.crypto.Data;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +32,7 @@ public class OrderController
         ctx.redirect("/");
     }
 
-    private static void checkout(Context ctx, ConnectionPool pool) throws DatabaseException
+    private static void checkout(Context ctx, ConnectionPool pool)
     {
         // hvis brugeren er logget ind - betal med store credit
 

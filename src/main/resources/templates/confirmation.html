@@ -14,6 +14,7 @@
   <header th:replace="~{fragments :: header}"></header>
   <div class="content bg-light rounded-4 p-5">
     <h1 class="display-1">Bekræftelse på din ordre</h1>
+    <!--/*@thymesVar id="message" type="string"*/-->
     <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
     <!-- log ind bruger formular-->
 

@@ -108,7 +108,7 @@ public class OrderController
 
             int ordersum = 0;
             for (OrderLine ol : orderLineList) {
-                ordersum += ol.getPrice() * ol.getQuantity();
+                ordersum += ol.getPrice();
             }
 
             ctx.sessionAttribute("ordersum", ordersum);

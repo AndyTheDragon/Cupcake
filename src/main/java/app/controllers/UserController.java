@@ -18,7 +18,7 @@ public class UserController
                 app.get("/logout", ctx -> logout(ctx, pool));
         }
 
-        private static void createUser(Context ctx, ConnectionPool dbConnection)
+        private static void createUser(Context ctx, ConnectionPool pool)
         {
 
                 String username = ctx.formParam("username");
@@ -32,7 +32,7 @@ public class UserController
             {
                     try
                     {
-                            UserMapper.createUser(username, password, dbConnection);
+                            UserMapper.createUser(username, password, pool);
                             ctx.redirect("/");
                     }
                     catch (DatabaseException e)

@@ -4,9 +4,11 @@ import app.entities.*;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper; // Sørg for at du har importeret din OrderMapper
+import app.persistence.UserMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context; // Den korrekte Context import fra Javalin
 
+import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,32 +24,45 @@ public class OrderController
         app.get("/basket", ctx -> ctx.render("basket.html") );
         app.get("/checkout", ctx -> ctx.render("checkout.html") );
         app.post("/checkout", ctx -> checkout(ctx, pool) );
+        app.get("/confirmation", ctx -> ctx.render("confirmation.html") );
+        app.post("/confirmation", ctx -> confirmation(ctx, pool));
+    }
+
+    private static void confirmation(Context ctx, ConnectionPool pool)
+    {
+        ctx.attribute("message", "Din ordre er gennemført.");
+        ctx.redirect("/");
     }
 
     private static void checkout(Context ctx, ConnectionPool pool) throws DatabaseException
     {
-        List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
+        // hvis brugeren er logget ind - betal med store credit
         String username = ctx.formParam("username");
         String password = ctx.formParam("password");
-        String currentUser = ctx.sessionAttribute("session.currentUser");
-
-
 
         LocalDate datePlaced = LocalDate.now();
-        LocalDate datePaid = LocalDate.now();
-        LocalDate dateCompleted = LocalDate.now().plusDays(2);
-
-        String status = "betalt";
-        int orderId = Integer.parseInt(currentUser);
+        String status = "Ordren er placeret";
 
         try
         {
-            OrderMapper.newOrdersToOrdersTable(username, datePlaced, datePaid, dateCompleted, status, pool);
-            OrderMapper.newOrderToOrderLines(orderId, orderLineList, pool);
+            User user = UserMapper.login(username, password, pool);
+            ctx.sessionAttribute("currentUser", user);
+            int userId = user.getUserId();
+            ctx.render("checkout.html");
+
+            // opretter ordren i orders
+            OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, user, pool);
+            //ctx.redirect("confirmation.html");
+
         } catch (DatabaseException e)
         {
-            throw new DatabaseException(e.getMessage());
+            ctx.attribute("message", e.getMessage());
+            ctx.render("basket.html");
         }
+
+
+        // hvis brugeren er gæst - afhent i butikken
+
     }
 
     private static void addCupcakeToBasket(Context ctx, ConnectionPool pool) {

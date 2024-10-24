@@ -1,9 +1,6 @@
 package app.persistence;
 
-import app.entities.Order;
-import app.entities.CupcakeFlavour;
-import app.entities.CupcakeType;
-import app.entities.OrderLine;
+import app.entities.*;
 import app.exceptions.DatabaseException;
 
 import java.sql.*;
@@ -18,28 +15,28 @@ import java.sql.SQLException;
 public class OrderMapper
 {
 
-    public static void newOrdersToOrdersTable(String name, LocalDate datePlaced, LocalDate datePaid, LocalDate dateCompleted, String status, ConnectionPool pool) throws DatabaseException
+    public static int newOrdersToOrdersTable(String name, LocalDate datePlaced, String status, User user, ConnectionPool pool) throws DatabaseException
     {
-        String sql = "INSERT INTO orders (name, date_placed, date_paid, date_completed, status) VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO orders (name, date_placed, status, user_id) VALUES (?,?,?,?)";
         try (Connection connection = pool.getConnection())
         {
-            PreparedStatement ps = connection.prepareStatement(sql);
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setDate(2, Date.valueOf(datePlaced));
-            ps.setDate(3, Date.valueOf(datePaid));
-            ps.setDate(4, Date.valueOf(dateCompleted));
-            ps.setString(5, status);
+            ps.setString(3, status);
+            ps.setInt(4, user.getUserId());
 
             int rowsAffected = ps.executeUpdate();
-            if(rowsAffected != 1)
+            if (rowsAffected != 1)
             {
-                throw new DatabaseException("Fejl ved oprettelse af ny ordre");
+                throw new DatabaseException("fejl........");
             }
 
         } catch (SQLException e)
         {
             throw new DatabaseException(e.getMessage());
         }
+        return user.getUserId();
     }
 
     public static void newOrderToOrderLines(int orderId, List<OrderLine> orderLines, ConnectionPool pool) throws DatabaseException

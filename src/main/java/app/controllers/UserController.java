@@ -33,8 +33,13 @@ public class UserController {
                 UserMapper.createUser(username, password, dbConnection);
                 ctx.redirect("/");
             } catch (DatabaseException e) {
-                ctx.attribute("message", e.getMessage());
-                ctx.render("createuser.html");
+                if (e.getMessage().contains("duplicate key value violates unique constraint")) {
+                    ctx.attribute("message", "Brugernavnet er allerede i brug. Prøv et andet.");
+                    ctx.render("createuser.html");
+                } else {
+                    ctx.attribute("message", e.getMessage());
+                    ctx.render("createuser.html");
+                }
             }
         } else {
             ctx.render("createuser.html");

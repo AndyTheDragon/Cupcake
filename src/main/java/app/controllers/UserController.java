@@ -20,30 +20,44 @@ public class UserController
 
         private static void createUser(Context ctx, ConnectionPool dbConnection)
         {
-
                 String username = ctx.formParam("username");
                 String password = ctx.formParam("password");
                 String confirmPassword = ctx.formParam("confirmpassword");
-            if (password == null || confirmPassword == null)
+            // Simple email check
+            if (username == null || !username.contains("@") || !username.contains("."))
             {
-                    ctx.attribute("message", "Venligst udfyld dit kodeord i begge felter.");
-                    ctx.render("createuser.html");
-            } else if (passwordCheck(ctx, password, confirmPassword))
+                ctx.attribute("message", "Venligst indtast en gyldig e-mail-adresse.");
+                ctx.render("createuser.html");
+            }
+            else if (password == null || confirmPassword == null)
             {
-                    try
+                ctx.attribute("message", "Venligst udfyld dit kodeord i begge felter.");
+                ctx.render("createuser.html");
+            }
+            else if (passwordCheck(ctx, password, confirmPassword))
+            {
+                try
+                {
+                    UserMapper.createUser(username, password, dbConnection);
+                    ctx.attribute("message", "du er nu oprettet");
+                    CupcakeController.showFrontpage(ctx, dbConnection);
+                }
+                catch (DatabaseException e)
+                {
+                    if (e.getMessage().contains("duplicate key value violates unique constraint"))
                     {
-                            UserMapper.createUser(username, password, dbConnection);
-                            ctx.attribute("message", "du er nu oprettet");
-                            CupcakeController.showFrontpage(ctx,dbConnection);
+                        ctx.attribute("message", "Brugernavnet er allerede i brug. Prøv et andet.");
                     }
-                    catch (DatabaseException e)
+                    else
                     {
-                            ctx.attribute("message", e.getMessage());
-                            ctx.render("createuser.html");
+                        ctx.attribute("message", e.getMessage());
+                        ctx.render("createuser.html");
                     }
-            } else
+                }
+            }
+            else
             {
-                    ctx.render("createuser.html");
+                ctx.render("createuser.html");
             }
         }
 

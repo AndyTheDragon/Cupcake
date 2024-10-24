@@ -48,7 +48,7 @@ public class UserMapper {
                 }
             }
         } catch (SQLException e) {
-            throw new DatabaseException(e.getMessage());
+            throw new DatabaseException( e.getMessage());
         }
     }
 }

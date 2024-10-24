@@ -37,22 +37,31 @@ public class OrderController
     private static void checkout(Context ctx, ConnectionPool pool) throws DatabaseException
     {
         // hvis brugeren er logget ind - betal med store credit
+
+        // til orders
         String username = ctx.formParam("username");
         String password = ctx.formParam("password");
-
         LocalDate datePlaced = LocalDate.now();
         String status = "Ordren er placeret";
+        // til order_lines
+        List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
+        if (orderLineList == null || orderLineList.isEmpty())
+        {
+            ctx.attribute("message", "din kurv er tom");
+            ctx.render("/basket");
+            return;
+        }
+
 
         try
         {
             User user = UserMapper.login(username, password, pool);
             ctx.sessionAttribute("currentUser", user);
-            int userId = user.getUserId();
             ctx.render("checkout.html");
 
-            // opretter ordren i orders
-            OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, user, pool);
-            //ctx.redirect("confirmation.html");
+            // opretter ordren i orders & orderlines
+            int orderId = OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, user, pool); // egentlig er det user_id
+            OrderMapper.newOrderToOrderLines(orderId, orderLineList, pool);
 
         } catch (DatabaseException e)
         {

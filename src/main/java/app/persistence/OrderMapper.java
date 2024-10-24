@@ -41,7 +41,7 @@ public class OrderMapper
 
     public static void newOrderToOrderLines(int orderId, List<OrderLine> orderLines, ConnectionPool pool) throws DatabaseException
     {
-        String sql = "INSERT INTO order_lines (quantity, top_flavour, bottom_flavour, price) VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO order_lines (order_line_id, quantity, top_flavour, bottom_flavour, price, order_id) VALUES (?,?,?,?,?,?)";
         try (Connection connection = pool.getConnection())
         {
             for (OrderLine order : orderLines)
@@ -49,9 +49,11 @@ public class OrderMapper
                 PreparedStatement ps = connection.prepareStatement(sql);
                 ps.setInt(1, orderId);
                 ps.setInt(2, order.getQuantity());
-                ps.setString(3, order.getTopFlavour());
-                ps.setString(4, order.getBottomFlavour());
+                ps.setInt(3, order.getTopFlavorId());
+                ps.setInt(4, order.getBottomFlavourId());
                 ps.setInt(5, order.getPrice());
+                ps.setInt(6, order.getOrderId());
+
                 int rowsAffected = ps.executeUpdate();
 
                 if(rowsAffected != 1)

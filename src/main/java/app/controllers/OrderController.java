@@ -47,7 +47,7 @@ public class OrderController
                     orderId,
                     quantity,
                     cupcake,
-                    cupcake.getPrice()
+                    cupcake.getPrice()*quantity
             ));
 
             int ordersum = 0;
@@ -69,19 +69,14 @@ public class OrderController
         List<Order> orders = new ArrayList<>();
         try
         {
-
             orders = OrderMapper.getOrders(pool);
         }
         catch (DatabaseException e)
         {
-
             ctx.attribute("message","Noget gik galt. " + e.getMessage());
         }
-
-
-        ctx.attribute("orders", orders);
-
         // Render Thymeleaf-skabelonen
+        ctx.attribute("orders", orders);
         ctx.render("/ordrehistory.html");
     }
 }

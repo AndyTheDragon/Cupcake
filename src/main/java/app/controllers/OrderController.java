@@ -6,6 +6,7 @@ import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper; // Sørg for at du har importeret din OrderMapper
 import io.javalin.Javalin;
 import io.javalin.http.Context; // Den korrekte Context import fra Javalin
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,9 @@ public class OrderController
     {
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, pool));
         app.post("/addcupcake", ctx -> addCupcakeToOrder(ctx, pool));
+        app.get("/order/delete", ctx -> deleteOrder(ctx,pool));
     }
+
 
 
     private static void addCupcakeToOrder(Context ctx, ConnectionPool pool) {
@@ -79,4 +82,26 @@ public class OrderController
         ctx.attribute("orders", orders);
         ctx.render("/ordrehistory.html");
     }
+
+    private static void deleteOrder(Context ctx, ConnectionPool pool)
+    {
+        try
+        {
+            int orderId = Integer.parseInt(ctx.queryParam("order_id"));
+            OrderMapper.deleteOrder(orderId,pool);
+            ctx.attribute("message","Order deleted");
+            showOrderHistory(ctx,pool);
+        }
+        catch (NumberFormatException e)
+        {
+            ctx.attribute("message","Invalid order id.");
+            showOrderHistory(ctx, pool);
+        }
+        catch (DatabaseException e)
+        {
+            ctx.attribute("message","Database error: " + e.getMessage());
+            showOrderHistory(ctx, pool);
+        }
+    }
+
 }

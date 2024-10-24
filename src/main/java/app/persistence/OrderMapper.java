@@ -82,4 +82,22 @@ public class OrderMapper
     }
 
 
+    public static void deleteOrder(int order_id, ConnectionPool connectionPool) throws DatabaseException
+    {
+        String sql = "DELETE FROM orders WHERE order_id = ?";
+        try (var connection = connectionPool.getConnection())
+        {
+            try (var prepareStatement = connection.prepareStatement(sql))
+            {
+                prepareStatement.setInt(1, order_id);
+
+                prepareStatement.executeUpdate();
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DatabaseException("Could not delete order from the database");
+        }
+    }
+
 }

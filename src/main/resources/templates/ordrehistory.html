@@ -29,7 +29,7 @@
         </thead>
         <tbody>
             <tr class="" th:each="order : ${orders}">
-                <td class="text-center"> </td>
+                <td class="text-center"> <a class="link-danger link-opacity-50-hover" href="/order/delete" th:href="@{/order/delete(order_id=${order.orderid})}" ><i class="bi bi-trash3"></i></a></td>
                 <td th:text="${order.orderid}">order id</td>
                 <td th:text="${order.name}">Navn</td>
                 <td><span class="badge badge-success" th:text="${order.status}">Fullfilled</span></td>

@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS public.users CASCADE;
 CREATE TABLE IF NOT EXISTS public.users
 (
     user_id serial NOT NULL,
-    username character varying(64) NOT NULL,
+    username character varying(64) NOT NULL UNIQUE,
     password character varying(64) NOT NULL,
     balance integer default 0,
     role character varying(12) NOT NULL,

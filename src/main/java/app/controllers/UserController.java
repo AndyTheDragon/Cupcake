@@ -14,8 +14,8 @@ public class UserController
                 app.get("/createuser", ctx -> ctx.render("createuser.html") );
                 app.post("/createuser", ctx -> createUser(ctx, pool));
                 app.get("/login", ctx -> ctx.render("login.html"));
-                app.post("/login", ctx -> login(ctx, pool));
-                app.get("/logout", ctx -> logout(ctx, pool));
+                app.post("/login", ctx -> doLogin(ctx, pool));
+                app.get("/logout", ctx -> doLogout(ctx, pool));
         }
 
         private static void createUser(Context ctx, ConnectionPool dbConnection)
@@ -56,13 +56,14 @@ public class UserController
                 if(password.length() >= 8 && hasNumber && hasSpecialChar && password.equals(confirmPassword))
                 {
                         return true;
-                } else
+                }
+                else
                 {
-                        ctx.attribute("message", "Kodeordet følger ikke op til krav. Check venligst: \n" +
-                                "{" +
-                                "Minimumslængde på 8 tegn," +
-                                "Inkluder et tal i dit kodeord," +
-                                "Inkluder et specielt tegn} ");
+                        ctx.attribute("message", "Kodeordet følger ikke op til krav. Check venligst: <br>\n" +
+                                "Minimumslængde på 8 tegn,<br>" +
+                                "Inkluder et tal i dit kodeord,<br>" +
+                                "Inkluder et specielt tegn.<br>" +
+                                "Kodeord skal være ens.");
                         return false;
 
                 }
@@ -72,25 +73,24 @@ public class UserController
 
         }
 
-        private static void customizeCupcake(Context ctx, ConnectionPool pool) {
-
-        }
-        public static void login(Context ctx, ConnectionPool connectionPool) {
+        public static void doLogin(Context ctx, ConnectionPool dbConnection)
+        {
                 String name = ctx.formParam("username");
                 String password = ctx.formParam("password");
-                try {
-                        User user = UserMapper.login(name, password, connectionPool);
+                try
+                {
+                        User user = UserMapper.login(name, password, dbConnection);
                         ctx.sessionAttribute("currentUser", user);
-                        ctx.render("index.html");
-                } catch (DatabaseException e) {
-                        ctx.attribute("message", e.getMessage());
-                        ctx.render("index.html");
-                } catch (Exception e){
-                        ctx.attribute("message", "An unexpected error occurred. Please try again.");
-                        ctx.render("index.html");
                 }
+                catch (DatabaseException e)
+                {
+                        ctx.attribute("message", e.getMessage());
+                }
+                CupcakeController.showFrontpage(ctx,dbConnection);
+
         }
-        public static void logout(Context ctx, ConnectionPool pool){
+        public static void doLogout(Context ctx, ConnectionPool pool)
+        {
                 //Invalidate session
                 ctx.req().getSession().invalidate();
                 ctx.redirect("/");

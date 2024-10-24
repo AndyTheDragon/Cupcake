@@ -52,17 +52,19 @@
                                 <i class="bi bi-basket2"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li th:if="${session.ordersum == null}"><span class="dropdown-item">Kurven er tom</span></li>
+                                <li th:if="${session.ordersum == null}">
+                                    <a class="dropdown-item" th:href="@{/}">Kurven er tom, bestil nu</a>
+                                </li>
                                 <li th:each="orderline : ${session.orderlines}">
                                     <a class="dropdown-item" href="#"
-                                       th:text="${orderline.quantity} + ' x ' + ${orderline.cupcake} + ' ' + (${(orderline.price/100) * orderline.quantity}) + ' kr'">
+                                       th:text="${orderline.quantity} + ' x ' + ${orderline.cupcake} + ' ' + ${(orderline.price)/100} + ' kr'">
                                     </a>
                                 </li>
                                 <li th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li th:if="${session.ordersum != null}">
-                                    <a class="dropdown-item" href="#" th:href="@{/basket}" th:text="'Bestil nu ' + ${session.ordersum} + ' kr'"></a>
+                                    <a class="dropdown-item" href="#" th:href="@{/basket}" th:text="'Bestil nu ' + ${(session.ordersum)/100} + ' kr'"></a>
                                 </li>
                             </ul>
                         </li>

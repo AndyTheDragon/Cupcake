@@ -7,6 +7,7 @@ import app.persistence.OrderMapper; // Sørg for at du har importeret din OrderM
 import app.persistence.UserMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context; // Den korrekte Context import fra Javalin
+import org.jetbrains.annotations.NotNull;
 
 import javax.xml.crypto.Data;
 import java.sql.SQLException;
@@ -20,6 +21,8 @@ public class OrderController
     public static void addRoutes(Javalin app, ConnectionPool pool)
     {
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, pool));
+        app.post("/addcupcake", ctx -> addCupcakeToOrder(ctx, pool));
+        app.get("/order/delete", ctx -> deleteOrder(ctx,pool));
         app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, pool));
         app.get("/basket", ctx -> ctx.render("basket.html") );
         app.get("/checkout", ctx -> ctx.render("checkout.html") );
@@ -101,7 +104,7 @@ public class OrderController
                     orderId,
                     quantity,
                     cupcake,
-                    cupcake.getPrice()
+                    cupcake.getPrice()*quantity
             ));
 
             int ordersum = 0;
@@ -123,19 +126,36 @@ public class OrderController
         List<Order> orders = new ArrayList<>();
         try
         {
-
             orders = OrderMapper.getOrders(pool);
         }
         catch (DatabaseException e)
         {
-
             ctx.attribute("message","Noget gik galt. " + e.getMessage());
         }
-
-
-        ctx.attribute("orders", orders);
-
         // Render Thymeleaf-skabelonen
+        ctx.attribute("orders", orders);
         ctx.render("/ordrehistory.html");
     }
+
+    private static void deleteOrder(Context ctx, ConnectionPool pool)
+    {
+        try
+        {
+            int orderId = Integer.parseInt(ctx.queryParam("order_id"));
+            OrderMapper.deleteOrder(orderId,pool);
+            ctx.attribute("message","Order deleted");
+            showOrderHistory(ctx,pool);
+        }
+        catch (NumberFormatException e)
+        {
+            ctx.attribute("message","Invalid order id.");
+            showOrderHistory(ctx, pool);
+        }
+        catch (DatabaseException e)
+        {
+            ctx.attribute("message","Database error: " + e.getMessage());
+            showOrderHistory(ctx, pool);
+        }
+    }
+
 }

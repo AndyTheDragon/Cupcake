@@ -31,7 +31,7 @@ public class UserMapper {
 
     public static User login(String username, String password, ConnectionPool connectionPool) throws DatabaseException {
 
-        String sql = "Select * FROM \"users\" WHERE username=? and password=?";
+        String sql = "SELECT * FROM users WHERE username=? AND password=?";
         try (Connection connection = connectionPool.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, username);
@@ -40,10 +40,10 @@ public class UserMapper {
                 if (rs.next()) {
                     int id = rs.getInt("user_id");
                     String role = rs.getString("role");
-                    //int balance = rs.getInt("balance");
-                    return new User(id, username, password, role);
+                    int balance = rs.getInt("balance");
+                    return new User(id, username, password, role, balance);
                 } else {
-                    throw new DatabaseException("Fejl ved login. Prøv igen");
+                    throw new DatabaseException("Brugernavn/kodeord matcher ikke. Prøv igen");
                 }
             }
         } catch (SQLException e) {

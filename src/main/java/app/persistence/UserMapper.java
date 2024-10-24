@@ -2,6 +2,7 @@ package app.persistence;
 
 import app.exceptions.DatabaseException;
 import app.entities.User;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -47,7 +48,7 @@ public class UserMapper {
                 }
             }
         } catch (SQLException e) {
-            throw new DatabaseException( e.getMessage());
+            throw new DatabaseException(e.getMessage());
         }
     }
 }

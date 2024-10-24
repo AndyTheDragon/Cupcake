@@ -33,7 +33,8 @@ public class UserController
                     try
                     {
                             UserMapper.createUser(username, password, dbConnection);
-                            ctx.redirect("/");
+                            ctx.attribute("message", "du er nu oprettet");
+                            CupcakeController.showFrontpage(ctx,dbConnection);
                     }
                     catch (DatabaseException e)
                     {

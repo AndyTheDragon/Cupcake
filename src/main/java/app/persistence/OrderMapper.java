@@ -34,13 +34,13 @@ public class OrderMapper
             List<Order> orders = new ArrayList<>();
             while (rs.next())
             {
-                order_id = rs.getInt("Order_id");
-                name = rs.getString("Name");
-                date_placed = rs.getDate("Date placed");
-                date_paid = rs.getDate("Date paid");
-                date_completed = rs.getDate("Date completed");
-                status = rs.getString("Status");
-                user_id = rs.getInt("User_id");
+                order_id = rs.getInt("order_id");
+                name = rs.getString("name");
+                date_placed = rs.getDate("date_placed");
+                date_paid = rs.getDate("date_paid");
+                date_completed = rs.getDate("date_completed");
+                status = rs.getString("status");
+                user_id = rs.getInt("user_id");
                 orders.add(new Order(order_id, name, date_placed, date_paid, date_completed,status, user_id));
 
             }

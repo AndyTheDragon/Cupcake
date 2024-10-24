@@ -31,7 +31,7 @@ public class UserMapper {
 
     public static User login(String username, String password, ConnectionPool connectionPool) throws DatabaseException {
 
-        String sql = "Select * FROM \"users\" WHERE username=? and password=?";
+        String sql = "SELECT * FROM users WHERE username=? AND password=?";
         try (Connection connection = connectionPool.getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, username);
@@ -47,7 +47,7 @@ public class UserMapper {
                 }
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Ukendt fejl, kontakt Olker cupcakes, Hvis problemet forbliver");
+            throw new DatabaseException( e.getMessage());
         }
     }
 }

@@ -2,6 +2,7 @@ package app.persistence;
 
 import app.exceptions.DatabaseException;
 import app.entities.User;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

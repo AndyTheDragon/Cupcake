@@ -23,13 +23,13 @@ public class OrderController
         app.get("/checkout", ctx -> ctx.render("checkout.html") );
         app.post("/checkout", ctx -> checkout(ctx, pool) );
         app.get("/confirmation", ctx -> ctx.render("confirmation.html") );
-        app.post("/confirmation", ctx -> confirmation(ctx, pool));
+        //app.post("/confirmation", ctx -> confirmation(ctx, pool));
     }
 
     private static void confirmation(Context ctx, ConnectionPool pool)
     {
         ctx.attribute("message", "Din ordre er gennemført.");
-        ctx.redirect("/");
+        //ctx.redirect("/");
     }
 
     private static void checkout(Context ctx, ConnectionPool pool)
@@ -50,7 +50,6 @@ public class OrderController
             return;
         }
 
-
         try
         {
             User user = UserMapper.login(username, password, pool);
@@ -60,15 +59,32 @@ public class OrderController
             // opretter ordren i orders & orderlines
             int orderId = OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, user, pool);
             OrderMapper.newOrderToOrderLines(orderId, orderLineList, pool);
+            ctx.render("confirmation.html");
 
         } catch (DatabaseException e)
         {
             ctx.attribute("message", e.getMessage());
-            ctx.render("basket.html");
+            ctx.render("/basket");
         }
 
 
         // hvis brugeren er gæst - afhent i butikken
+        if (ctx.sessionAttribute("currentUser") == null)
+        {
+            try
+            {
+                int orderId = OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, null, pool);
+                OrderMapper.newOrderToOrderLines(orderId, orderLineList, pool);
+                ctx.render("confirmation.html");
+                ctx.attribute("message", "Din ordre er gennemført og du kan afhente i butikken");
+
+            } catch (DatabaseException e)
+            {
+                ctx.attribute("message", e.getMessage());
+                ctx.render("basket.html");
+            }
+        }
+
 
     }
 

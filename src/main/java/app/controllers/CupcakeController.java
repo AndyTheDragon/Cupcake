@@ -23,12 +23,8 @@ public class CupcakeController
     {
         String flavourName = ctx.formParam("flavoursmag");
         String flavourPriceString = ctx.formParam("flavourpris");
-        int flavourPrice = Integer.parseInt(flavourPriceString);
-
-        //String isFlavourTopString = ctx.formParam("istopflavour");
-        //String isFlavourBottomString = ctx.formParam("isbottomflavour");
-        //boolean isFlavourTop = Boolean.parseBoolean(isFlavourTopString);
-        //boolean isFlavourBottom = Boolean.parseBoolean(isFlavourBottomString);
+        int flavourPrice1 = Integer.parseInt(flavourPriceString);
+        int flavourPrice2 = flavourPrice1 * 100;
 
         // check boolean-flavour condition
         boolean isTopFlavourAccepted = ctx.formParam("istopflavour") != null;
@@ -38,17 +34,17 @@ public class CupcakeController
         {
             if(isTopFlavourAccepted && isBottomFlavourAccepted) // if true and true
             {
-                CupcakeMapper.addCupcakeFlavour(flavourName, true, true, flavourPrice, pool);
+                CupcakeMapper.addCupcakeFlavour(flavourName, true, true, flavourPrice2, pool);
                 ctx.attribute("message", "Din nye flavour er oprettet.");
                 ctx.render("newcupcakeflavours.html");
             } else if (isTopFlavourAccepted || isBottomFlavourAccepted) // if true/false
             {
-                CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice, pool);
+                CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice2, pool);
                 ctx.attribute("message", "Din nye flavour er oprettet.");
                 ctx.render("newcupcakeflavours.html");
             } else // if false and false
             {
-                CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice, pool);
+                CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice2, pool);
                 ctx.attribute("message", "Din nye flavour er oprettet.");
                 ctx.render("newcupcakeflavours.html");
             }

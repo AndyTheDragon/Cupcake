@@ -17,31 +17,33 @@
     <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
     <!-- Indkøbskurv her-->
     <form method="post">
-    <div class="card">
-      <div class="card-header">
-        Ordredetaljer
-      </div>
-      <div class="card-body" th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
-        <p class="card-text">Indtast venligst navnet på den peron som afhenter ordren i butikken.</p>
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="pickupname" name="pickupname">
-          <label for="pickupname" class="form-label">Navn</label>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          Ordredetaljer
         </div>
+        <div class="card-body" th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
+          <p class="card-text">Indtast venligst navnet på den peron som afhenter ordren i butikken.</p>
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="pickupname" name="pickupname">
+            <label for="pickupname" class="form-label">Navn</label>
+          </div>
+        </div>
+        <ul class="list-group list-group-flush" >
+          <li class="list-group-item" th:each="order : ${session.orderlines}">
+            <span th:text="${order.quantity} + ' x ' + ${order.cupcake} + ' ' + (${(order.price/100)}) + ' kr'">Ordrelinje</span>
+            <a class="link-danger ms-4" href="/removecupcake" th:href="@{/removecupcake(line_id=(${#lists.toList(session.orderlines).indexOf(order)}))}">
+              <i class="bi bi-trash3"></i></a>
+          </li>
+          <li class="list-group-item" th:text="${session.ordersum}/100 + ' kr'"></li>
+        </ul>
+        <div class="card-body" th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
+          <button class="btn btn-success" value="guest" formaction="/checkout">Betal ved afhentning i butikken</button>
+          <a class="btn btn-primary" href="/login" th:href="@{/login(returnto=basket)}" th:if="${session.currentUser == null}">Login for at betale med balance</a>
+          <button class="btn btn-primary" value="user" formaction="/checkout" th:if="${session.currentUser != null}">Betal med balance</button>
+        </div>
+        <div class="card-body" th:if="${session.orderlines != null and #lists.size(session.orderlines) < 1}">Din kurv er tom. <a class="btn btn-lg btn-success" href="/" th:href="@{/}">Bestil her</a></div>
       </div>
-      <ul class="list-group list-group-flush" >
-        <li class="list-group-item" th:each="order : ${session.orderlines}">
-          <span th:text="${order.quantity} + ' x ' + ${order.cupcake} + ' ' + (${(order.price/100)}) + ' kr'">Ordrelinje</span>
-          <a class="link-danger ms-4" href="/removecupcake" th:href="@{/removecupcake(line_id=(${#lists.toList(session.orderlines).indexOf(order)}))}">
-            <i class="bi bi-trash3"></i></a>
-        </li>
-        <li class="list-group-item" th:text="${session.ordersum}/100 + ' kr'"></li>
-      </ul>
-      <div class="card-body" th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
-        <button class="btn btn-success" value="guest" formaction="/checkout">Betal ved afhentning i butikken</button>
-        <a class="btn btn-primary" href="/login" th:href="@{/login(returnto=basket)}" th:if="${session.currentUser == null}">Login for at betale med balance</a>
-        <button class="btn btn-primary" value="user" formaction="/checkout" th:if="${session.currentUser != null}">Betal med balance</button>
-      </div>
-      <div class="card-body" th:if="${session.orderlines != null and #lists.size(session.orderlines) < 1}">Din kurv er tom. <a class="btn btn-lg btn-success" href="/" th:href="@{/}">Bestil her</a></div>
     </div>
     </form>
 

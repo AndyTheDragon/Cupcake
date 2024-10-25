@@ -36,7 +36,7 @@
               <a class="link-danger ms-4" href="/removecupcake" th:href="@{/removecupcake(line_id=(${#lists.toList(session.orderlines).indexOf(order)}))}">
                 <i class="bi bi-trash3"></i></a>
             </li>
-            <li class="list-group-item fw-bold" th:text="'Odretotal: '${session.ordersum}/100 + ' kr'"></li>
+            <li class="list-group-item fw-bold" th:text="'Odretotal: ' + ${session.ordersum}/100 + ' kr'"></li>
           </ul>
           <div class="card-body text-center" th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
             <button class="btn btn-success m-3" value="guest" formaction="/checkout">Betal ved afhentning i butikken</button>

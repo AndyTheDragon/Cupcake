@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS public.orders
 (
     order_id serial NOT NULL,
     name character varying(64) NOT NULL,
-    date_placed date NOT NULL,
+    date_placed date DEFAULT NOW(),
     date_paid date NULL,
     date_completed date NULL,
     status character varying(64) NOT NULL,
@@ -63,7 +63,7 @@ ALTER TABLE IF EXISTS public.order_lines
     ADD CONSTRAINT fk FOREIGN KEY (order_id)
         REFERENCES public.orders (order_id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
         NOT VALID;
 
 ALTER TABLE IF EXISTS public.order_lines

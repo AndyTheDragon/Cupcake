@@ -31,7 +31,7 @@
       <ul class="list-group list-group-flush" >
         <li class="list-group-item" th:each="order : ${session.orderlines}">
           <span th:text="${order.quantity} + ' x ' + ${order.cupcake} + ' ' + (${(order.price/100)}) + ' kr'">Ordrelinje</span>
-          <a class="link-danger ms-auto" href="/removecupcake" th:href="@{/removecupcake(line_id=(${#lists.toList(session.orderlines).indexOf(order)}))}">
+          <a class="link-danger ms-4" href="/removecupcake" th:href="@{/removecupcake(line_id=(${#lists.toList(session.orderlines).indexOf(order)}))}">
             <i class="bi bi-trash3"></i></a>
         </li>
         <li class="list-group-item" th:text="${session.ordersum}/100 + ' kr'"></li>
@@ -45,58 +45,6 @@
     </div>
     </form>
 
-    <br>
-    <br>
-    <br>
-
-    <table >
-      <thead  th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
-        <tr>
-          <td>Antal</td>
-          <td>Cupcake top flavour</td>
-          <td>Cupcake bottom flavour</td>
-          <td>pris</td>
-          <td>Total pris</td>
-        </tr>
-      </thead>
-      <tbody th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
-      <tr th:each="order : ${session.orderlines}">
-        <td th:text="${order.quantity}">Antal cupcake(s)</td>
-        <a class="dropdown-item" href="#"
-           th:text="${order.quantity} + ' x ' + ${order.cupcake} + ' ' + (${(order.price/100) * order.quantity}) + ' kr'">
-        </a>
-        <td th:text="${order.price}">Pris pr. stk</td>
-        <td th:text="${order.price * order.quantity}">Total pris</td>
-      </tr>
-      </tbody>
-
-      <!-- Hvis kurven er tom-->
-      <tbody>
-        <tr th:if="${session.orderlines != null and #lists.size(session.orderlines) < 1}">
-          <td>Din kurv er tom.</td>
-        </tr>
-      </tbody>
-
-    </table>
-    <!-- Betal med store credit eller som gæst-->
-    <br><br><br><br>
-    <div>
-      <form method="post" action="/checkout" th:if="${session.currentUser == null}">
-        <h4>Log ind og betal med din store credit</h4>
-        <label class="form-label" for="username">Brugernavn: </label>
-        <input class="form-control form-control-lg" type="text" id="username" name="username"><br><br>
-        <label class="form-label" for="username">Kodeord: </label>
-        <input class="form-control form-control-lg" type="password" id="password" name="password"><br><br>
-        <button class="btn btn-lg btn-primary" type="submit" value="submit">Fortsæt til checkout</button>
-      </form>
-      <br><br><br><br>
-      <div th:if="${session.currentUser != null}">
-        <a href="/checkout" th:href="@{/checkout}">Betal med store credit</a>
-      </div>
-      <div>
-        <h4>Fortsæt til checkout som gæst</h4>
-        <a href="/checkout" th:href="@{/checkout}">Gå til checkout</a>
-      </div>
 
 
     </div>

@@ -17,9 +17,9 @@
     <h1 class="">Opret din bruger</h1>
     <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
     <!-- opret bruger formular-->
-    <form method="post" action="/createuser">
+    <form method="post" action="/createuser" novalidate>
       <label class="form-label" for="username">E-mail: </label>
-      <input class="form-control form-control-lg" type="text" id="username" name="username"><br><br>
+      <input class="form-control form-control-lg" type="email" id="username" name="username"><br><br>
       <label class="form-label" for="password">Kodeord: </label>
       <input class="form-control form-control-lg" type="password"  id="password" name="password"><br><br>
       <label class="form-label" for="confirmpassword">Bekræft kodeord: </label>

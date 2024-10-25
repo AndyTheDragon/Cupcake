@@ -27,11 +27,14 @@
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="/ordrehistory" th:href="@{/ordrehistory}">Ordrer</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Kunder</a>
+                        <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'admin'}">
+                            <a class="nav-link" href="/customer" th:href="@{/customer}">Kunder</a>
+                        </li>
+                        <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'customer'}">
+                            <a class="nav-link" href="/customer" th:href="@{/customer}">Din Info</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Cupcake smage</a>
+                            <a class="nav-link" href="/newcupcakeflavours" th:href="@{/newcupcakeflavours}">Cupcake smage</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav nav-underline ms-auto mb-2 me-1 mb-lg-0">
@@ -64,7 +67,7 @@
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li th:if="${session.ordersum != null}">
-                                    <a class="dropdown-item" href="#" th:href="@{/basket}" th:text="'Bestil nu ' + ${(session.ordersum)/100} + ' kr'"></a>
+                                    <a class="dropdown-item"  href="/basket" th:href="@{/basket}" th:text="'Bestil nu ' + ${(session.ordersum)/100} + ' kr'"></a>
                                 </li>
                             </ul>
                         </li>

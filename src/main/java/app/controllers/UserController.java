@@ -6,6 +6,7 @@ import app.persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import app.persistence.UserMapper;
+import java.util.List;
 
 public class UserController
         {
@@ -16,6 +17,7 @@ public class UserController
                 app.get("/login", ctx -> ctx.render("login.html"));
                 app.post("/login", ctx -> doLogin(ctx, dbConnection));
                 app.get("/logout", ctx -> doLogout(ctx));
+                app.get("/customer", ctx -> redirectUserByRole(ctx, dbConnection));
         }
 
         private static void createUser(Context ctx, ConnectionPool dbConnection)
@@ -111,5 +113,38 @@ public class UserController
                 //Invalidate session
                 ctx.req().getSession().invalidate();
                 ctx.redirect("/");
+        }
+
+        private static void redirectUserByRole(Context ctx, ConnectionPool dbConnection) {
+                User currentUser = ctx.sessionAttribute("currentUser");
+
+                if (currentUser == null) {
+                        ctx.redirect("/login");
+                        return;
+                }
+
+                String role = currentUser.getRole();
+
+                if ("admin".equals(role)) {
+                        showAdminPage(ctx, dbConnection);
+                } else {
+                        showCustomerPage(ctx, currentUser);
+                }
+        }
+
+        private static void showAdminPage(Context ctx, ConnectionPool dbConnection) {
+                try {
+                        List<User> allUsers = UserMapper.getAllUsers(dbConnection);
+                        ctx.attribute("users", allUsers);
+                        ctx.render("admin_users.html");
+                } catch (DatabaseException e) {
+                        ctx.attribute("message", e.getMessage());
+                        ctx.render("error.html");
+                }
+        }
+
+        private static void showCustomerPage(Context ctx, User currentUser) {
+                ctx.attribute("user", currentUser);
+                ctx.render("customer_details.html");
         }
 }

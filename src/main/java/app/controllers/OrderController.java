@@ -4,28 +4,96 @@ import app.entities.*;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper; // Sørg for at du har importeret din OrderMapper
+import app.persistence.UserMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context; // Den korrekte Context import fra Javalin
-import org.jetbrains.annotations.NotNull;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderController
 {
 
-    public static void addRoutes(Javalin app, ConnectionPool pool)
+    public static void addRoutes(Javalin app, ConnectionPool dbConnection)
     {
-        app.get("/ordrehistory", ctx -> showOrderHistory(ctx, pool));
-        app.post("/addcupcake", ctx -> addCupcakeToOrder(ctx, pool));
-        app.get("/order/delete", ctx -> deleteOrder(ctx,pool));
+        app.get("/ordrehistory", ctx -> showOrderHistory(ctx, dbConnection));
+        app.get("/order/delete", ctx -> deleteOrder(ctx,dbConnection));
+        app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, dbConnection));
+        app.get("/removecupcake", ctx -> removeCupcakeFromBasket(ctx,dbConnection));
+        app.get("/basket", ctx -> ctx.render("basket.html") );
+        app.get("/checkout", ctx -> ctx.render("checkout.html") );
+        app.post("/checkout", ctx -> checkout(ctx, dbConnection) );
+        app.get("/confirmation", ctx -> confirmation(ctx, dbConnection) );
+        //app.post("/confirmation", ctx -> confirmation(ctx, dbConnection));
     }
 
+    private static void confirmation(Context ctx, ConnectionPool pool)
+    {
+        ctx.attribute("message", "Din ordre er gennemført.");
+        ctx.render("confirmation.html");
+    }
 
+    private static void checkout(Context ctx, ConnectionPool pool)
+    {
+        // hvis brugeren er logget ind - betal med store credit
 
-    private static void addCupcakeToOrder(Context ctx, ConnectionPool pool) {
+        // til orders
+        String username = ctx.formParam("username");
+        String password = ctx.formParam("password");
+        LocalDate datePlaced = LocalDate.now();
+        String status = "Ordren er placeret";
+        // til order_lines
         List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
-        if (orderLineList == null) {
+        if (orderLineList == null || orderLineList.isEmpty())
+        {
+            ctx.attribute("message", "din kurv er tom");
+            ctx.render("/basket");
+            return;
+        }
+
+        try
+        {
+            User user = UserMapper.login(username, password, pool);
+            ctx.sessionAttribute("currentUser", user);
+            ctx.render("checkout.html");
+
+            // opretter ordren i orders & orderlines
+            int orderId = OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, user, pool);
+            OrderMapper.newOrderToOrderLines(orderId, orderLineList, pool);
+            ctx.render("confirmation.html");
+
+        } catch (DatabaseException e)
+        {
+            ctx.attribute("message", e.getMessage());
+            ctx.render("/basket");
+        }
+
+
+        // hvis brugeren er gæst - afhent i butikken
+        if (ctx.sessionAttribute("currentUser") == null)
+        {
+            try
+            {
+                int orderId = OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, null, pool);
+                OrderMapper.newOrderToOrderLines(orderId, orderLineList, pool);
+                ctx.render("confirmation.html");
+                ctx.attribute("message", "Din ordre er gennemført og du kan afhente i butikken");
+
+            } catch (DatabaseException e)
+            {
+                ctx.attribute("message", e.getMessage());
+                ctx.render("basket.html");
+            }
+        }
+
+
+    }
+
+    private static void addCupcakeToBasket(Context ctx, ConnectionPool pool)
+    {
+        List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
+        if (orderLineList == null)
+        {
             orderLineList = new ArrayList<>();
         }
 
@@ -33,14 +101,16 @@ public class OrderController
         String bottomFlavourName = ctx.formParam("chooseBottom");
 
         String quantityString = ctx.formParam("chooseAmount");
-        if (quantityString == null) {
+        if (quantityString == null)
+        {
             ctx.sessionAttribute("error", "Please select a quantity.");
             CupcakeController.showFrontpage(ctx,pool);
             return;
         }
         int quantity = Integer.parseInt(quantityString);
 
-        try {
+        try
+        {
             CupcakeFlavour topFlavour = OrderMapper.getCupcakeFlavour(topFlavourName, CupcakeType.TOP, pool);
             CupcakeFlavour bottomFlavour = OrderMapper.getCupcakeFlavour(bottomFlavourName, CupcakeType.BOTTOM, pool);
             Cupcake cupcake = new Cupcake(topFlavour, bottomFlavour);
@@ -55,13 +125,15 @@ public class OrderController
 
             int ordersum = 0;
             for (OrderLine ol : orderLineList) {
-                ordersum += ol.getPrice() * ol.getQuantity();
+                ordersum += ol.getPrice();
             }
 
             ctx.sessionAttribute("ordersum", ordersum);
             ctx.sessionAttribute("orderlines", orderLineList);
             ctx.redirect("/");
-        } catch (DatabaseException e){
+        }
+        catch (DatabaseException e)
+        {
             ctx.attribute("message","Database error: " + e.getMessage());
             CupcakeController.showFrontpage(ctx,pool);
         }
@@ -70,9 +142,14 @@ public class OrderController
     private static void showOrderHistory(Context ctx, ConnectionPool pool)
     {
         List<Order> orders = new ArrayList<>();
+        String sortby = ctx.formParam("sort");
         try
         {
-            orders = OrderMapper.getOrders(pool);
+            if (!(sortby==null || sortby.equals("name") || sortby.equals("status") || sortby.equals("date_created") || sortby.equals("date_paid") || sortby.equals("date_completed")))
+            {
+                sortby = "order_id";
+            }
+            orders = OrderMapper.getOrders(sortby, pool);
         }
         catch (DatabaseException e)
         {
@@ -102,6 +179,17 @@ public class OrderController
             ctx.attribute("message","Database error: " + e.getMessage());
             showOrderHistory(ctx, pool);
         }
+    }
+
+    private static void removeCupcakeFromBasket(Context ctx, ConnectionPool dbConnection)
+    {
+        String lineId = ctx.queryParam("line_id");
+        List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
+        if (lineId != null && orderLineList != null) {
+            int orderLineId = Integer.parseInt(lineId);
+            orderLineList.remove(orderLineId);
+        }
+        ctx.render("/basket.html");
     }
 
 }

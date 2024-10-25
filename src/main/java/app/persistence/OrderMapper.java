@@ -1,11 +1,10 @@
 package app.persistence;
 
-import app.entities.Order;
-import app.entities.CupcakeFlavour;
-import app.entities.CupcakeType;
+import app.entities.*;
 import app.exceptions.DatabaseException;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
@@ -16,9 +15,73 @@ import java.sql.SQLException;
 public class OrderMapper
 {
 
-    public static List<Order> getOrders(ConnectionPool dbConnection) throws DatabaseException
+    public static int newOrdersToOrdersTable(String name, LocalDate datePlaced, String status, User user, ConnectionPool pool) throws DatabaseException
     {
-        String sql = "SELECT order_id, name, date_placed, date_paid, date_completed, status, user_id FROM orders ORDER BY date_placed";
+        String sql = "INSERT INTO orders (name, date_placed, status, user_id) VALUES (?,?,?,?)";
+        try (Connection connection = pool.getConnection())
+        {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, name);
+            ps.setDate(2, Date.valueOf(datePlaced));
+            ps.setString(3, status);
+            ps.setInt(4, user.getUserId());
+
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected != 1)
+            {
+                throw new DatabaseException("fejl........");
+            }
+
+            try (ResultSet rs = ps.getGeneratedKeys())
+            {
+                if (rs.next())
+                {
+                    // Return the generated orderId
+                    return rs.getInt(1);  // assuming orderId is in the first column
+                }
+                else
+                {
+                    throw new DatabaseException("Kunne ikke hente genereret ordre-id.");
+                }
+            }
+        } catch (SQLException e)
+        {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    public static void newOrderToOrderLines(int orderId, List<OrderLine> orderLines, ConnectionPool pool) throws DatabaseException
+    {
+        String sql = "INSERT INTO order_lines (quantity, top_flavour, bottom_flavour, price, order_id) VALUES (?,?,?,?,?)";
+        try (Connection connection = pool.getConnection())
+        {
+            for (OrderLine order : orderLines)
+            {
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ps.setInt(1, order.getQuantity());
+                ps.setInt(2, order.getCupcake().getCupcakeTop().getCupcakeFlavourId());
+                ps.setInt(3, order.getCupcake().getCupcakeBottom().getCupcakeFlavourId());
+                ps.setInt(4, order.getPrice());
+                ps.setInt(5, orderId);
+
+                int rowsAffected = ps.executeUpdate();
+
+                if(rowsAffected != 1)
+                {
+                    throw new DatabaseException("Fejl ved oprettelse af ny ordre til orderlines");
+                }
+
+            }
+        } catch (SQLException e)
+        {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    public static List<Order> getOrders(String sortby, ConnectionPool pool) throws DatabaseException
+    {
+        String sql = "SELECT order_id, name, date_placed, date_paid, date_completed, status, orders.user_id, username, balance, role FROM orders INNER JOIN users ON orders.user_id = users.user_id ORDER BY ?";
         int order_id;
         String name;
         Date date_placed;
@@ -26,10 +89,15 @@ public class OrderMapper
         Date date_completed;
         String status;
         int user_id;
+        String username;
+        int balance;
+        String user_role;
 
-        try (Connection connection = dbConnection.getConnection();
+
+        try (Connection connection = pool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql))
         {
+            ps.setString(1, sortby);
             ResultSet rs = ps.executeQuery();
             List<Order> orders = new ArrayList<>();
             while (rs.next())
@@ -41,7 +109,11 @@ public class OrderMapper
                 date_completed = rs.getDate("date_completed");
                 status = rs.getString("status");
                 user_id = rs.getInt("user_id");
-                orders.add(new Order(order_id, name, date_placed, date_paid, date_completed,status, user_id));
+                username = rs.getString("username");
+                balance = rs.getInt("balance");
+                user_role = rs.getString("role");
+                orders.add(new Order(order_id, name, date_placed, date_paid, date_completed,status,
+                            new User(user_id, username, "", user_role, balance)));
 
             }
             return orders;

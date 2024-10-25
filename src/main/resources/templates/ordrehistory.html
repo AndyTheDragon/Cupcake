@@ -13,36 +13,30 @@
     <header th:replace="~{fragments :: header}"></header>
 
     <div class="content bg-light rounded-4 p-5">
-        <h1 class="display-1">Ordreoversigt</h1>
+        <h1 class="">Ordreoversigt</h1>
         <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient">Fejlbeskeder vises her</div>
 
         <table class="table table-striped table-hover">
         <thead>
             <tr>
                 <th class="text-center"><i class="bi bi-trash3"></i></th>
-                <th>Order #</th>
-                <th>Navn</th>
-                <th>Status</th>
-                <th>Total</th>
-                <th>Created</th>
+                <th><a th:href="@{/ordrehistory(sort=orderid)}">Order #</a></th>
+                <th><a th:href="@{/ordrehistory(sort=name)}">Navn</a></th>
+                <th><a th:href="@{/ordrehistory(sort=status)}">Status</a></th>
+                <th><a th:href="@{/ordrehistory(sort=date_created)}">Oprettet</a></th>
+                <th><a th:href="@{/ordrehistory(sort=date_paid)}">Betalt</a></th>
+                <th><a th:href="@{/ordrehistory(sort=date_completed)}">Afsluttet</a></th>
             </tr>
         </thead>
         <tbody>
             <tr class="" th:each="order : ${orders}">
-                <td class="text-center"> <a class="link-danger link-opacity-50-hover" href="/order/delete" th:href="@{/order/delete(order_id=${order.orderid})}" ><i class="bi bi-trash3"></i></a></td>
-                <td th:text="${order.orderid}">order id</td>
+                <td class="text-center"><a class="link-danger link-opacity-50-hover" href="/order/delete" th:href="@{/order/delete(order_id=${order.orderid})}" ><i class="bi bi-trash3"></i></a></td>
+                <td><a class="" href="order/details" th:href="@{/order/details/${order.orderid}}" th:text="${order.orderid}">order id</a></td>
                 <td th:text="${order.name}">Navn</td>
-                <td><span class="badge badge-success" th:text="${order.status}">Fullfilled</span></td>
-                <td th:text="${order.orderid}">Pris</td>
-                <td th:text="${order.dateplaced}">Today</td>
-            </tr>
-            <tr class="">
-                <td class="text-center"> </td>
-                <td>#SO-13453</td>
-                <td>Aartsen van</td>
-                <td><span class="badge badge-info">Confirmed</span></td>
-                <td>$3454.00</td>
-                <td>Yesterday</td>
+                <td><span class="badge text-bg-info" th:text="${order.status}">Fullfilled</span></td>
+                <td th:text="${order.dateplaced}">Pris</td>
+                <td th:text="${order.datepaid}">Today</td>
+                <td th:text="${order.datecompleted}">Today</td>
             </tr>
         </tbody>
         </table>

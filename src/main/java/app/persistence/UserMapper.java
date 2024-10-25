@@ -8,11 +8,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class UserMapper {
 
-    public static void createUser(String username, String password, ConnectionPool pool) throws DatabaseException {
+    public static void createUser(String username, String password, ConnectionPool pool) throws DatabaseException
+    {
         String sql = "insert into users (username, password, role) VALUES (?,?,?);";
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
@@ -30,9 +33,6 @@ public class UserMapper {
             throw new DatabaseException(e.getMessage());
         }
     }
-
-
-
 
     public static User login(String username, String password, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "SELECT * FROM users WHERE username=?";
@@ -59,7 +59,32 @@ public class UserMapper {
             }
 
         } catch (SQLException e) {
-            throw new DatabaseException("Database error: " + e.getMessage());
+
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    public static List<User> getAllUsers(ConnectionPool pool) throws DatabaseException {
+        List<User> userList = new ArrayList<>();
+        String sql = "SELECT user_id, username, password, role, balance FROM users ORDER BY role DESC, username ASC";
+
+        try (Connection connection = pool.getConnection()){
+            try(PreparedStatement ps = connection.prepareStatement(sql)){
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    int userId = rs.getInt("user_id");
+                    String username = rs.getString("username");
+                    String password = rs.getString("password");
+                    String role = rs.getString("role");
+                    int balance = rs.getInt("balance");
+
+                    userList.add(new User(userId, username, password, role, balance));
+                }
+                return userList;
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
         }
     }
 

@@ -6,6 +6,7 @@ import app.persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import app.persistence.UserMapper;
+import java.util.List;
 
 public class UserController
         {
@@ -16,6 +17,7 @@ public class UserController
                 app.get("/login", ctx -> ctx.render("login.html"));
                 app.post("/login", ctx -> login(ctx, pool));
                 app.get("/logout", ctx -> logout(ctx, pool));
+                app.get("/customer", ctx -> customerPage(ctx, pool));
         }
 
         private static void createUser(Context ctx, ConnectionPool dbConnection)
@@ -94,5 +96,38 @@ public class UserController
                 //Invalidate session
                 ctx.req().getSession().invalidate();
                 ctx.redirect("/");
+        }
+
+        private static void customerPage(Context ctx, ConnectionPool pool) {
+                User currentUser = ctx.sessionAttribute("currentUser");
+
+                if (currentUser == null) {
+                        ctx.redirect("/login");
+                        return;
+                }
+
+                String role = currentUser.getRole();
+
+                if ("admin".equals(role)) {
+                        showAdminPage(ctx, pool);
+                } else {
+                        showUserPage(ctx, currentUser);
+                }
+        }
+
+        private static void showAdminPage(Context ctx, ConnectionPool pool) {
+                try {
+                        List<User> allUsers = UserMapper.getAllUsers(pool);
+                        ctx.attribute("users", allUsers);
+                        ctx.render("admin_users.html");
+                } catch (DatabaseException e) {
+                        ctx.attribute("message", e.getMessage());
+                        ctx.render("error.html");
+                }
+        }
+
+        private static void showUserPage(Context ctx, User currentUser) {
+                ctx.attribute("user", currentUser);
+                ctx.render("customer_details.html");
         }
 }

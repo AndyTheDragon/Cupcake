@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordreoplysninger</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .order-container { max-width: 800px; margin: auto; border: 1px solid #ddd; padding: 20px; }
+        h1 { color: #333; }
+        h2 { font-size: 18px; margin-top: 20px; color: #555; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        .note { font-style: italic; color: #888; }
+    </style>
+</head>
+<body>
+
+<div class="order-container">
+    <h1>Ordreoplysninger</h1>
+
+    <section>
+        <h2>1. Ordreoplysninger</h2>
+        <p><strong>Ordrenummer:</strong> #12345</p>
+        <p><strong>Ordredato:</strong> 25-10-2024</p>
+        <p><strong>Ordrestatus:</strong> Under behandling</p>
+        <p><strong>Betalingsstatus:</strong> Betalt</p>
+    </section>
+
+    <section>
+        <h2>2. Kundeoplysninger</h2>
+        <p><strong>Navn:</strong> John Doe</p>
+        <p><strong>Email:</strong> johndoe@example.com</p>
+        <p><strong>Telefon:</strong> +45 12345678</p>
+        <p><strong>Leveringsadresse:</strong> Eksempelvej 12, 1234 København</p>
+        <p><strong>Faktureringsadresse:</strong> Eksempelvej 12, 1234 København</p>
+        <p class="note"><strong>Kommentar fra kunden:</strong> Levering ønskes inden fredag</p>
+    </section>
+
+    <section>
+        <h2>3. Produktoplysninger</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Produktnavn</th>
+                <th>Varenummer</th>
+                <th>Antal</th>
+                <th>Pris</th>
+                <th>Samlet pris</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Produkt A</td>
+                <td>SKU001</td>
+                <td>2</td>
+                <td>200 DKK</td>
+                <td>400 DKK</td>
+            </tr>
+            <tr>
+                <td>Produkt B</td>
+                <td>SKU002</td>
+                <td>1</td>
+                <td>150 DKK</td>
+                <td>150 DKK</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>4. Betalingsoplysninger</h2>
+        <p><strong>Betalingsmetode:</strong> Kreditkort</p>
+        <p><strong>Betalingsbeløb:</strong> 550 DKK</p>
+        <p><strong>Transaktions-ID:</strong> 9876543210</p>
+    </section>
+
+    <section>
+        <h2>5. Forsendelsesoplysninger</h2>
+        <p><strong>Dato for afhentning:</strong> Fredag d. 26 Oktober
+    </section>
+
+    <section>
+        <h2>6. Notater og historik</h2>
+        <p><strong>Intern notat:</strong> Kunden har anmodet om hurtig levering</p>
+        <p><strong>Statushistorik:</strong></p>
+        <ul>
+            <li>25-10-2024: Ordre oprettet</li>
+            <li>25-10-2024: Betaling modtaget</li>
+        </ul>
+    </section>
+
+</div>
+
+</body>
+</html>

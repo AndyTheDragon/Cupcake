@@ -17,10 +17,9 @@
 
         <!-- Customer Balance -->
         <div class="mb-4">
-            <h3>Indestående: <span th:text="${user.balance}">0</span> kr</h3>
+            <h3>Indestående: <span th:text="${user.balance/100}">0</span> kr</h3>
         </div>
 
-        <!-- Order List -->
         <h3>Ordrer:</h3>
         <!--<ul class="list-group">
             <li class="list-group-item" th:each="order : ${user.orders}">

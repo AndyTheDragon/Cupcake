@@ -36,17 +36,17 @@ public class CupcakeController
 
         try
         {
-            if(isTopFlavourAccepted && isBottomFlavourAccepted)
+            if(isTopFlavourAccepted && isBottomFlavourAccepted) // if true and true
             {
                 CupcakeMapper.addCupcakeFlavour(flavourName, true, true, flavourPrice, pool);
                 ctx.attribute("message", "Din nye flavour er oprettet.");
                 ctx.render("newcupcakeflavours.html");
-            } else if (isTopFlavourAccepted || isBottomFlavourAccepted)
+            } else if (isTopFlavourAccepted || isBottomFlavourAccepted) // if true/false
             {
                 CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice, pool);
                 ctx.attribute("message", "Din nye flavour er oprettet.");
                 ctx.render("newcupcakeflavours.html");
-            } else
+            } else // if false and false
             {
                 CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice, pool);
                 ctx.attribute("message", "Din nye flavour er oprettet.");

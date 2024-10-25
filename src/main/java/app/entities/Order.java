@@ -30,8 +30,8 @@ public class Order
         this.orderId = order_id;
         this.name = name;
         this.datePlaced = date_placed.toLocalDate();
-        this.datePaid = date_paid.toLocalDate();
-        this.dateCompleted = date_completed.toLocalDate();
+        this.datePaid = date_paid==null?null:date_paid.toLocalDate();
+        this.dateCompleted = date_completed==null?null:date_completed.toLocalDate();
         this.status = status;
         this.user = user;
 

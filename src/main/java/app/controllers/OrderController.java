@@ -23,6 +23,7 @@ public class OrderController
         app.get("/checkout", ctx -> ctx.render("checkout.html") );
         app.post("/checkout", ctx -> checkout(ctx, pool) );
         app.get("/confirmation", ctx -> ctx.render("confirmation.html") );
+        app.get("/order/details/{orderid}", ctx -> showOrderDetails(ctx,pool));
         //app.post("/confirmation", ctx -> confirmation(ctx, pool));
     }
 
@@ -174,5 +175,26 @@ public class OrderController
             showOrderHistory(ctx, pool);
         }
     }
+
+    private static void showOrderDetails(Context ctx,ConnectionPool db ){
+
+        {
+            List<Order> order = new ArrayList<>();
+            try
+            {
+                order = OrderMapper.showOrderDetails(pool);
+            }
+            catch (DatabaseException e)
+            {
+                ctx.attribute("message","Noget gik galt. " + e.getMessage());
+            }
+            // Render Thymeleaf-skabelonen
+            ctx.attribute("orders", order);
+            ctx.render("/showorderdetails.html");
+        }
+
+    }
+
+
 
 }

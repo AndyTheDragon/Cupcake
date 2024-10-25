@@ -45,11 +45,11 @@ public class UserMapper {
                     int balance = rs.getInt("balance");
                     return new User(id, username, password, role, balance);
                 } else {
-                    throw new DatabaseException("Fejl ved login. Prøv igen");
+                    throw new DatabaseException("Brugernavn/kodeord matcher ikke. Prøv igen");
                 }
             }
         } catch (SQLException e) {
-            throw new DatabaseException( e.getMessage());
+            throw new DatabaseException(e.getMessage());
         }
     }
 

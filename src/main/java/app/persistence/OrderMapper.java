@@ -1,11 +1,10 @@
 package app.persistence;
 
-import app.entities.Order;
-import app.entities.CupcakeFlavour;
-import app.entities.CupcakeType;
+import app.entities.*;
 import app.exceptions.DatabaseException;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
@@ -16,7 +15,71 @@ import java.sql.SQLException;
 public class OrderMapper
 {
 
-    public static List<Order> getOrders(ConnectionPool dbConnection) throws DatabaseException
+    public static int newOrdersToOrdersTable(String name, LocalDate datePlaced, String status, User user, ConnectionPool pool) throws DatabaseException
+    {
+        String sql = "INSERT INTO orders (name, date_placed, status, user_id) VALUES (?,?,?,?)";
+        try (Connection connection = pool.getConnection())
+        {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, name);
+            ps.setDate(2, Date.valueOf(datePlaced));
+            ps.setString(3, status);
+            ps.setInt(4, user.getUserId());
+
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected != 1)
+            {
+                throw new DatabaseException("fejl........");
+            }
+
+            try (ResultSet rs = ps.getGeneratedKeys())
+            {
+                if (rs.next())
+                {
+                    // Return the generated orderId
+                    return rs.getInt(1);  // assuming orderId is in the first column
+                }
+                else
+                {
+                    throw new DatabaseException("Kunne ikke hente genereret ordre-id.");
+                }
+            }
+        } catch (SQLException e)
+        {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    public static void newOrderToOrderLines(int orderId, List<OrderLine> orderLines, ConnectionPool pool) throws DatabaseException
+    {
+        String sql = "INSERT INTO order_lines (quantity, top_flavour, bottom_flavour, price, order_id) VALUES (?,?,?,?,?)";
+        try (Connection connection = pool.getConnection())
+        {
+            for (OrderLine order : orderLines)
+            {
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ps.setInt(1, order.getQuantity());
+                ps.setInt(2, order.getCupcake().getCupcakeTop().getCupcakeFlavourId());
+                ps.setInt(3, order.getCupcake().getCupcakeBottom().getCupcakeFlavourId());
+                ps.setInt(4, order.getPrice());
+                ps.setInt(5, orderId);
+
+                int rowsAffected = ps.executeUpdate();
+
+                if(rowsAffected != 1)
+                {
+                    throw new DatabaseException("Fejl ved oprettelse af ny ordre til orderlines");
+                }
+
+            }
+        } catch (SQLException e)
+        {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    public static List<Order> getOrders(ConnectionPool pool) throws DatabaseException
     {
         String sql = "SELECT order_id, name, date_placed, date_paid, date_completed, status, user_id FROM orders ORDER BY date_placed";
         int order_id;
@@ -27,7 +90,7 @@ public class OrderMapper
         String status;
         int user_id;
 
-        try (Connection connection = dbConnection.getConnection();
+        try (Connection connection = pool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql))
         {
             ResultSet rs = ps.executeQuery();
@@ -81,5 +144,23 @@ public class OrderMapper
         }
     }
 
+
+    public static void deleteOrder(int order_id, ConnectionPool connectionPool) throws DatabaseException
+    {
+        String sql = "DELETE FROM orders WHERE order_id = ?";
+        try (var connection = connectionPool.getConnection())
+        {
+            try (var prepareStatement = connection.prepareStatement(sql))
+            {
+                prepareStatement.setInt(1, order_id);
+
+                prepareStatement.executeUpdate();
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DatabaseException("Could not delete order from the database");
+        }
+    }
 
 }

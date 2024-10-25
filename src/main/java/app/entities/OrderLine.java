@@ -7,6 +7,7 @@ public class OrderLine
     private Cupcake cupcake;
     private int price;
 
+
     public OrderLine(int orderId, int quantity, Cupcake cupcake, int price)
     {
         this.orderId = orderId;
@@ -30,4 +31,6 @@ public class OrderLine
     public int getPrice() {
         return price;
     }
+
+
 }

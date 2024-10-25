@@ -30,7 +30,8 @@ public class OrderController
     private static void confirmation(Context ctx, ConnectionPool pool)
     {
         ctx.attribute("message", "Din ordre er gennemført.");
-        ctx.render("confirmation.html")    }
+        ctx.render("confirmation.html");
+    }
 
     private static void checkout(Context ctx, ConnectionPool pool)
     {

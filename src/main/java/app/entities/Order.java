@@ -26,14 +26,14 @@ public class Order
         this.datePlaced = LocalDate.now();
     }
 
-    public  Order (int order_id, String name, Date date_placed, Date date_paid, Date date_completed, String status, int user_id){
+    public  Order (int order_id, String name, Date date_placed, Date date_paid, Date date_completed, String status, User user){
         this.orderId = order_id;
         this.name = name;
-        this.datePlaced = LocalDate.now();
-        this.datePaid = LocalDate.now();
-        this.dateCompleted = LocalDate.now();
+        this.datePlaced = date_placed.toLocalDate();
+        this.datePaid = date_paid.toLocalDate();
+        this.dateCompleted = date_completed.toLocalDate();
         this.status = status;
-
+        this.user = user;
 
     }
 

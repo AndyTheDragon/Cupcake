@@ -17,7 +17,7 @@ public class UserController
                 app.get("/login", ctx -> ctx.render("login.html"));
                 app.post("/login", ctx -> login(ctx, pool));
                 app.get("/logout", ctx -> logout(ctx, pool));
-                app.get("/customer", ctx -> customerPage(ctx, pool));
+                app.get("/customer", ctx -> redirectUserByRole(ctx, pool));
         }
 
         private static void createUser(Context ctx, ConnectionPool dbConnection)
@@ -98,7 +98,7 @@ public class UserController
                 ctx.redirect("/");
         }
 
-        private static void customerPage(Context ctx, ConnectionPool pool) {
+        private static void redirectUserByRole(Context ctx, ConnectionPool pool) {
                 User currentUser = ctx.sessionAttribute("currentUser");
 
                 if (currentUser == null) {
@@ -111,7 +111,7 @@ public class UserController
                 if ("admin".equals(role)) {
                         showAdminPage(ctx, pool);
                 } else {
-                        showUserPage(ctx, currentUser);
+                        showCustomerPage(ctx, currentUser);
                 }
         }
 
@@ -126,7 +126,7 @@ public class UserController
                 }
         }
 
-        private static void showUserPage(Context ctx, User currentUser) {
+        private static void showCustomerPage(Context ctx, User currentUser) {
                 ctx.attribute("user", currentUser);
                 ctx.render("customer_details.html");
         }

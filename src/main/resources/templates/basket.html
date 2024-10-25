@@ -30,7 +30,7 @@
               <label for="pickupname" class="form-label">Navn</label>
             </div>
           </div>
-          <ul class="list-group list-group-flush" >
+          <ul class="list-group list-group-flush" th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
             <li class="list-group-item" th:each="order : ${session.orderlines}">
               <span th:text="${order.quantity} + ' x ' + ${order.cupcake} + ' ' + (${(order.price/100)}) + ' kr'">Ordrelinje</span>
               <a class="link-danger ms-4" href="/removecupcake" th:href="@{/removecupcake(line_id=(${#lists.toList(session.orderlines).indexOf(order)}))}">
@@ -43,7 +43,7 @@
             <a class="btn btn-primary m-3" href="/login" th:href="@{/login(returnto=basket)}" th:if="${session.currentUser == null}">Login for at betale med balance</a>
             <button class="btn btn-primary m-3" value="user" formaction="/checkout" th:if="${session.currentUser != null}">Betal med balance</button>
           </div>
-          <div class="card-body" th:if="${session.orderlines != null and #lists.size(session.orderlines) < 1}">Din kurv er tom. <a class="btn btn-lg btn-success" href="/" th:href="@{/}">Bestil her</a></div>
+          <div class="card-body" th:if="${session.orderlines == null or #lists.size(session.orderlines) < 1}">Din kurv er tom. <a class="btn btn-lg btn-success" href="/" th:href="@{/}">Bestil her</a></div>
         </div>
       </div>
     </div>

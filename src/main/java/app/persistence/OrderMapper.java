@@ -81,7 +81,7 @@ public class OrderMapper
 
     public static List<Order> getOrders(String sortby, ConnectionPool pool) throws DatabaseException
     {
-        String sql = "SELECT order_id, name, date_placed, date_paid, date_completed, status, user_id, username, balance, role FROM orders INNER JOIN users ON orders.user_id = users.user_id ORDER BY ?";
+        String sql = "SELECT order_id, name, date_placed, date_paid, date_completed, status, orders.user_id, username, balance, role FROM orders INNER JOIN users ON orders.user_id = users.user_id ORDER BY ?";
         int order_id;
         String name;
         Date date_placed;

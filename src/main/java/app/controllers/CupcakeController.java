@@ -19,19 +19,20 @@ public class CupcakeController
         app.post("/newcupcakeflavours", ctx -> addCupcakeFlavour(ctx, dbConnection) );
     }
 
-    private static void addCupcakeFlavour(Context ctx, ConnectionPool pool) throws DatabaseException
+    private static void addCupcakeFlavour(Context ctx, ConnectionPool pool)
     {
-        String flavourName = ctx.formParam("flavoursmag");
-        String flavourPriceString = ctx.formParam("flavourpris");
-        int flavourPrice1 = Integer.parseInt(flavourPriceString);
-        int flavourPrice2 = flavourPrice1 * 100;
 
-        // check boolean-flavour condition
-        boolean isTopFlavourAccepted = ctx.formParam("istopflavour") != null;
-        boolean isBottomFlavourAccepted = ctx.formParam("isbottomflavour") != null;
 
         try
         {
+            String flavourName = ctx.formParam("flavoursmag");
+            String flavourPriceString = ctx.formParam("flavourpris");
+            int flavourPrice1 = Integer.parseInt(flavourPriceString);
+            int flavourPrice2 = flavourPrice1 * 100;
+
+            // check boolean-flavour condition
+            boolean isTopFlavourAccepted = ctx.formParam("istopflavour") != null;
+            boolean isBottomFlavourAccepted = ctx.formParam("isbottomflavour") != null;
             if (isTopFlavourAccepted || isBottomFlavourAccepted)
             {
                 CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice2, pool);
@@ -39,13 +40,19 @@ public class CupcakeController
                 ctx.render("newcupcakeflavours.html");
             } else // if false and false
             {
-                ctx.attribute("error", "Din nye flavour skal have en top/bund.");
+                ctx.attribute("message", "Din nye flavour skal have en top/bund.");
                 ctx.render("newcupcakeflavours.html");
             }
 
         } catch (DatabaseException e)
         {
-            throw new DatabaseException(e.getMessage());
+            ctx.attribute("message", e.getMessage());
+            ctx.render("newcupcakeflavours.html");
+        }
+        catch (NumberFormatException e)
+        {
+            ctx.attribute("message", "Prisen skal være et tal");
+            ctx.render("newcupcakeflavours.html");
         }
 
     }

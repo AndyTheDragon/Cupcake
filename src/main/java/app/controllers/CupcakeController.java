@@ -44,8 +44,7 @@ public class CupcakeController
                 ctx.render("newcupcakeflavours.html");
             } else // if false and false
             {
-                CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice2, pool);
-                ctx.attribute("message", "Din nye flavour er oprettet.");
+                ctx.attribute("error", "Din nye flavour skal have en top/bund.");
                 ctx.render("newcupcakeflavours.html");
             }
 

@@ -18,7 +18,6 @@
         <!-- Vis en oversigt af cupcake flavours -->
         <table class="table table-striped table-hover">
             <tr>
-                <thclass="text-center"><i class="bi bi-trash3"></th>
                 <th></th>
             </tr>
             <tr>
@@ -30,7 +29,11 @@
         <!-- Vis en form til at redigere/tilføje cupcake flavours -->
         <form method="post" action="/newcupcakeflavours">
             <label class="form-label" for="flavoursmag">Flavour smag (fx. Chokolade)</label>
-            <input class="form-control form-control-lg" id="flavoursmag" name="flavoursmag" type="text">
+            <input class="form-control form-control-lg" id="flavoursmag" name="flavoursmag" type="text"><br>
+            <label class="form-check-label" for="istopflavour">Kan din flavour fås som topping?</label>
+            <input class="form-check-input custom-checkbox" type="checkbox" id="istopflavour" name="istopflavour" value="true"><br>
+            <label class="form-check-label" for="isbottomflavour">Kan din flavour fås som bottom?</label>
+            <input class="form-check-input custom-checkbox" type="checkbox" id="isbottomflavour" name="isbottomflavour" value="true"><br><br>
             <label class="form-label" for="flavourpris">Pris til ny flavour</label>
             <input class="form-control form-control-lg" id="flavourpris" name="flavourpris" type="text">
             <button class="btn btn-lg btn-primary" type="submit" value="submit">Opret ny flavour</button>

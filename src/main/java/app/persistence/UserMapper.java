@@ -3,7 +3,6 @@ package app.persistence;
 import app.exceptions.DatabaseException;
 import app.entities.User;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -12,7 +11,8 @@ import java.sql.ResultSet;
 
 public class UserMapper {
 
-    public static void createUser(String username, String password, ConnectionPool pool) throws DatabaseException {
+    public static void createUser(String username, String password, ConnectionPool pool) throws DatabaseException
+    {
         String sql = "insert into users (username, password, role) VALUES (?,?,?);";
 
         try (Connection connection = pool.getConnection()) {

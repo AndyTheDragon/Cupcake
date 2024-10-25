@@ -8,7 +8,6 @@ import app.persistence.CupcakeMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 
 public class CupcakeController
@@ -26,11 +25,34 @@ public class CupcakeController
         String flavourPriceString = ctx.formParam("flavourpris");
         int flavourPrice = Integer.parseInt(flavourPriceString);
 
+        //String isFlavourTopString = ctx.formParam("istopflavour");
+        //String isFlavourBottomString = ctx.formParam("isbottomflavour");
+        //boolean isFlavourTop = Boolean.parseBoolean(isFlavourTopString);
+        //boolean isFlavourBottom = Boolean.parseBoolean(isFlavourBottomString);
+
+        // check boolean-flavour condition
+        boolean isTopFlavourAccepted = ctx.formParam("istopflavour") != null;
+        boolean isBottomFlavourAccepted = ctx.formParam("isbottomflavour") != null;
+
         try
         {
-            CupcakeMapper.addCupcakeFlavour(flavourName, flavourPrice, pool);
-            ctx.attribute("message", "Din nye flavour er oprettet.");
-            ctx.render("newcupcakeflavours.html");
+            if(isTopFlavourAccepted && isBottomFlavourAccepted)
+            {
+                CupcakeMapper.addCupcakeFlavour(flavourName, true, true, flavourPrice, pool);
+                ctx.attribute("message", "Din nye flavour er oprettet.");
+                ctx.render("newcupcakeflavours.html");
+            } else if (isTopFlavourAccepted || isBottomFlavourAccepted)
+            {
+                CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice, pool);
+                ctx.attribute("message", "Din nye flavour er oprettet.");
+                ctx.render("newcupcakeflavours.html");
+            } else
+            {
+                CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice, pool);
+                ctx.attribute("message", "Din nye flavour er oprettet.");
+                ctx.render("newcupcakeflavours.html");
+            }
+
         } catch (DatabaseException e)
         {
             throw new DatabaseException(e.getMessage());

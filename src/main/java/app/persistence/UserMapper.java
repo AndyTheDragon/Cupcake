@@ -40,8 +40,8 @@ public class UserMapper {
                 if (rs.next()) {
                     int id = rs.getInt("user_id");
                     String role = rs.getString("role");
-                    //int balance = rs.getInt("balance");
-                    return new User(id, username, password, role);
+                    int balance = rs.getInt("balance");
+                    return new User(id, username, password, role, balance);
                 } else {
                     throw new DatabaseException("Brugernavn/kodeord matcher ikke. Prøv igen");
                 }

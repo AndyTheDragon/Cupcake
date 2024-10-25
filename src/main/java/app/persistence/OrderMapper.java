@@ -79,9 +79,9 @@ public class OrderMapper
         }
     }
 
-    public static List<Order> getOrders(ConnectionPool pool) throws DatabaseException
+    public static List<Order> getOrders(String sortby, ConnectionPool pool) throws DatabaseException
     {
-        String sql = "SELECT order_id, name, date_placed, date_paid, date_completed, status, user_id FROM orders ORDER BY date_placed";
+        String sql = "SELECT order_id, name, date_placed, date_paid, date_completed, status, user_id FROM orders ORDER BY ?";
         int order_id;
         String name;
         Date date_placed;
@@ -93,6 +93,7 @@ public class OrderMapper
         try (Connection connection = pool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql))
         {
+            ps.setString(1, sortby);
             ResultSet rs = ps.executeQuery();
             List<Order> orders = new ArrayList<>();
             while (rs.next())

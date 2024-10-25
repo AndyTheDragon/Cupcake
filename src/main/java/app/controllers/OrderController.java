@@ -19,6 +19,7 @@ public class OrderController
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, pool));
         app.get("/order/delete", ctx -> deleteOrder(ctx,pool));
         app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, pool));
+        app.get("/removecupcake", ctx -> removeCupcakeFromBasket(ctx,pool));
         app.get("/basket", ctx -> ctx.render("basket.html") );
         app.get("/checkout", ctx -> ctx.render("checkout.html") );
         app.post("/checkout", ctx -> checkout(ctx, pool) );
@@ -141,9 +142,14 @@ public class OrderController
     private static void showOrderHistory(Context ctx, ConnectionPool pool)
     {
         List<Order> orders = new ArrayList<>();
+        String sortby = ctx.formParam("sort");
         try
         {
-            orders = OrderMapper.getOrders(pool);
+            if (!(sortby==null || sortby.equals("name") || sortby.equals("status") || sortby.equals("date_created") || sortby.equals("date_paid") || sortby.equals("date_completed")))
+            {
+                sortby = "order_id";
+            }
+            orders = OrderMapper.getOrders(sortby, pool);
         }
         catch (DatabaseException e)
         {
@@ -173,6 +179,17 @@ public class OrderController
             ctx.attribute("message","Database error: " + e.getMessage());
             showOrderHistory(ctx, pool);
         }
+    }
+
+    private static void removeCupcakeFromBasket(Context ctx, ConnectionPool dbConnection)
+    {
+        String lineId = ctx.queryParam("line_id");
+        List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
+        if (lineId != null && orderLineList != null) {
+            int orderLineId = Integer.parseInt(lineId);
+            orderLineList.remove(orderLineId);
+        }
+        ctx.render("/basket.html");
     }
 
 }

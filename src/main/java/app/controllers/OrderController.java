@@ -14,24 +14,23 @@ import java.util.List;
 public class OrderController
 {
 
-    public static void addRoutes(Javalin app, ConnectionPool pool)
+    public static void addRoutes(Javalin app, ConnectionPool dbConnection)
     {
-        app.get("/ordrehistory", ctx -> showOrderHistory(ctx, pool));
-        app.get("/order/delete", ctx -> deleteOrder(ctx,pool));
-        app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, pool));
-        app.get("/removecupcake", ctx -> removeCupcakeFromBasket(ctx,pool));
+        app.get("/ordrehistory", ctx -> showOrderHistory(ctx, dbConnection));
+        app.get("/order/delete", ctx -> deleteOrder(ctx,dbConnection));
+        app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, dbConnection));
+        app.get("/removecupcake", ctx -> removeCupcakeFromBasket(ctx,dbConnection));
         app.get("/basket", ctx -> ctx.render("basket.html") );
         app.get("/checkout", ctx -> ctx.render("checkout.html") );
-        app.post("/checkout", ctx -> checkout(ctx, pool) );
-        app.get("/confirmation", ctx -> ctx.render("confirmation.html") );
-        //app.post("/confirmation", ctx -> confirmation(ctx, pool));
+        app.post("/checkout", ctx -> checkout(ctx, dbConnection) );
+        app.get("/confirmation", ctx -> confirmation(ctx, dbConnection) );
+        //app.post("/confirmation", ctx -> confirmation(ctx, dbConnection));
     }
 
     private static void confirmation(Context ctx, ConnectionPool pool)
     {
         ctx.attribute("message", "Din ordre er gennemført.");
-        //ctx.redirect("/");
-    }
+        ctx.render("confirmation.html")    }
 
     private static void checkout(Context ctx, ConnectionPool pool)
     {

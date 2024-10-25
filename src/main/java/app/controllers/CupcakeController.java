@@ -32,12 +32,7 @@ public class CupcakeController
 
         try
         {
-            if(isTopFlavourAccepted && isBottomFlavourAccepted) // if true and true
-            {
-                CupcakeMapper.addCupcakeFlavour(flavourName, true, true, flavourPrice2, pool);
-                ctx.attribute("message", "Din nye flavour er oprettet.");
-                ctx.render("newcupcakeflavours.html");
-            } else if (isTopFlavourAccepted || isBottomFlavourAccepted) // if true/false
+            if (isTopFlavourAccepted || isBottomFlavourAccepted)
             {
                 CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice2, pool);
                 ctx.attribute("message", "Din nye flavour er oprettet.");

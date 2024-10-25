@@ -27,8 +27,11 @@
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="/ordrehistory" th:href="@{/ordrehistory}">Ordrer</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Kunder</a>
+                        <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'admin'}">
+                            <a class="nav-link" href="/customer" th:href="@{/customer}">Kunder</a>
+                        </li>
+                        <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'customer'}">
+                            <a class="nav-link" href="/customer" th:href="@{/customer}">Din Info</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Cupcake smage</a>

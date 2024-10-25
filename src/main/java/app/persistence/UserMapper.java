@@ -2,6 +2,8 @@ package app.persistence;
 
 import app.exceptions.DatabaseException;
 import app.entities.User;
+
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -27,7 +29,6 @@ public class UserMapper {
             throw new DatabaseException(e.getMessage());
         }
     }
-
 
     public static User login(String username, String password, ConnectionPool connectionPool) throws DatabaseException {
 

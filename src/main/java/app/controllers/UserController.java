@@ -16,7 +16,15 @@ public class UserController
                 app.get("/login", ctx -> ctx.render("login.html"));
                 app.post("/login", ctx -> doLogin(ctx, dbConnection));
                 app.get("/logout", ctx -> doLogout(ctx));
+
         }
+
+        private static void editCupcakeFlavours(Context ctx, ConnectionPool pool)
+        {
+
+        }
+
+
 
         private static void createUser(Context ctx, ConnectionPool dbConnection)
         {

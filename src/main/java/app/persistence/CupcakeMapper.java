@@ -14,6 +14,28 @@ import java.util.List;
 public class CupcakeMapper
 {
 
+    public static void addCupcakeFlavour(String flavourName, int flavourPrice, ConnectionPool pool) throws DatabaseException
+    {
+        String sql = "INSERT INTO cupcake_flavours (flavour_name, is_top_flavour, is_bottom_flavour, price) VALUES (?,?,?,?)";
+
+        try (Connection connection = pool.getConnection())
+        {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, flavourName);
+            ps.setBoolean(2, true);
+            ps.setBoolean(3, true);
+            ps.setInt(4, flavourPrice);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1)
+            {
+                throw new DatabaseException("fejl ved oprettelse af ny flavour");
+            }
+        }  catch (DatabaseException | SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
     public static List<CupcakeFlavour> getFlavours(CupcakeType cupcakeType, ConnectionPool dbConnection) throws DatabaseException
     {
         List<CupcakeFlavour> flavours = new ArrayList<>();

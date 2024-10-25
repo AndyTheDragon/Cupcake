@@ -15,6 +15,46 @@ public class CupcakeController
     public static void addRoutes(Javalin app, ConnectionPool dbConnection)
     {
         app.get("/", ctx ->  showFrontpage(ctx,dbConnection));
+        app.get("/newcupcakeflavours", ctx -> ctx.render("newcupcakeflavours.html") );
+        app.post("/newcupcakeflavours", ctx -> addCupcakeFlavour(ctx, dbConnection) );
+    }
+
+    private static void addCupcakeFlavour(Context ctx, ConnectionPool pool)
+    {
+
+
+        try
+        {
+            String flavourName = ctx.formParam("flavoursmag");
+            String flavourPriceString = ctx.formParam("flavourpris");
+            int flavourPrice1 = Integer.parseInt(flavourPriceString);
+            int flavourPrice2 = flavourPrice1 * 100;
+
+            // check boolean-flavour condition
+            boolean isTopFlavourAccepted = ctx.formParam("istopflavour") != null;
+            boolean isBottomFlavourAccepted = ctx.formParam("isbottomflavour") != null;
+            if (isTopFlavourAccepted || isBottomFlavourAccepted)
+            {
+                CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice2, pool);
+                ctx.attribute("message", "Din nye flavour er oprettet.");
+                ctx.render("newcupcakeflavours.html");
+            } else // if false and false
+            {
+                ctx.attribute("message", "Din nye flavour skal have en top/bund.");
+                ctx.render("newcupcakeflavours.html");
+            }
+
+        } catch (DatabaseException e)
+        {
+            ctx.attribute("message", e.getMessage());
+            ctx.render("newcupcakeflavours.html");
+        }
+        catch (NumberFormatException e)
+        {
+            ctx.attribute("message", "Prisen skal være et tal");
+            ctx.render("newcupcakeflavours.html");
+        }
+
     }
 
     public static void showFrontpage(Context ctx, ConnectionPool dbConnection)

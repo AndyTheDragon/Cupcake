@@ -2,6 +2,7 @@ package app.persistence;
 
 import app.exceptions.DatabaseException;
 import app.entities.User;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -12,7 +13,8 @@ import java.util.List;
 
 public class UserMapper {
 
-    public static void createUser(String username, String password, ConnectionPool pool) throws DatabaseException {
+    public static void createUser(String username, String password, ConnectionPool pool) throws DatabaseException
+    {
         String sql = "insert into users (username, password, role) VALUES (?,?,?);";
 
         try (Connection connection = pool.getConnection()) {
@@ -29,7 +31,6 @@ public class UserMapper {
             throw new DatabaseException(e.getMessage());
         }
     }
-
 
     public static User login(String username, String password, ConnectionPool connectionPool) throws DatabaseException {
 

@@ -120,7 +120,6 @@ public class OrderMapper
                 balance = rs.getInt("balance");
                 user_role = rs.getString("role");
                 if (user_id == 0) {
-                    user_id = 0;
                     username = "Gæst";
                     user_role = "guest";
                     balance = 0;

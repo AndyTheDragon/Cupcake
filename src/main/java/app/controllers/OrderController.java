@@ -20,6 +20,8 @@ public class OrderController
     {
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, dbConnection));
         app.get("/order/delete", ctx -> deleteOrder(ctx,dbConnection));
+        app.get("/order/details/{id}", ctx -> showOrderHistory(ctx, dbConnection));
+        app.get("/order/finish/{id}", ctx -> showOrderHistory(ctx, dbConnection));
         app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, dbConnection));
         app.get("/removecupcake", OrderController::removeCupcakeFromBasket);
         app.get("/basket", ctx -> showBasket(null,ctx) );

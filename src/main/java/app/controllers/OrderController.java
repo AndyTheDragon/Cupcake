@@ -4,7 +4,6 @@ import app.entities.*;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper; // Sørg for at du har importeret din OrderMapper
-import app.persistence.UserMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context; // Den korrekte Context import fra Javalin
 import java.time.LocalDate;
@@ -21,69 +20,62 @@ public class OrderController
         app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, dbConnection));
         app.get("/removecupcake", ctx -> removeCupcakeFromBasket(ctx,dbConnection));
         app.get("/basket", ctx -> ctx.render("basket.html") );
-        app.get("/checkout", ctx -> ctx.render("checkout.html") );
+        app.get("/checkout", ctx -> ctx.render("basket.html") );
         app.post("/checkout", ctx -> checkout(ctx, dbConnection) );
-        app.get("/confirmation", ctx -> confirmation(ctx, dbConnection) );
-        //app.post("/confirmation", ctx -> confirmation(ctx, dbConnection));
     }
 
-    private static void confirmation(Context ctx, ConnectionPool pool)
-    {
-        ctx.attribute("message", "Din ordre er gennemført.");
-        ctx.render("confirmation.html");
-    }
 
     private static void checkout(Context ctx, ConnectionPool pool)
     {
-        // hvis brugeren er logget ind - betal med store credit
-
-        // til orders
-        String username = ctx.formParam("username");
-        String password = ctx.formParam("password");
-        LocalDate datePlaced = LocalDate.now();
-        String status = "Ordren er placeret";
-        // til order_lines
         List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
+        String pickupName = ctx.formParam("pickupname");
+        String paymentMethod = ctx.formParam("paymentmethod");
         if (orderLineList == null || orderLineList.isEmpty())
         {
             ctx.attribute("message", "din kurv er tom");
-            ctx.render("/basket");
+            ctx.render("basket.html");
+            return;
+        }
+        if (pickupName == null || paymentMethod == null)
+        {
+            ctx.attribute("message", "Navn eller paymentmethod er tom");
+            ctx.render("basket.html");
             return;
         }
 
+        User user;
+        if (paymentMethod.equals("user") && ctx.sessionAttribute("currentUser") != null)
+        {
+            user = ctx.sessionAttribute("currentUser");
+
+        }
+        else if (paymentMethod.equals("guest"))
+        {
+            user = null;
+        }
+        else
+        {
+            ctx.attribute("message", "Du er ikke logget ind, og kan derfor kun bestille til afhentning i butikken.");
+            ctx.render("basket.html");
+            return;
+        }
+
+        LocalDate datePlaced = LocalDate.now();
+        String status = "Ordren er placeret";
         try
         {
-            User user = UserMapper.login(username, password, pool);
-            ctx.sessionAttribute("currentUser", user);
-            ctx.render("checkout.html");
-
             // opretter ordren i orders & orderlines
-            int orderId = OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, user, pool);
-            OrderMapper.newOrderToOrderLines(orderId, orderLineList, pool);
+            int orderId = OrderMapper.createOrderInDb(pickupName, datePlaced, status, user, pool);
+            OrderMapper.createOrderlinesInDb(orderId, orderLineList, pool);
+            ctx.attribute("message", "Ordre er placeret med ordrenummer: " + orderId);
+            ctx.sessionAttribute("orderlines", null);
+            ctx.sessionAttribute("ordersum", null);
             ctx.render("confirmation.html");
 
         } catch (DatabaseException e)
         {
             ctx.attribute("message", e.getMessage());
-            ctx.render("/basket");
-        }
-
-
-        // hvis brugeren er gæst - afhent i butikken
-        if (ctx.sessionAttribute("currentUser") == null)
-        {
-            try
-            {
-                int orderId = OrderMapper.newOrdersToOrdersTable(username, datePlaced, status, null, pool);
-                OrderMapper.newOrderToOrderLines(orderId, orderLineList, pool);
-                ctx.render("confirmation.html");
-                ctx.attribute("message", "Din ordre er gennemført og du kan afhente i butikken");
-
-            } catch (DatabaseException e)
-            {
-                ctx.attribute("message", e.getMessage());
-                ctx.render("basket.html");
-            }
+            ctx.render("basket.html");
         }
 
 

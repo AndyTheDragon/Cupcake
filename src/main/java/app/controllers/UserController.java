@@ -24,10 +24,12 @@ public class UserController
 
     private static void depositToCustomerBalance(Context ctx, ConnectionPool pool)
     {
-        // retrieve user id - to prevent money being paid to all users in db
-        String idString = ctx.formParam("userId");
-        int userId = Integer.parseInt(idString);
+
         try {
+            // retrieve user id - to prevent money being paid to all users in db
+            String idString = ctx.formParam("userId");
+            int userId = Integer.parseInt(idString);
+
             String balanceString = ctx.formParam("customerbalance");
             // check if balance is null
             if (balanceString == null || balanceString.isEmpty()) {
@@ -35,7 +37,7 @@ public class UserController
             }
 
             int balance = Integer.parseInt(balanceString);
-            UserMapper.depositToCustomerBalance(userId, balance, pool);
+            UserMapper.depositToCustomerBalance(balance, userId, pool);
 
         } catch (DatabaseException e) {
             System.out.println(e.getMessage());

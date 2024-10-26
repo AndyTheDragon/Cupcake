@@ -44,7 +44,7 @@ public class UserMapper {
                     int id = rs.getInt("user_id");
                     String role = rs.getString("role");
                     int balance = rs.getInt("balance");
-                    return new User(id, username, password, role, balance);
+                    return new User(id, username, role, balance);
                 } else {
                     throw new DatabaseException("Brugernavn/kodeord matcher ikke. Prøv igen");
                 }
@@ -69,7 +69,7 @@ public class UserMapper {
                     String role = rs.getString("role");
                     int balance = rs.getInt("balance");
 
-                    userList.add(new User(userId, username, password, role, balance));
+                    userList.add(new User(userId, username, role, balance));
                 }
                 return userList;
             }

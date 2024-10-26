@@ -126,7 +126,7 @@ public class OrderMapper
                     balance = 0;
                 }
                 orders.add(new Order(order_id, name, date_placed, date_paid, date_completed,status,
-                            new User(user_id, username, "", user_role, balance)));
+                            new User(user_id, username, user_role, balance)));
 
             }
             return orders;

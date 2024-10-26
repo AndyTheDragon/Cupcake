@@ -35,7 +35,7 @@
                 <td><a class="" href="order/details" th:href="@{/order/details/{id}(id=${order.orderid})}" th:text="${order.orderid}">order id</a></td>
                 <td th:text="${order.name}">Navn</td>
                 <td>
-                    <a th:if="${order.user.userid}!=0" href="/customer" th:href="@{/customer/details/{id}(id=${order.user.userid})}" th:text="${order.user}">Bruger</a>
+                    <a th:if="${order.user.userid}!=0" href="/customer" th:href="@{/customer/{id}(id=${order.user.userid})}" th:text="${order.user}">Bruger</a>
                     <span th:if="${order.user.userid}==0" th:text="${order.user}">Gæst</span>
                 </td>
                 <td><span class="badge text-bg-info" th:text="${order.status}">Fullfilled</span></td>

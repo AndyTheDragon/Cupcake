@@ -101,4 +101,24 @@ public class UserMapper {
             throw new DatabaseException(e.getMessage());
         }
     }
+
+    public static User getUser(int userId, ConnectionPool dbConnection) throws DatabaseException
+    {
+        String sql = "SELECT user_id, username, role, balance FROM users WHERE user_id=?";
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql))
+        {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next())
+            {
+                return new User(userId, rs.getString("username"), rs.getString("role"), rs.getInt("balance"));
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DatabaseException(e.getMessage());
+        }
+        return null;
+    }
 }

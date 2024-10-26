@@ -21,7 +21,7 @@ public class OrderController
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, dbConnection));
         app.get("/order/delete", ctx -> deleteOrder(ctx,dbConnection));
         app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, dbConnection));
-        app.get("/removecupcake", ctx -> removeCupcakeFromBasket(ctx));
+        app.get("/removecupcake", OrderController::removeCupcakeFromBasket);
         app.get("/basket", ctx -> showBasket(null,ctx) );
         app.get("/checkout", ctx -> showBasket(null,ctx) );
         app.post("/checkout", ctx -> checkout(ctx, dbConnection) );

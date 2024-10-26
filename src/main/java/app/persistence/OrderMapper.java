@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class OrderMapper
 {
 
-    public static int newOrdersToOrdersTable(String name, LocalDate datePlaced, String status, User user, ConnectionPool pool) throws DatabaseException
+    public static int createOrderInDb(String name, LocalDate datePlaced, String status, User user, ConnectionPool pool) throws DatabaseException
     {
         String sql = "INSERT INTO orders (name, date_placed, status, user_id) VALUES (?,?,?,?)";
         try (Connection connection = pool.getConnection())
@@ -24,7 +24,14 @@ public class OrderMapper
             ps.setString(1, name);
             ps.setDate(2, Date.valueOf(datePlaced));
             ps.setString(3, status);
-            ps.setInt(4, user.getUserId());
+            if (user != null)
+            {
+                ps.setInt(4, user.getUserId());
+            }
+            else
+            {
+                ps.setNull(4, Types.INTEGER);
+            }
 
             int rowsAffected = ps.executeUpdate();
 
@@ -51,7 +58,7 @@ public class OrderMapper
         }
     }
 
-    public static void newOrderToOrderLines(int orderId, List<OrderLine> orderLines, ConnectionPool pool) throws DatabaseException
+    public static void createOrderlinesInDb(int orderId, List<OrderLine> orderLines, ConnectionPool pool) throws DatabaseException
     {
         String sql = "INSERT INTO order_lines (quantity, top_flavour, bottom_flavour, price, order_id) VALUES (?,?,?,?,?)";
         try (Connection connection = pool.getConnection())
@@ -81,7 +88,7 @@ public class OrderMapper
 
     public static List<Order> getOrders(String sortby, ConnectionPool pool) throws DatabaseException
     {
-        String sql = "SELECT order_id, name, date_placed, date_paid, date_completed, status, orders.user_id, username, balance, role FROM orders INNER JOIN users ON orders.user_id = users.user_id ORDER BY ?";
+        String sql = "SELECT order_id, name, date_placed, date_paid, date_completed, status, orders.user_id, username, balance, role FROM orders LEFT JOIN users ON orders.user_id = users.user_id ORDER BY ?";
         int order_id;
         String name;
         Date date_placed;
@@ -112,6 +119,12 @@ public class OrderMapper
                 username = rs.getString("username");
                 balance = rs.getInt("balance");
                 user_role = rs.getString("role");
+                if (user_id == 0) {
+                    user_id = 0;
+                    username = "Gæst";
+                    user_role = "guest";
+                    balance = 0;
+                }
                 orders.add(new Order(order_id, name, date_placed, date_paid, date_completed,status,
                             new User(user_id, username, "", user_role, balance)));
 

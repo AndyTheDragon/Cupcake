@@ -7,6 +7,8 @@ import app.persistence.OrderMapper;
 import app.persistence.UserMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import org.jetbrains.annotations.Nullable;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +21,14 @@ public class OrderController
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, dbConnection));
         app.get("/order/delete", ctx -> deleteOrder(ctx,dbConnection));
         app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, dbConnection));
-        app.get("/removecupcake", ctx -> removeCupcakeFromBasket(ctx,dbConnection));
-        app.get("/basket", ctx -> ctx.render("basket.html") );
-        app.get("/checkout", ctx -> ctx.render("basket.html") );
+        app.get("/removecupcake", ctx -> removeCupcakeFromBasket(ctx));
+        app.get("/basket", ctx -> showBasket(null,ctx) );
+        app.get("/checkout", ctx -> showBasket(null,ctx) );
         app.post("/checkout", ctx -> checkout(ctx, dbConnection) );
     }
 
 
-    private static void showBasket(String message, Context ctx, ConnectionPool dbConnection)
+    private static void showBasket(@Nullable String message, Context ctx)
     {
         ctx.attribute("message", message);
         ctx.render("basket.html");
@@ -35,28 +37,27 @@ public class OrderController
     private static void checkout(Context ctx, ConnectionPool dbConnection)
     {
         List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
-        int orderSum = (ctx.sessionAttribute("ordersum")==null) ? 0 : ctx.sessionAttribute("ordersum");
+        int orderSum = (ctx.sessionAttribute("ordersum") != null) ? ctx.sessionAttribute("ordersum") : 0;
         String pickupName = ctx.formParam("pickupname");
         String paymentMethod = ctx.formParam("paymentmethod");
         if (orderLineList == null || orderLineList.isEmpty())
         {
-            showBasket("din kurv er tom", ctx, dbConnection);
+            showBasket("din kurv er tom", ctx);
             return;
         }
         if (pickupName == null || paymentMethod == null)
         {
-            showBasket("Navn eller paymentmethod er tom", ctx, dbConnection);
+            showBasket("Navn eller paymentmethod er tom", ctx);
             return;
         }
 
-        User user;
+        User user = ctx.sessionAttribute("currentUser");
         LocalDate datePlaced = LocalDate.now();
         LocalDate datePaid = null;
         String status = "Ordren er placeret";
 
-        if (paymentMethod.equals("user") && ctx.sessionAttribute("currentUser") != null)
+        if (paymentMethod.equals("user") && user != null)
         {
-            user = ctx.sessionAttribute("currentUser");
             if (user.getBalance() > orderSum)
             {
                 try
@@ -69,13 +70,13 @@ public class OrderController
                 }
                 catch (DatabaseException e)
                 {
-                    showBasket(e.getMessage(), ctx, dbConnection);
+                    showBasket(e.getMessage(), ctx);
                     return;
                 }
             }
             else
             {
-                showBasket("Du har ikke penge nok på kontoen.", ctx, dbConnection);
+                showBasket("Du har ikke penge nok på kontoen.", ctx);
                 return;
             }
 
@@ -86,7 +87,7 @@ public class OrderController
         }
         else
         {
-            showBasket("Du er ikke logget ind, og kan derfor kun bestille til afhentning i butikken.", ctx, dbConnection);
+            showBasket("Du er ikke logget ind, og kan derfor kun bestille til afhentning i butikken.", ctx);
             return;
         }
 
@@ -102,7 +103,7 @@ public class OrderController
 
         } catch (DatabaseException e)
         {
-            showBasket(e.getMessage(), ctx, dbConnection);
+            showBasket(e.getMessage(), ctx);
         }
 
 
@@ -200,7 +201,7 @@ public class OrderController
         }
     }
 
-    private static void removeCupcakeFromBasket(Context ctx, ConnectionPool dbConnection)
+    private static void removeCupcakeFromBasket(Context ctx)
     {
         String lineId = ctx.queryParam("line_id");
         List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");

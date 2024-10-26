@@ -77,4 +77,21 @@ public class UserMapper {
             throw new DatabaseException(e.getMessage());
         }
     }
+
+    public static void payForOrder(User user, ConnectionPool dbConnection) throws DatabaseException
+    {
+        String sql = "UPDATE users SET balance=? WHERE user_id=?";
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql))
+        {
+            ps.setInt(1, user.getBalance());
+            ps.setInt(2, user.getUserId());
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1) {
+                throw new DatabaseException("Fejl ved betaling.");
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
 }

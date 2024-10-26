@@ -3,9 +3,10 @@ package app.controllers;
 import app.entities.*;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
-import app.persistence.OrderMapper; // Sørg for at du har importeret din OrderMapper
+import app.persistence.OrderMapper;
+import app.persistence.UserMapper;
 import io.javalin.Javalin;
-import io.javalin.http.Context; // Den korrekte Context import fra Javalin
+import io.javalin.http.Context;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,28 +26,58 @@ public class OrderController
     }
 
 
-    private static void checkout(Context ctx, ConnectionPool pool)
+    private static void showBasket(String message, Context ctx, ConnectionPool dbConnection)
+    {
+        ctx.attribute("message", message);
+        ctx.render("basket.html");
+    }
+
+    private static void checkout(Context ctx, ConnectionPool dbConnection)
     {
         List<OrderLine> orderLineList = ctx.sessionAttribute("orderlines");
+        int orderSum = (ctx.sessionAttribute("ordersum")==null) ? 0 : ctx.sessionAttribute("ordersum");
         String pickupName = ctx.formParam("pickupname");
         String paymentMethod = ctx.formParam("paymentmethod");
         if (orderLineList == null || orderLineList.isEmpty())
         {
-            ctx.attribute("message", "din kurv er tom");
-            ctx.render("basket.html");
+            showBasket("din kurv er tom", ctx, dbConnection);
             return;
         }
         if (pickupName == null || paymentMethod == null)
         {
-            ctx.attribute("message", "Navn eller paymentmethod er tom");
-            ctx.render("basket.html");
+            showBasket("Navn eller paymentmethod er tom", ctx, dbConnection);
             return;
         }
 
         User user;
+        LocalDate datePlaced = LocalDate.now();
+        LocalDate datePaid = null;
+        String status = "Ordren er placeret";
+
         if (paymentMethod.equals("user") && ctx.sessionAttribute("currentUser") != null)
         {
             user = ctx.sessionAttribute("currentUser");
+            if (user.getBalance() > orderSum)
+            {
+                try
+                {
+                    user.buy(orderSum);
+                    UserMapper.payForOrder(user,dbConnection);
+                    datePlaced = LocalDate.now();
+                    status = "Ordren er betalt";
+
+                }
+                catch (DatabaseException e)
+                {
+                    showBasket(e.getMessage(), ctx, dbConnection);
+                    return;
+                }
+            }
+            else
+            {
+                showBasket("Du har ikke penge nok på kontoen.", ctx, dbConnection);
+                return;
+            }
 
         }
         else if (paymentMethod.equals("guest"))
@@ -55,18 +86,15 @@ public class OrderController
         }
         else
         {
-            ctx.attribute("message", "Du er ikke logget ind, og kan derfor kun bestille til afhentning i butikken.");
-            ctx.render("basket.html");
+            showBasket("Du er ikke logget ind, og kan derfor kun bestille til afhentning i butikken.", ctx, dbConnection);
             return;
         }
 
-        LocalDate datePlaced = LocalDate.now();
-        String status = "Ordren er placeret";
         try
         {
             // opretter ordren i orders & orderlines
-            int orderId = OrderMapper.createOrderInDb(pickupName, datePlaced, status, user, pool);
-            OrderMapper.createOrderlinesInDb(orderId, orderLineList, pool);
+            int orderId = OrderMapper.createOrderInDb(pickupName, datePlaced, status, user, dbConnection);
+            OrderMapper.createOrderlinesInDb(orderId, orderLineList, dbConnection);
             ctx.attribute("message", "Ordre er placeret med ordrenummer: " + orderId);
             ctx.sessionAttribute("orderlines", null);
             ctx.sessionAttribute("ordersum", null);
@@ -74,8 +102,7 @@ public class OrderController
 
         } catch (DatabaseException e)
         {
-            ctx.attribute("message", e.getMessage());
-            ctx.render("basket.html");
+            showBasket(e.getMessage(), ctx, dbConnection);
         }
 
 

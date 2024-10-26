@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS public.cupcake_flavours
     flavour_name character varying(64) NOT NULL,
     is_top_flavour boolean NOT NULL,
     is_bottom_flavour boolean NOT NULL,
+    is_enabled boolean NOT NULL DEFAULT true,
     price int NOT NULL,
     PRIMARY KEY (flavour_id)
 );

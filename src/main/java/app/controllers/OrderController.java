@@ -93,9 +93,9 @@ public class OrderController
         try
         {
             // opretter ordren i orders & orderlines
-            int orderId = OrderMapper.createOrderInDb(pickupName, datePlaced, status, user, dbConnection);
+            int orderId = OrderMapper.createOrderInDb(pickupName, datePlaced, datePaid, status, user, dbConnection);
             OrderMapper.createOrderlinesInDb(orderId, orderLineList, dbConnection);
-            ctx.attribute("message", "Ordre er placeret med ordrenummer: " + orderId);
+            ctx.attribute("message", "Ordre er placeret med ordrenummer: " + orderId + " " + ctx.formParamMap());
             ctx.sessionAttribute("orderlines", null);
             ctx.sessionAttribute("ordersum", null);
             ctx.render("confirmation.html");

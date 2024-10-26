@@ -15,22 +15,29 @@ import java.sql.SQLException;
 public class OrderMapper
 {
 
-    public static int createOrderInDb(String name, LocalDate datePlaced, String status, User user, ConnectionPool pool) throws DatabaseException
+    public static int createOrderInDb(String name, LocalDate datePlaced, LocalDate datePaid, String status, User user, ConnectionPool pool) throws DatabaseException
     {
-        String sql = "INSERT INTO orders (name, date_placed, status, user_id) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO orders (name, date_placed, date_paid, status, user_id) VALUES (?,?,?,?,?)";
         try (Connection connection = pool.getConnection())
         {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setDate(2, Date.valueOf(datePlaced));
-            ps.setString(3, status);
+            if ((datePaid == null))
+            {
+                ps.setNull(3, Types.DATE);
+            } else
+            {
+                ps.setDate(3, Date.valueOf(datePaid));
+            }
+            ps.setString(4, status);
             if (user != null)
             {
-                ps.setInt(4, user.getUserId());
+                ps.setInt(5, user.getUserId());
             }
             else
             {
-                ps.setNull(4, Types.INTEGER);
+                ps.setNull(5, Types.INTEGER);
             }
 
             int rowsAffected = ps.executeUpdate();

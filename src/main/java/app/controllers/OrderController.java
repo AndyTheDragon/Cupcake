@@ -63,7 +63,7 @@ public class OrderController
                 {
                     user.buy(orderSum);
                     UserMapper.payForOrder(user,dbConnection);
-                    datePlaced = LocalDate.now();
+                    datePaid = LocalDate.now();
                     status = "Ordren er betalt";
 
                 }
@@ -95,7 +95,7 @@ public class OrderController
             // opretter ordren i orders & orderlines
             int orderId = OrderMapper.createOrderInDb(pickupName, datePlaced, datePaid, status, user, dbConnection);
             OrderMapper.createOrderlinesInDb(orderId, orderLineList, dbConnection);
-            ctx.attribute("message", "Ordre er placeret med ordrenummer: " + orderId + " " + ctx.formParamMap());
+            ctx.attribute("message", "Ordre er placeret med ordrenummer: " + orderId);
             ctx.sessionAttribute("orderlines", null);
             ctx.sessionAttribute("ordersum", null);
             ctx.render("confirmation.html");

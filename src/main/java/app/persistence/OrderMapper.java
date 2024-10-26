@@ -18,9 +18,10 @@ public class OrderMapper
     public static int createOrderInDb(String name, LocalDate datePlaced, LocalDate datePaid, String status, User user, ConnectionPool pool) throws DatabaseException
     {
         String sql = "INSERT INTO orders (name, date_placed, date_paid, status, user_id) VALUES (?,?,?,?,?)";
-        try (Connection connection = pool.getConnection())
+        try (Connection connection = pool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);)
         {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
             ps.setString(1, name);
             ps.setDate(2, Date.valueOf(datePlaced));
             if ((datePaid == null))
@@ -47,19 +48,18 @@ public class OrderMapper
                 throw new DatabaseException("fejl........");
             }
 
-            try (ResultSet rs = ps.getGeneratedKeys())
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next())
             {
-                if (rs.next())
-                {
-                    // Return the generated orderId
-                    return rs.getInt(1);  // assuming orderId is in the first column
-                }
-                else
-                {
-                    throw new DatabaseException("Kunne ikke hente genereret ordre-id.");
-                }
+                // Return the generated orderId
+                return rs.getInt(1);  // assuming orderId is in the first column
             }
-        } catch (SQLException e)
+            else
+            {
+                throw new DatabaseException("Kunne ikke hente genereret ordre-id.");
+            }
+        }
+        catch (SQLException e)
         {
             throw new DatabaseException(e.getMessage());
         }

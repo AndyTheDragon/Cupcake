@@ -42,8 +42,8 @@ public class User
 
     }
 
-    public void buy()
+    public void buy(int amount)
     {
-
+        this.balance -= amount;
     }
 }

@@ -15,25 +15,30 @@ public class UserMapper {
 
     public static void depositToCustomerBalance(int userId, int balance, ConnectionPool pool) throws DatabaseException
     {
-        String sql = "UPDATE users SET balance = ? where user_id = ?";
+        String sql = "UPDATE users SET balance = ? WHERE user_id = ?";
 
         try (Connection connection = pool.getConnection())
         {
             PreparedStatement ps = connection.prepareStatement(sql);
 
-            ps.setInt(1, userId);
             ps.setInt(2, balance);
-            System.out.println("opdaterer" + userId + " med balancen " + balance);
+            ps.setInt(1, userId);
+
+            System.out.println("opdaterer " + userId + " med balancen " + balance);
+
 
 
             int rowsAffected = ps.executeUpdate();
+            //System.out.println("Auto-commit status: " + connection.getAutoCommit()); // to confirm auto-commit is deactivated - hence. prior line
 
+/*
             if (rowsAffected != 1)
             {
                 throw new DatabaseException("fejl ved indbetaling til saldo.");
-            }
+            }*/
         } catch (SQLException e)
         {
+            System.out.println("fejl ved indbetalign" + e.getMessage());
             throw new DatabaseException(e.getMessage());
         }
     }

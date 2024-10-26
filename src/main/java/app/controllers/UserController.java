@@ -33,10 +33,12 @@ public class UserController
             if (balanceString == null || balanceString.isEmpty()) {
                 ctx.attribute("error", "Du skal indtaste et beløb for at opdatere kundens saldo");
             }
+
             int balance = Integer.parseInt(balanceString);
             UserMapper.depositToCustomerBalance(userId, balance, pool);
 
         } catch (DatabaseException e) {
+            System.out.println(e.getMessage());
             ctx.attribute("message", e.getMessage());
         } catch (NumberFormatException e)
         {

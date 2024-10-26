@@ -56,7 +56,7 @@ public class UserMapper {
 
     public static List<User> getAllUsers(ConnectionPool pool) throws DatabaseException {
         List<User> userList = new ArrayList<>();
-        String sql = "SELECT user_id, username, password, role, balance FROM users ORDER BY role DESC, username ASC";
+        String sql = "SELECT user_id, username, password, role, balance FROM users ORDER BY role DESC, username";
 
         try (Connection connection = pool.getConnection()){
             try(PreparedStatement ps = connection.prepareStatement(sql)){
@@ -65,7 +65,6 @@ public class UserMapper {
                 while (rs.next()) {
                     int userId = rs.getInt("user_id");
                     String username = rs.getString("username");
-                    String password = rs.getString("password");
                     String role = rs.getString("role");
                     int balance = rs.getInt("balance");
 

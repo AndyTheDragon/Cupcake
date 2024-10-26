@@ -83,11 +83,10 @@ public class UserController
         }
         else
         {
-            ctx.attribute("message", "Kodeordet følger ikke op til krav. Check venligst: \n" +
-                    "{" +
-                    "Minimumslængde på 8 tegn," +
-                    "Inkluder et tal i dit kodeord," +
-                    "Inkluder et specielt tegn} ");
+            ctx.attribute("message", "Kodeordet følger ikke op til krav. Check venligst: <br>" +
+                    "Minimumslængde på 8 tegn, " +
+                    "Inkluder et tal i dit kodeord, " +
+                    "Inkluder et special tegn ");
         }
         return false;
     }

@@ -40,6 +40,10 @@ public class User
     {
         this.balance -= amount;
     }
+    public boolean isAdmin()
+    {
+        return role.equals("admin");
+    }
 
     @Override
     public String toString()

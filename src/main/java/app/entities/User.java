@@ -31,11 +31,6 @@ public class User
         return balance;
     }
 
-    public void deposit(int amount)
-    {
-        this.balance += amount;
-    }
-
     public void buy(int amount)
     {
         this.balance -= amount;

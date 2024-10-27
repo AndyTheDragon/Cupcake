@@ -19,7 +19,7 @@ public class OrderMapper
     {
         String sql = "INSERT INTO orders (name, date_placed, date_paid, status, user_id) VALUES (?,?,?,?,?)";
         try (Connection connection = pool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);)
+             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS))
         {
 
             ps.setString(1, name);

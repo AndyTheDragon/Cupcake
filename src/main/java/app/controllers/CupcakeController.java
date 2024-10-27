@@ -5,10 +5,12 @@ import app.entities.CupcakeType;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.CupcakeMapper;
+import app.persistence.UserMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 import javax.naming.spi.ObjectFactory;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +25,43 @@ public class CupcakeController
 
     }
 
+    private static void deactivateFlavour(Context ctx, ConnectionPool dbConnection)
+    {
+        String isEnabledString = ctx.formParam("isenabled");
+        String flavourIdString = ctx.formParam("flavourId");
+
+        if (isEnabledString == null || isEnabledString.isEmpty())
+        {
+            ctx.attribute("message", "Indtast en værdi ");
+        }
+
+        boolean isEnabled = Boolean.parseBoolean(isEnabledString);
+        int flavourId = Integer.parseInt(flavourIdString);
+
+
+        try
+        {
+            CupcakeMapper.deactivateFlavour(isEnabled, flavourId, dbConnection);
+        } catch (DatabaseException e)
+        {
+            ctx.attribute("message", e.getMessage());
+            ctx.render("");
+        }
+
+
+    }
+
+
     private static void editCupcakeFlavours(Context ctx, ConnectionPool dbConnection)
     {
-
+        /*
+        try
+        {
+            UserMapper;
+        } catch (DatabaseException e)
+        {
+            ctx.attribute("message", e.getMessage());
+        }*/
 
     }
 

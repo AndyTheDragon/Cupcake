@@ -37,6 +37,57 @@ public class CupcakeMapper
         }
     }
 
+    public static void deactivateFlavour(boolean isEnabled, int flavourId, ConnectionPool pool) throws DatabaseException
+    {
+        String sql = "UPDATE cupcake_flavours SET is_enabled = ? WHERE flavour_id = ?";
+
+        try (Connection connection = pool.getConnection())
+        {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setBoolean(1, isEnabled);
+            ps.setInt(2, flavourId);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1)
+            {
+                throw new DatabaseException("Fejl ved opdatering af tilgængelighed");
+            }
+        } catch (SQLException e)
+        {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    public static List<CupcakeFlavour> getAllFlavours(ConnectionPool dbConnection) throws DatabaseException
+    {
+        List<CupcakeFlavour> flavours = new ArrayList<>();
+        int flavourId = 0;
+        String flavourName = "";
+        boolean isEnabled = true;
+        int price = 0;
+
+        String sql = "SELECT flavour_id, flavour_name, is_enabled, price FROM cupcake_flavours";
+
+        try (Connection connection = dbConnection.getConnection())
+        {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                rs.getInt("flavour_id");
+                rs.getString("flavour_name");
+                rs.getBoolean("is_enabled");
+                rs.getInt("price");
+            }
+
+            flavours.add(new CupcakeFlavour(flavourId, price, flavourName, "desc", CupcakeType.TOP));
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Fejl ved at hente alle flavours fra db", e);
+        }
+        return flavours;
+    }
+
     public static List<CupcakeFlavour> getFlavours(CupcakeType cupcakeType, ConnectionPool dbConnection) throws DatabaseException
     {
         List<CupcakeFlavour> flavours = new ArrayList<>();
@@ -73,4 +124,6 @@ public class CupcakeMapper
 
         return flavours;
     }
+
+
 }

@@ -33,6 +33,7 @@ public class CupcakeController
         if (isEnabledString == null || isEnabledString.isEmpty())
         {
             ctx.attribute("message", "Indtast en værdi ");
+            ctx.render("/");
         }
 
         boolean isEnabled = Boolean.parseBoolean(isEnabledString);

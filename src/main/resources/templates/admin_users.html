@@ -23,6 +23,18 @@
                         <p class="card-text">Brugernavn: <span th:text="${user.userName}">Navn</span></p>
                         <p class="card-text">Balance: <span th:text="${user.balance/100}">Balance</span></p>
                         <p class="card-text">Rolle: <span th:text="${user.role}">Rolle</span></p>
+
+                        <form method="post" action="/deposit">
+                            <div class="row g-3 mb-3">
+                                <div class="col-auto">
+                                    <input type="hidden" name="userId" th:value="${user.userId}">
+                                    <input class="form-control form-control-lg" type="text" id="customerbalance" placeholder="Indbetal et beløb" name="customerbalance">
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-lg btn-primary" type="submit">indbetal</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

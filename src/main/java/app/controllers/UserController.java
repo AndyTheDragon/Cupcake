@@ -6,7 +6,6 @@ import app.persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import app.persistence.UserMapper;
-
 import java.util.List;
 
 public class UserController
@@ -20,7 +19,42 @@ public class UserController
         app.get("/logout", ctx -> doLogout(ctx));
         app.get("/customer", ctx -> redirectUserByRole(ctx, dbConnection));
         app.get("/customer/{id}", ctx -> showCustomerPage(ctx, dbConnection));
+        app.post("/deposit", ctx -> depositToCustomerBalance(ctx, dbConnection));
     }
+
+    private static void depositToCustomerBalance(Context ctx, ConnectionPool pool)
+    {
+
+        try
+        {
+            // retrieve user id - to prevent money being paid to all users in db
+            String idString = ctx.formParam("userId");
+            int userId = Integer.parseInt(idString);
+
+            String balanceString = ctx.formParam("customerbalance");
+            // check if balance is null
+            if (balanceString == null || balanceString.isEmpty())
+            {
+                ctx.attribute("error", "Du skal indtaste et beløb for at opdatere kundens saldo");
+            }
+
+            int balance = Integer.parseInt(balanceString);
+            UserMapper.depositToCustomerBalance(balance, userId, pool);
+            ctx.attribute("message", "Beløb er indbetalt.");
+        }
+        catch (DatabaseException e)
+        {
+            ctx.attribute("message", e.getMessage());
+        }
+        catch (NumberFormatException e)
+        {
+            ctx.attribute("message", "Du skal indtaste et gyldigt beløb");
+            ctx.render("login.html");
+        }
+        showAdminPage(ctx, pool);
+
+    }
+
 
     private static void createUser(Context ctx, ConnectionPool dbConnection)
     {
@@ -77,7 +111,8 @@ public class UserController
         if (password.length() >= 8 && hasNumber && hasSpecialChar)
         {
             return true; // Password meets all criteria
-        } else
+        }
+        else
         {
             ctx.attribute("message", "Kodeordet følger ikke op til krav. Check venligst: <br>" +
                     "Minimumslængde på 8 tegn, " +

@@ -14,6 +14,32 @@ import java.util.List;
 
 public class UserMapper {
 
+    public static void depositToCustomerBalance(int balance, int userId, ConnectionPool pool) throws DatabaseException
+    {
+        String sql = "UPDATE users SET balance = ? WHERE user_id = ?";
+
+        try (Connection connection = pool.getConnection())
+        {
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ps.setInt(1, balance);
+            ps.setInt(2, userId);
+
+            //System.out.println("opdaterer " + userId + " med balancen " + balance);
+            int rowsAffected = ps.executeUpdate();
+            //System.out.println("Auto-commit status: " + connection.getAutoCommit()); // to confirm auto-commit is deactivated - hence. prior line
+            if (rowsAffected != 1)
+            {
+                throw new DatabaseException("fejl ved indbetaling til saldo.");
+            }
+
+        } catch (SQLException e)
+        {
+            throw new DatabaseException(e.getMessage());
+        }
+
+    }
+
     public static void createUser(String username, String password, ConnectionPool pool) throws DatabaseException
     {
         String sql = "insert into users (username, password, role) VALUES (?,?,?);";

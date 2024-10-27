@@ -17,7 +17,7 @@ public class OrderController
     {
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, dbConnection));
         app.get("/order/delete", ctx -> deleteOrder(ctx,dbConnection));
-        app.get("/order/details/{id}", ctx -> showOrderHistory(ctx, dbConnection));
+        app.get("/order/details/{id}", ctx -> showOrderDetails(ctx, dbConnection));
         app.get("/order/finish/{id}", ctx -> showOrderHistory(ctx, dbConnection));
         app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, dbConnection));
         app.get("/removecupcake", OrderController::removeCupcakeFromBasket);
@@ -211,21 +211,22 @@ public class OrderController
         ctx.render("/basket.html");
     }
 
-    private static void showOrderDetails(Context ctx,ConnectionPool db ){
+    private static void showOrderDetails(Context ctx,ConnectionPool dbConnection ){
 
         {
-            List<Order> order = new ArrayList<>();
+            Order order;
             try
             {
-                order = OrderMapper.showOrderDetails(pool);
+                String orderId = ctx.pathParam("id");
+                order = OrderMapper.getOrderDetails(Integer.parseInt(orderId), dbConnection);
+                ctx.attribute("order", order);
+                ctx.render("/showorderdetails.html");
             }
-            catch (DatabaseException e)
+            catch (DatabaseException | NumberFormatException e)
             {
                 ctx.attribute("message","Noget gik galt. " + e.getMessage());
             }
             // Render Thymeleaf-skabelonen
-            ctx.attribute("orders", order);
-            ctx.render("/showorderdetails.html");
         }
 
     }

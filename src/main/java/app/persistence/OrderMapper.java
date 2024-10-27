@@ -188,60 +188,47 @@ public class OrderMapper
         }
     }
 
- public  static Order showOrderDetails (ConnectionPool pool)throws DatabaseException{
-        String sql = "SELECT user.user_id, user.username, user.password, user.balance, user.role order.name, order.status, order.date_placed, order.date_paid, order.date_completed, order.order_id, order.user_id " +
-                "ol.order_line_id, ol.quantity, bottomf.flavour_name AS bot_flavour, topf.flavour_name AS top_flavour, ol.price  FROM order_lines AS ol " +
-                "INNER JOIN cupcake_flavours AS bottomf on bottomf.flavour_id = ol.bottom_flavour INNER JOIN cupcake_flavours AS topf on topf.flavour_id = ol.top_flavour  " +
-                "INNER JOIN orders on orders.order_id = ol.order_id INNER JOIN users on users.user_id = orders.user_id ";
+ public  static Order getOrderDetails(int orderId, ConnectionPool pool)throws DatabaseException{
+        String sql = "SELECT u.*, o.*, ol.*, " +
+                "bottomf.flavour_name AS bot_flavour_name, bottomf.price AS bot_price, topf.flavour_name AS top_flavour_name, topf.price AS top_price " +
+                "FROM order_lines AS ol " +
+                "INNER JOIN cupcake_flavours AS bottomf ON bottomf.flavour_id = ol.bottom_flavour " +
+                "INNER JOIN cupcake_flavours AS topf ON topf.flavour_id = ol.top_flavour  " +
+                "INNER JOIN orders AS o ON o.order_id = ol.order_id " +
+                "INNER JOIN users AS u ON u.user_id = o.user_id " +
+                "WHERE ol.order_id = ?";
 
-
-     int order_line_id;
-        String top_flavour;
-        String bottom_flavour;
-        int order_lines;
 
         try (Connection connection = pool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql))
         {
+            ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
             List<OrderLine> orderLines = new ArrayList<>();
 
-            User user = null;
-            int orderId = 0;
-            String name ="";
-            String status = "";
-
-
             while (rs.next()) {
-                int orderLineId = rs.getInt("order_line_id");
-                int quantity = rs.getInt("quantity");
-                String topFlavourName = rs.getString("top_flavour");
-                String bottomFlavourName = rs.getString("bot_flavour");
-                int price = rs.getInt("price");
-                int bottomPrice = rs.getInt("bottom_price");
-                int cupcakeFlavourId = rs.getInt("buttom_flavour");
-                int order_id = rs.getInt("order_id");
-                name = rs.getString("name");
-                status = rs.getString("status");
-                Date date_placed = rs.getDate("date_placed");
-                Date date_paid = rs.getDate("date_paid");
-                Date date_completed = rs.getDate("date_completed");
-                orderId = rs.getInt("order_id");
-                int userId = rs.getInt("user_id");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                int balance = rs.getInt("balance");
-                String role = rs.getString("role");
-
-
-                CupcakeFlavour topFlavour = new CupcakeFlavour(cupcakeFlavourId,bottomPrice,topFlavourName,"",CupcakeType.TOP);
-                CupcakeFlavour bottomFlavour = new CupcakeFlavour(cupcakeFlavourId,bottomPrice,bottomFlavourName,"",CupcakeType.BOTTOM);
-
+                CupcakeFlavour topFlavour = new CupcakeFlavour(
+                        rs.getInt("top_flavour"),
+                        rs.getInt("top_price"),
+                        rs.getString("top_flavour_name"),
+                        "",
+                        CupcakeType.TOP);
+                CupcakeFlavour bottomFlavour = new CupcakeFlavour(
+                        rs.getInt("bottom_flavour"),
+                        rs.getInt("bot_price"),
+                        rs.getString("bot_flavour_name"),
+                        "",
+                        CupcakeType.BOTTOM);
                 Cupcake cupcake = new Cupcake(topFlavour, bottomFlavour);
-                orderLines.add(new OrderLine(order_id,quantity,cupcake,price));
-                user = new User(userId,username,password,role,balance);
+                orderLines.add(new OrderLine(orderId, rs.getInt("quantity"), cupcake, rs.getInt("price") ));
+
             }
-            return new Order(orderId,name,status, user,orderLines);
+            return new Order(
+                    orderId,
+                    rs.getString("name"),
+                    rs.getString("status"),
+                    new User(rs.getInt("u.user_id"),rs.getString("username"),rs.getString("role"),rs.getInt("balance")),
+                    orderLines);
         }
         catch (SQLException e)
         {

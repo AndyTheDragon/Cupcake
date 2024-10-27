@@ -2,16 +2,13 @@ package app.controllers;
 
 import app.entities.*;
 import app.exceptions.DatabaseException;
-import app.persistence.ConnectionPool;
-import app.persistence.OrderMapper;
-import app.persistence.UserMapper;
+import app.persistence.*;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import org.jetbrains.annotations.Nullable;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 public class OrderController
 {
@@ -134,8 +131,8 @@ public class OrderController
 
         try
         {
-            CupcakeFlavour topFlavour = OrderMapper.getCupcakeFlavour(topFlavourName, CupcakeType.TOP, pool);
-            CupcakeFlavour bottomFlavour = OrderMapper.getCupcakeFlavour(bottomFlavourName, CupcakeType.BOTTOM, pool);
+            CupcakeFlavour topFlavour = CupcakeMapper.getCupcakeFlavour(topFlavourName, CupcakeType.TOP, pool);
+            CupcakeFlavour bottomFlavour = CupcakeMapper.getCupcakeFlavour(bottomFlavourName, CupcakeType.BOTTOM, pool);
             Cupcake cupcake = new Cupcake(topFlavour, bottomFlavour);
 
             int orderId = 0;

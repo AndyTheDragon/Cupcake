@@ -17,9 +17,9 @@ public class CupcakeController
     public static void addRoutes(Javalin app, ConnectionPool dbConnection)
     {
         app.get("/", ctx ->  showFrontpage(ctx,dbConnection));
-        app.get("/newcupcakeflavours", ctx -> ctx.render("addcupcakeflavour.html") );
+        app.get("/addcupcakeflavour", ctx -> ctx.render("addcupcakeflavour.html") );
         app.post("/addcupcakeflavour", ctx -> addCupcakeFlavour(ctx, dbConnection) );
-        app.get("/editcupcakeflavour", ctx -> ctx.render("allcupcakeflavours.html") );
+        app.get("/editcupcakeflavour", ctx -> ctx.render("editcupcakeflavour.html") );
 
     }
 
@@ -47,22 +47,22 @@ public class CupcakeController
             {
                 CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice2, pool);
                 ctx.attribute("message", "Din nye flavour er oprettet.");
-                ctx.render("newcupcakeflavours.html");
+                ctx.render("addcupcakeflavour.html");
             } else // if false and false
             {
                 ctx.attribute("message", "Din nye flavour skal have en top/bund.");
-                ctx.render("newcupcakeflavours.html");
+                ctx.render("addcupcakeflavour.html");
             }
 
         } catch (DatabaseException e)
         {
             ctx.attribute("message", e.getMessage());
-            ctx.render("newcupcakeflavours.html");
+            ctx.render("addcupcakeflavour.html");
         }
         catch (NumberFormatException e)
         {
             ctx.attribute("message", "Prisen skal være et tal");
-            ctx.render("newcupcakeflavours.html");
+            ctx.render("addcupcakeflavour.html");
         }
 
     }
@@ -93,7 +93,7 @@ public class CupcakeController
             if (cupcakeType == null || cupcakeType.isEmpty())
             {
                 ctx.attribute("message", "Du skal angive en type");
-                ctx.render("newcupcakeflavours.html");
+                ctx.render("addcupcakeflavour.html");
             }
 
         } catch (DatabaseException e)

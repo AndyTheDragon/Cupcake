@@ -160,6 +160,12 @@ public class OrderController
 
     private static void showOrderHistory(Context ctx, ConnectionPool pool)
     {
+        if (ctx.sessionAttribute("currentUser") == null || !((User)ctx.sessionAttribute("currentUser")).isAdmin())
+        {
+            ctx.attribute("message", "Du skal være logget ind for at se dette indhold.");
+            ctx.render("login.html");
+            return;
+        }
         List<Order> orders = new ArrayList<>();
         String sortby = ctx.formParam("sort");
         try

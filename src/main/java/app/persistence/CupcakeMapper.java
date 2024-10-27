@@ -1,5 +1,6 @@
 package app.persistence;
 
+import app.entities.Cupcake;
 import app.entities.CupcakeFlavour;
 import app.entities.CupcakeType;
 import app.exceptions.DatabaseException;
@@ -42,12 +43,17 @@ public class CupcakeMapper
         String sql;
         if (cupcakeType == CupcakeType.BOTTOM)
         {
-            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE";
+            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE AND is_enabled = TRUE";
         }
-        else //dvs. (cupcakeType == CupcakeType.TOP)
+        else if (cupcakeType == CupcakeType.TOP) //dvs. (cupcakeType == CupcakeType.TOP)
         {
-            sql = "SELECT * FROM cupcake_flavours WHERE is_top_flavour = TRUE";
+            sql = "SELECT * FROM cupcake_flavours WHERE is_top_flavour = TRUE AND is_enabled = TRUE";
         }
+        else
+        {
+            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE AND is_top_flavour = TRUE AND is_enabled = TRUE";
+        }
+
         try (Connection con = dbConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql))
         {

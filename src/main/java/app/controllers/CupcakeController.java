@@ -8,6 +8,8 @@ import app.persistence.CupcakeMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import javax.naming.spi.ObjectFactory;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CupcakeController
@@ -15,8 +17,16 @@ public class CupcakeController
     public static void addRoutes(Javalin app, ConnectionPool dbConnection)
     {
         app.get("/", ctx ->  showFrontpage(ctx,dbConnection));
-        app.get("/newcupcakeflavours", ctx -> ctx.render("newcupcakeflavours.html") );
-        app.post("/newcupcakeflavours", ctx -> addCupcakeFlavour(ctx, dbConnection) );
+        app.get("/newcupcakeflavours", ctx -> ctx.render("addcupcakeflavour.html") );
+        app.post("/addcupcakeflavour", ctx -> addCupcakeFlavour(ctx, dbConnection) );
+        app.get("/editcupcakeflavour", ctx -> ctx.render("allcupcakeflavours.html") );
+
+    }
+
+    private static void editCupcakeFlavours(Context ctx, ConnectionPool dbConnection)
+    {
+
+
     }
 
     private static void addCupcakeFlavour(Context ctx, ConnectionPool pool)
@@ -72,4 +82,26 @@ public class CupcakeController
         }
         ctx.render("index.html");
     }
+
+    private static void showCupcakeFlavours(Context ctx, ConnectionPool dbConnection)
+    {
+/*
+        try
+        {
+            String cupcakeType = ctx.formParam("cupcaketype");
+
+            if (cupcakeType == null || cupcakeType.isEmpty())
+            {
+                ctx.attribute("message", "Du skal angive en type");
+                ctx.render("newcupcakeflavours.html");
+            }
+
+        } catch (DatabaseException e)
+        {
+            ctx.attribute("message", e.getMessage());
+        }*/
+
+    }
+
+
 }

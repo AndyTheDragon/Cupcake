@@ -27,6 +27,7 @@ C -> V: render /login  eller /createuser\n med message
 deactivate C
 
 
+
 deactivate V
 
 @enduml

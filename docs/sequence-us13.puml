@@ -1,0 +1,35 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+skinparam backgroundColor #e3e3e3
+skinparam handwritten true
+
+actor Admin
+participant View as View
+participant "UserController.deactivateFlavour()" as C
+participant "UserMapper.deactivateFlavour()" as M
+participant DB
+
+Admin -> V: Deaktiver eksisterende flavour
+activate V
+
+V -> C: Post request til /disableflavour
+activate C
+
+C -> C: Validate flavour
+C -> M: disableFlavour(flavour, pool)
+activate M
+
+M --> DB: execute sql
+DB --> M: change flavour status to "false"
+M --> C: Succesbesked / Catch-exception
+deactivate M
+C -> C: sæt succesbesked/fejlbesked i message-attributten
+C -> C: render /newcupcakeflavours
+deactivate C
+
+deactivate V
+
+@enduml

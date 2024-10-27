@@ -87,11 +87,12 @@ public class UserController
                 if (e.getMessage().contains("duplicate key value violates unique constraint"))
                 {
                     ctx.attribute("message", "Brugernavnet er allerede i brug. Prøv et andet.");
-                } else
+                }
+                else
                 {
                     ctx.attribute("message", e.getMessage());
-                    ctx.render("createuser.html");
                 }
+                ctx.render("createuser.html");
             }
         } else
         {

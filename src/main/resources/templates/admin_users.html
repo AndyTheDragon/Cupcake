@@ -14,19 +14,22 @@
 
     <div class="content bg-light rounded-4 p-5">
         <h1 class="display-4">Brugerliste (Admin)</h1>
-        <div class="row">
-            <div th:each="user : ${users}" class="col-md-4 mb-4">
+        <div class="row g-3">
+            <div th:each="user : ${users}" class="col-lg-4 col-md-6 mb-3">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${user.username}">Brugerens navn</h5>
-                        <p class="card-text">Bruger Id: <span th:text="${user.userId}">bruger Id</span></p>
+                        <p class="card-text">
+                            Bruger Id: <span th:text="${user.userId}">bruger Id</span>
+                            <a href="/customer" th:href="@{/customer/{id}(id=${user.userId})}">(Se detaljer)</a>
+                        </p>
                         <p class="card-text">Brugernavn: <span th:text="${user.userName}">Navn</span></p>
                         <p class="card-text">Balance: <span th:text="${user.balance/100}">Balance</span></p>
                         <p class="card-text">Rolle: <span th:text="${user.role}">Rolle</span></p>
 
                         <form method="post" action="/deposit">
-                            <div class="row g-3 mb-3">
-                                <div class="col-auto">
+                            <div class="row g-2 mb-2">
+                                <div class="col-8 col-md-12 col-lg-8">
                                     <input type="hidden" name="userId" th:value="${user.userId}">
                                     <input class="form-control form-control-lg" type="text" id="customerbalance" placeholder="Indbetal et beløb" name="customerbalance">
                                 </div>

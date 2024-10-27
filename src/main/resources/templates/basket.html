@@ -16,60 +16,38 @@
     <h1 class="display-1">Indkøbskurv</h1>
     <div th:if="${#ctx.message!=null}" th:text="${#ctx.message}" class="alert alert-warning bg-gradient" role="alert">Fejlbeskeder vises her</div>
     <!-- Indkøbskurv her-->
-    <table >
-      <thead th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
-        <tr>
-          <td>Antal</td>
-          <td>Cupcake top flavour</td>
-          <td>Cupcake bottom flavour</td>
-          <td>pris</td>
-          <td>Total pris</td>
-        </tr>
-      </thead>
-      <tbody th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
-      <tr th:each="order : ${session.orderlines}">
-        <td th:text="${order.quantity}">Antal cupcake(s)</td>
-        <a class="dropdown-item" href="#"
-           th:text="${order.quantity} + ' x ' + ${order.cupcake} + ' ' + (${(order.price/100) * order.quantity}) + ' kr'">
-        </a>
-        <td th:text="${order.price}">Pris pr. stk</td>
-        <td th:text="${order.price * order.quantity}">Total pris</td>
-      </tr>
-      </tbody>
-
-      <!-- Hvis kurven er tom-->
-      <tbody>
-        <tr th:if="${session.orderlines != null and #lists.size(session.orderlines) < 1}">
-          <td>Din kurv er tom.</td>
-        </tr>
-      </tbody>
-
-    </table>
-    <!-- Betal med store credit eller som gæst-->
-    <br><br><br><br>
-    <div>
-      <form method="post" action="/checkout" th:if="${session.currentUser == null}">
-        <h4>Log ind og betal med din store credit</h4>
-        <label class="form-label" for="username">Brugernavn: </label>
-        <input class="form-control form-control-lg" type="text" id="username" name="username"><br><br>
-        <label class="form-label" for="username">Kodeord: </label>
-        <input class="form-control form-control-lg" type="password" id="password" name="password"><br><br>
-        <button class="btn btn-lg btn-primary" type="submit" value="submit">Fortsæt til checkout</button>
-      </form>
-      <br><br><br><br>
-      <div th:if="${session.currentUser != null}">
-        <a href="/checkout" th:href="@{/checkout}">Betal med store credit</a>
+    <form method="post">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            Ordredetaljer
+          </div>
+          <div class="card-body" th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
+            <p class="card-text">Indtast venligst navnet på den peron som afhenter ordren i butikken.</p>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="pickupname" name="pickupname">
+              <label for="pickupname" class="form-label">Navn</label>
+            </div>
+          </div>
+          <ul class="list-group list-group-flush" th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
+            <li class="list-group-item" th:each="order : ${session.orderlines}">
+              <span th:text="${order.quantity} + ' x ' + ${order.cupcake} + ' ' + (${(order.price/100)}) + ' kr'">Ordrelinje</span>
+              <a class="link-danger ms-4" href="/removecupcake" th:href="@{/removecupcake(line_id=(${#lists.toList(session.orderlines).indexOf(order)}))}">
+                <i class="bi bi-trash3"></i></a>
+            </li>
+            <li class="list-group-item fw-bold" th:text="'Odretotal: ' + ${session.ordersum}/100 + ' kr'"></li>
+          </ul>
+          <div class="card-body text-center" th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
+            <button class="btn btn-success m-3" name="paymentmethod" value="guest" formaction="/checkout">Betal ved afhentning i butikken</button>
+            <a class="btn btn-primary m-3" href="/login" th:href="@{/login(returnto=basket)}" th:if="${session.currentUser == null}">Login for at betale med balance</a>
+            <button class="btn btn-primary m-3" name="paymentmethod" value="user" formaction="/checkout" th:if="${session.currentUser != null}">Betal med balance</button>
+          </div>
+          <div class="card-body" th:if="${session.orderlines == null or #lists.size(session.orderlines) < 1}">Din kurv er tom. <a class="btn btn-lg btn-success" href="/" th:href="@{/}">Bestil her</a></div>
+        </div>
       </div>
-      <div>
-        <h4>Fortsæt til checkout som gæst</h4>
-        <a href="/checkout" th:href="@{/checkout}">Gå til checkout</a>
-      </div>
-
-
     </div>
-
-
-
+    </form>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

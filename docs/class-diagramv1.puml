@@ -48,7 +48,6 @@ package entities {
         + String getRole()
         + int getBalance()
         + void deposit()
-        + void buy()
     }
 
     class Order {
@@ -60,15 +59,26 @@ package entities {
         - String status
         - User user
         - List<OrderLine> orderLines
-        + getters()
-        + updateStatus(String)
+        + Order()
+        + int getOrderId()
+        + String getName()
+        + LocalDate getDatePlaced()
+        + LocalDate getDatePaid()
+        + LocalDate getDateCompleted()
+        + String getStatus()
+        + User getUser()
+        + List<OrderLine> getOrderLines()
+        + void updateStatus(String)
     }
     class OrderLine {
         - int orderId
         - int quantity
         - Cupcake cupcake
         - int price
-        + getters()
+        + int getOrderId()
+        + int getQuantity()
+        + Cupcake getCupcake()
+        + int getPrice()
     }
 }
 
@@ -80,32 +90,33 @@ package controllers {
     class UserController {
         + static void addRoutes()
         - static void createUser()
-        + static void login()
-        - static void logout()
+        - static void passwordCheck()
+        + static void doLogin()
+        - static void doLogout()
     }
     class OrderController {
         + static void addRoutes()
         - static void addCupcakeToOrder()
-        - static void addOrder()
         - static void showOrderHistory()
-        - static void removeOrder()
+        - static void deleteOrder()
     }
 }
 
 package persistence {
     class CupcakeMapper {
         + static List<CupcakeFlavour> getFlavours()
+
     }
     class OrderMapper {
-        + static void newOrder()
-        + static Order getOrder()
-        + static List<Order> getOrders()
-        + static void removeOrder()
+        + static void List<Order> getOrders()
+        + static CucpakeFlavour getCupcakeFlavour()
+        + static void deleteOrder()
     }
 
     class UserMapper {
-        + static User login()
         + static void createUser()
+        + static void doLogin()
+
     }
 }
 

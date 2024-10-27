@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS public.cupcake_flavours
     flavour_name character varying(64) NOT NULL,
     is_top_flavour boolean NOT NULL,
     is_bottom_flavour boolean NOT NULL,
+    is_enabled boolean NOT NULL DEFAULT true,
     price int NOT NULL,
     PRIMARY KEY (flavour_id)
 );
@@ -95,5 +96,7 @@ INSERT INTO cupcake_flavours (flavour_name, is_top_flavour, is_bottom_flavour, p
                  ('Lemon', true,false,800),
                  ('Blue cheese', true,false,900);
 
+INSERT INTO users (username, password, balance, role) VALUES
+('admin@cph.dk', '$2a$10$d4at6bZlDljL1ZOEfx1zR.AkFTiWoaoW4X6np3YoNEH/O23SEKSay', 0, 'admin');
 
 END;

@@ -195,7 +195,7 @@ public class OrderMapper
                 "INNER JOIN cupcake_flavours AS bottomf ON bottomf.flavour_id = ol.bottom_flavour " +
                 "INNER JOIN cupcake_flavours AS topf ON topf.flavour_id = ol.top_flavour  " +
                 "INNER JOIN orders AS o ON o.order_id = ol.order_id " +
-                "INNER JOIN users AS u ON u.user_id = o.user_id " +
+                "LEFT JOIN users AS u ON u.user_id = o.user_id " +
                 "WHERE ol.order_id = ?";
 
 
@@ -205,6 +205,9 @@ public class OrderMapper
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
             List<OrderLine> orderLines = new ArrayList<>();
+            String orderName = "";
+            String orderStatus = "";
+            User user = null;
 
             while (rs.next()) {
                 CupcakeFlavour topFlavour = new CupcakeFlavour(
@@ -221,14 +224,20 @@ public class OrderMapper
                         CupcakeType.BOTTOM);
                 Cupcake cupcake = new Cupcake(topFlavour, bottomFlavour);
                 orderLines.add(new OrderLine(orderId, rs.getInt("quantity"), cupcake, rs.getInt("price") ));
+                orderName = rs.getString("name");
+                orderStatus = rs.getString("status");
+                if (rs.getInt("user_id")!=0)
+                {
+                    user = new User(rs.getInt("user_id"),rs.getString("username"),rs.getString("role"),rs.getInt("balance"));
+                }
+                else
+                {
+                    user = new User(0,"Gæst","guest",0);
+                }
 
             }
-            return new Order(
-                    orderId,
-                    rs.getString("name"),
-                    rs.getString("status"),
-                    new User(rs.getInt("u.user_id"),rs.getString("username"),rs.getString("role"),rs.getInt("balance")),
-                    orderLines);
+
+            return new Order(orderId, orderName, orderStatus, user, orderLines);
         }
         catch (SQLException e)
         {

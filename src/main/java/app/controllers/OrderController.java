@@ -225,6 +225,7 @@ public class OrderController
             catch (DatabaseException | NumberFormatException e)
             {
                 ctx.attribute("message","Noget gik galt. " + e.getMessage());
+                showOrderHistory(ctx,dbConnection);
             }
             // Render Thymeleaf-skabelonen
         }

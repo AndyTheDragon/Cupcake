@@ -40,15 +40,14 @@ public class UserController
             UserMapper.depositToCustomerBalance(balance, userId, pool);
 
         } catch (DatabaseException e) {
-            System.out.println(e.getMessage());
             ctx.attribute("message", e.getMessage());
         } catch (NumberFormatException e)
         {
-            ctx.attribute("error", "Du skal indtaste et gyldigt beløb");
+            ctx.attribute("message", "Du skal indtaste et gyldigt beløb");
             ctx.render("login.html");
         }
-        ctx.render("admin_users.html");
         ctx.attribute("message", "Beløb er indbetalt.");
+        showAdminPage(ctx, pool);
 
     }
 

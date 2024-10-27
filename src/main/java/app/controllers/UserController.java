@@ -1,11 +1,14 @@
 package app.controllers;
 
-import app.exceptions.DatabaseException;
-import app.entities.User;
-import app.persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import app.entities.Order;
+import app.entities.User;
+import app.exceptions.DatabaseException;
+import app.persistence.ConnectionPool;
 import app.persistence.UserMapper;
+import app.persistence.OrderMapper;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserController
@@ -164,7 +167,8 @@ public class UserController
             showAdminPage(ctx, dbConnection);
         } else
         {
-            showCustomerPage(ctx, dbConnection);
+            ctx.redirect("/customer/" + currentUser.getUserId());
+            //showCustomerPage(ctx, dbConnection);
         }
     }
 
@@ -185,20 +189,36 @@ public class UserController
     private static void showCustomerPage(Context ctx, ConnectionPool dbConnection)
     {
         User currentUser = ctx.sessionAttribute("currentUser");
+        List<Order> orderList;
         String userId = ctx.pathParam("id");
-        if (userId != null && currentUser != null && currentUser.getRole().equals("admin"))
+        if (currentUser != null)
         {
-            try
+            if (currentUser.getRole().equals("admin"))
             {
-                currentUser = UserMapper.getUser(Integer.parseInt(userId), dbConnection);
+                try
+                {
+                    currentUser = UserMapper.getUser(Integer.parseInt(userId), dbConnection);
+
+                } catch (NumberFormatException | DatabaseException e)
+                {
+                    ctx.attribute("message", e.getMessage());
+                }
             }
-            catch (NumberFormatException | DatabaseException e)
+            try {
+                orderList = OrderMapper.getOrdersByUserId(currentUser,"date_placed",dbConnection);
+            }
+            catch (DatabaseException e)
             {
                 ctx.attribute("message", e.getMessage());
+                orderList = new ArrayList<>();
             }
-
+            ctx.attribute("orders", orderList);
+            ctx.attribute("user", currentUser);
+            ctx.render("customer_details.html");
+            return;
         }
-        ctx.attribute("user", currentUser);
-        ctx.render("customer_details.html");
+        ctx.attribute("message", "Du skal være logget ind for at se dette indhold.");
+        ctx.render("login.html");
+
     }
 }

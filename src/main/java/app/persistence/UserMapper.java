@@ -14,9 +14,9 @@ import java.util.List;
 
 public class UserMapper {
 
-    public static void updateCustomerBalance(int balance, int userId, ConnectionPool pool) throws DatabaseException
+    public static void increaseCustomerBalance(int balance, int userId, ConnectionPool pool) throws DatabaseException
     {
-        String sql = "UPDATE users SET balance = ? WHERE user_id = ?";
+        String sql = "UPDATE users SET balance = balance+? WHERE user_id = ?";
         try (Connection connection = pool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql))
         {

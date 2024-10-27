@@ -42,8 +42,8 @@ public class UserController
             }
             else
             {
-                int balance = Integer.parseInt(balanceString);
-                UserMapper.updateCustomerBalance(balance, userId, pool);
+                int balance = 100*Integer.parseInt(balanceString);
+                UserMapper.increaseCustomerBalance(balance, userId, pool);
                 ctx.attribute("message", "Beløb er indbetalt.");
             }
         }

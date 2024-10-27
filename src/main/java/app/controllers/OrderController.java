@@ -65,7 +65,8 @@ public class OrderController
                 try
                 {
                     user.buy(orderSum);
-                    UserMapper.payForOrder(user,dbConnection);
+                    //UserMapper.payForOrder(user,dbConnection);
+                    UserMapper.updateCustomerBalance(user.getBalance(), user.getUserId(), dbConnection);
                     datePaid = LocalDate.now();
                     status = "Ordren er betalt";
 

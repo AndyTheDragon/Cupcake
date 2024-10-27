@@ -14,30 +14,41 @@ import java.util.List;
 
 public class UserMapper {
 
-    public static void depositToCustomerBalance(int balance, int userId, ConnectionPool pool) throws DatabaseException
+    public static void updateCustomerBalance(int balance, int userId, ConnectionPool pool) throws DatabaseException
     {
         String sql = "UPDATE users SET balance = ? WHERE user_id = ?";
-
-        try (Connection connection = pool.getConnection())
+        try (Connection connection = pool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql))
         {
-            PreparedStatement ps = connection.prepareStatement(sql);
-
             ps.setInt(1, balance);
             ps.setInt(2, userId);
-
-            //System.out.println("opdaterer " + userId + " med balancen " + balance);
             int rowsAffected = ps.executeUpdate();
-            //System.out.println("Auto-commit status: " + connection.getAutoCommit()); // to confirm auto-commit is deactivated - hence. prior line
             if (rowsAffected != 1)
             {
-                throw new DatabaseException("fejl ved indbetaling til saldo.");
+                throw new DatabaseException("fejl ved ændring af brugerens balance.");
             }
-
         } catch (SQLException e)
         {
             throw new DatabaseException(e.getMessage());
         }
+    }
 
+    public static void payForOrder(User user, ConnectionPool dbConnection) throws DatabaseException
+    {
+        String sql = "UPDATE users SET balance=? WHERE user_id=?";
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql))
+        {
+            ps.setInt(1, user.getBalance());
+            ps.setInt(2, user.getUserId());
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1)
+            {
+                throw new DatabaseException("Fejl ved betaling.");
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     public static void createUser(String username, String password, ConnectionPool pool) throws DatabaseException
@@ -60,70 +71,66 @@ public class UserMapper {
         }
     }
 
-    public static User login(String username, String password, ConnectionPool connectionPool) throws DatabaseException {
+    public static User login(String username, String password, ConnectionPool connectionPool) throws DatabaseException
+    {
         String sql = "SELECT * FROM users WHERE username=?";
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql))
+        {
 
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
+            if (rs.next())
+            {
                 String storedHashedPassword = rs.getString("password");
-                if (BCrypt.checkpw(password, storedHashedPassword)) {
+                if (BCrypt.checkpw(password, storedHashedPassword))
+                {
                     int id = rs.getInt("user_id");
                     String role = rs.getString("role");
                     int balance = rs.getInt("balance");
                     return new User(id, username, role, balance);
-                } else {
+                }
+                else
+                {
                     // Catching wrong passwords.
                     throw new DatabaseException("Kodeord matcher ikke. Prøv igen");
                 }
-            } else {
+            }
+            else
+            {
                 // Catching wrong usernames.
                 throw new DatabaseException("Brugernavn matcher ikke. Prøv igen");
             }
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             throw new DatabaseException(e.getMessage());
         }
     }
 
-    public static List<User> getAllUsers(ConnectionPool pool) throws DatabaseException {
+    public static List<User> getAllUsers(ConnectionPool pool) throws DatabaseException
+    {
         List<User> userList = new ArrayList<>();
         String sql = "SELECT user_id, username, password, role, balance FROM users ORDER BY role DESC, username";
 
-        try (Connection connection = pool.getConnection()){
-            try(PreparedStatement ps = connection.prepareStatement(sql)){
-                ResultSet rs = ps.executeQuery();
-
-                while (rs.next()) {
-                    int userId = rs.getInt("user_id");
-                    String username = rs.getString("username");
-                    String role = rs.getString("role");
-                    int balance = rs.getInt("balance");
-
-                    userList.add(new User(userId, username, role, balance));
-                }
-                return userList;
-            }
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getMessage());
-        }
-    }
-
-    public static void payForOrder(User user, ConnectionPool dbConnection) throws DatabaseException
-    {
-        String sql = "UPDATE users SET balance=? WHERE user_id=?";
-        try (Connection connection = dbConnection.getConnection();
+        try (Connection connection = pool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql))
         {
-            ps.setInt(1, user.getBalance());
-            ps.setInt(2, user.getUserId());
-            int rowsAffected = ps.executeUpdate();
-            if (rowsAffected != 1) {
-                throw new DatabaseException("Fejl ved betaling.");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                int userId = rs.getInt("user_id");
+                String username = rs.getString("username");
+                String role = rs.getString("role");
+                int balance = rs.getInt("balance");
+
+                userList.add(new User(userId, username, role, balance));
             }
-        } catch (SQLException e) {
+            return userList;
+
+        } catch (SQLException e)
+        {
             throw new DatabaseException(e.getMessage());
         }
     }

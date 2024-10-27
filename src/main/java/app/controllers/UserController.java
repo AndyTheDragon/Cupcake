@@ -35,12 +35,14 @@ public class UserController
             // check if balance is null
             if (balanceString == null || balanceString.isEmpty())
             {
-                ctx.attribute("error", "Du skal indtaste et beløb for at opdatere kundens saldo");
+                ctx.attribute("message", "Du skal indtaste et beløb for at opdatere kundens saldo");
             }
-
-            int balance = Integer.parseInt(balanceString);
-            UserMapper.depositToCustomerBalance(balance, userId, pool);
-            ctx.attribute("message", "Beløb er indbetalt.");
+            else
+            {
+                int balance = Integer.parseInt(balanceString);
+                UserMapper.updateCustomerBalance(balance, userId, pool);
+                ctx.attribute("message", "Beløb er indbetalt.");
+            }
         }
         catch (DatabaseException e)
         {
@@ -189,11 +191,8 @@ public class UserController
             try
             {
                 currentUser = UserMapper.getUser(Integer.parseInt(userId), dbConnection);
-            } catch (NumberFormatException e)
-            {
-                ctx.attribute("message", e.getMessage());
             }
-            catch (DatabaseException e)
+            catch (NumberFormatException | DatabaseException e)
             {
                 ctx.attribute("message", e.getMessage());
             }

@@ -34,7 +34,10 @@
                             <a class="nav-link" href="/customer" th:href="@{/customer}">Din Info</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/newcupcakeflavours" th:href="@{/newcupcakeflavours}">Cupcake smage</a>
+                            <a class="nav-link" href="/newcupcakeflavours" th:href="@{/newcupcakeflavours}">Tilføj ny flavour</a>
+                        </li>
+                        <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'admin'}">
+                            <a class="nav-link" href="/editcupcakeflavour" th:href="@{/editcupcakeflavour}">Rediger flavour</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav nav-underline ms-auto mb-2 me-1 mb-lg-0">

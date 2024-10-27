@@ -5,13 +5,9 @@ import app.entities.CupcakeType;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.CupcakeMapper;
-import app.persistence.UserMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import javax.naming.spi.ObjectFactory;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CupcakeController
@@ -19,10 +15,10 @@ public class CupcakeController
     public static void addRoutes(Javalin app, ConnectionPool dbConnection)
     {
         app.get("/", ctx ->  showFrontpage(ctx,dbConnection));
-        app.get("/addcupcakeflavour", ctx -> ctx.render("addcupcakeflavour.html") );
-        app.post("/addcupcakeflavour", ctx -> addCupcakeFlavour(ctx, dbConnection) );
+        app.get("/newcupcakeflavours", ctx -> ctx.render("newcupcakeflavours.html") );
+        app.post("/newcupcakeflavours", ctx -> addCupcakeFlavour(ctx, dbConnection) );
         app.get("/editcupcakeflavour", ctx -> ctx.render("editcupcakeflavour.html") );
-
+        app.post("/editcupcakeflavour", ctx -> editCupcakeFlavours(ctx,dbConnection));
     }
 
     private static void deactivateFlavour(Context ctx, ConnectionPool dbConnection)
@@ -55,14 +51,15 @@ public class CupcakeController
 
     private static void editCupcakeFlavours(Context ctx, ConnectionPool dbConnection)
     {
-        /*
+
         try
         {
-            UserMapper;
+            List<CupcakeFlavour> flavours = CupcakeMapper.getAllFlavours(dbConnection);
+            ctx.attribute("flavours", flavours);
         } catch (DatabaseException e)
         {
             ctx.attribute("message", e.getMessage());
-        }*/
+        }
 
     }
 
@@ -84,22 +81,22 @@ public class CupcakeController
             {
                 CupcakeMapper.addCupcakeFlavour(flavourName, isTopFlavourAccepted, isBottomFlavourAccepted, flavourPrice2, pool);
                 ctx.attribute("message", "Din nye flavour er oprettet.");
-                ctx.render("addcupcakeflavour.html");
+                ctx.render("newcupcakeflavours.html");
             } else // if false and false
             {
                 ctx.attribute("message", "Din nye flavour skal have en top/bund.");
-                ctx.render("addcupcakeflavour.html");
+                ctx.render("newcupcakeflavours.html");
             }
 
         } catch (DatabaseException e)
         {
             ctx.attribute("message", e.getMessage());
-            ctx.render("addcupcakeflavour.html");
+            ctx.render("newcupcakeflavours.html");
         }
         catch (NumberFormatException e)
         {
             ctx.attribute("message", "Prisen skal være et tal");
-            ctx.render("addcupcakeflavour.html");
+            ctx.render("newcupcakeflavours.html");
         }
 
     }
@@ -130,7 +127,7 @@ public class CupcakeController
             if (cupcakeType == null || cupcakeType.isEmpty())
             {
                 ctx.attribute("message", "Du skal angive en type");
-                ctx.render("addcupcakeflavour.html");
+                ctx.render("newcupcakeflavours.html");
             }
 
         } catch (DatabaseException e)

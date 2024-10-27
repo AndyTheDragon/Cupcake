@@ -21,20 +21,29 @@
         <div class="content bg-light rounded-4 p-5">
             <h1 class="display-4">Rediger en cupcake flavour</h1>
             <div class="row">
-                <div th:each="flavour : ${flavours}" class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${flavour.flavourName}">Flavour smag</h5>
-                            <p class="card-text">Beskrivelse: <span th:text="${flavour.flavourDesc}"> Beskrivelse</span></p>
-                            <p class="card-text"> ID: <span th:text="${flavour.cupcakeFlavourId}"> ID</span>></p>
-                            <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
-                            <p class="card-text"> Pris: <span th:text="${flavour.price}">Pris</span></p>
+                <div class="card">
+                    <ul class="list-group list-group-flush">
+                        <form method="post" action="/editcupcakeflavour">
+                        <li class="list-group-item" th:each="flavour : ${flavours}">
+                            <p class="card-text">flavour id:><span th:text="${flavour}">Flavour ID</span></p></p>
+                            <p class="card-text">flavour name:><span th:text="${flavour}">Flavour name: </span></p>
+                            <p class="card-text">top flavour:><span th:text="${flavour}">Top Flavour:</span></p>
+                            <p class="card-text">bottom flavour><span th:text="${flavour}">Bottom Flavour:</span></p>
+                            <p class="card-text">Availability:><span th:text="${flavour}">Available: </span></p>
+                            <p class="card-text">Price:><span th:text="${flavour}">Price</span></p>
+                            <input class="form-check-input" type="checkbox" value="flavourid" id="flavourid">
+                        </li>
+                        </form>
+                        <li class="list-group-item">osv</li>
+                        <li class="list-group-item">osv</li>
+                    </ul>
+                </div>
 
                             <form method="get" action="/editcupcakeflavour">
                                 <label class="form-label" for="deactivateflavour">Deaktiver</label>
                                 <input class="form-control-lg form-control" id="deactivateflavour" name="deactivateflavour" type="checkbox">
                                 <label class="form-label" for="activateflavour">Aktiver</label>
-                                <input class="form-control form-control-lg" id="activateflavour" name="activateflavour">
+                                <input class="form-control form-control-lg" id="activateflavour" name="activateflavour" type="checkbox">
                                 <button class="btn btn-lg btn-primary" type="submit" value="submit">Button</button>
                             </form>
                         </div>

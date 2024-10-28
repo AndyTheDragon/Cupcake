@@ -187,4 +187,63 @@ public class OrderMapper
             throw new DatabaseException(e.getMessage());
         }
     }
+
+ public  static Order getOrderDetails(int orderId, ConnectionPool pool)throws DatabaseException{
+        String sql = "SELECT u.*, o.*, ol.*, " +
+                "bottomf.flavour_name AS bot_flavour_name, bottomf.price AS bot_price, topf.flavour_name AS top_flavour_name, topf.price AS top_price " +
+                "FROM order_lines AS ol " +
+                "INNER JOIN cupcake_flavours AS bottomf ON bottomf.flavour_id = ol.bottom_flavour " +
+                "INNER JOIN cupcake_flavours AS topf ON topf.flavour_id = ol.top_flavour  " +
+                "INNER JOIN orders AS o ON o.order_id = ol.order_id " +
+                "LEFT JOIN users AS u ON u.user_id = o.user_id " +
+                "WHERE ol.order_id = ?";
+
+
+        try (Connection connection = pool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql))
+        {
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+            List<OrderLine> orderLines = new ArrayList<>();
+            String orderName = "";
+            String orderStatus = "";
+            User user = null;
+
+            while (rs.next()) {
+                CupcakeFlavour topFlavour = new CupcakeFlavour(
+                        rs.getInt("top_flavour"),
+                        rs.getInt("top_price"),
+                        rs.getString("top_flavour_name"),
+                        "",
+                        CupcakeType.TOP);
+                CupcakeFlavour bottomFlavour = new CupcakeFlavour(
+                        rs.getInt("bottom_flavour"),
+                        rs.getInt("bot_price"),
+                        rs.getString("bot_flavour_name"),
+                        "",
+                        CupcakeType.BOTTOM);
+                Cupcake cupcake = new Cupcake(topFlavour, bottomFlavour);
+                orderLines.add(new OrderLine(orderId, rs.getInt("quantity"), cupcake, rs.getInt("price") ));
+                orderName = rs.getString("name");
+                orderStatus = rs.getString("status");
+                if (rs.getInt("user_id")!=0)
+                {
+                    user = new User(rs.getInt("user_id"),rs.getString("username"),rs.getString("role"),rs.getInt("balance"));
+                }
+                else
+                {
+                    user = new User(0,"Gæst","guest",0);
+                }
+
+            }
+
+            return new Order(orderId, orderName, orderStatus, user, orderLines);
+        }
+        catch (SQLException e)
+        {
+            throw new DatabaseException(e.getMessage());
+        }
+
+    }
+
 }

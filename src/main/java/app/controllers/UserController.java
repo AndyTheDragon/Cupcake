@@ -79,6 +79,7 @@ public class UserController
         {
             try
             {
+                username = username.toLowerCase();
                 UserMapper.createUser(username, password, dbConnection);
                 ctx.attribute("message", "du er nu oprettet");
                 CupcakeController.showFrontpage(ctx, dbConnection);
@@ -132,6 +133,10 @@ public class UserController
     {
         String name = ctx.formParam("username");
         String password = ctx.formParam("password");
+        if (name !=null )
+        {
+            name = name.toLowerCase(); //Avoiding potential nullPointerExceptions
+        }
         try
         {
             User user = UserMapper.login(name, password, dbConnection);

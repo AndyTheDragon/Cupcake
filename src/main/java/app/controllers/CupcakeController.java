@@ -1,13 +1,17 @@
 package app.controllers;
 
+import app.entities.Cupcake;
 import app.entities.CupcakeFlavour;
 import app.entities.CupcakeType;
+import app.entities.User;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.CupcakeMapper;
+import app.persistence.UserMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CupcakeController
@@ -17,8 +21,8 @@ public class CupcakeController
         app.get("/", ctx ->  showFrontpage(ctx,dbConnection));
         app.get("/newcupcakeflavours", ctx -> ctx.render("newcupcakeflavours.html") );
         app.post("/newcupcakeflavours", ctx -> addCupcakeFlavour(ctx, dbConnection) );
-        app.get("/editcupcakeflavour", ctx -> ctx.render("editcupcakeflavour.html") );
-        app.post("/editcupcakeflavour", ctx -> editCupcakeFlavours(ctx,dbConnection));
+        //app.get("/editcupcakeflavour", ctx -> ctx.render("editcupcakeflavour.html") );
+        app.get("/editcupcakeflavour", ctx -> showCupcakeFlavours(ctx,dbConnection));
     }
 
     private static void deactivateFlavour(Context ctx, ConnectionPool dbConnection)
@@ -52,14 +56,7 @@ public class CupcakeController
     private static void editCupcakeFlavours(Context ctx, ConnectionPool dbConnection)
     {
 
-        try
-        {
-            List<CupcakeFlavour> flavours = CupcakeMapper.getAllFlavours(dbConnection);
-            ctx.attribute("flavours", flavours);
-        } catch (DatabaseException e)
-        {
-            ctx.attribute("message", e.getMessage());
-        }
+
 
     }
 
@@ -119,23 +116,31 @@ public class CupcakeController
 
     private static void showCupcakeFlavours(Context ctx, ConnectionPool dbConnection)
     {
-/*
-        try
+        User user = ctx.sessionAttribute("currentUser");
+        if (user == null)
         {
-            String cupcakeType = ctx.formParam("cupcaketype");
+            ctx.redirect("login.html");
+            return;
+        }
 
-            if (cupcakeType == null || cupcakeType.isEmpty())
-            {
-                ctx.attribute("message", "Du skal angive en type");
-                ctx.render("newcupcakeflavours.html");
+        String role = user.getRole();
+
+        if ("admin".equals(role))
+        {
+            try { // henter kun top flavours
+                List<CupcakeFlavour> flavours = CupcakeMapper.getFlavours(CupcakeType.TOP, dbConnection);
+                ctx.attribute("flavours", flavours);
+                ctx.render("editcupcakeflavour.html");
+            } catch (DatabaseException e) {
+                ctx.attribute("message", e.getMessage());
+                ctx.render("error.html");
             }
-
-        } catch (DatabaseException e)
+        } else
         {
-            ctx.attribute("message", e.getMessage());
-        }*/
+            ctx.render("login.html");
+        }
+
 
     }
-
 
 }

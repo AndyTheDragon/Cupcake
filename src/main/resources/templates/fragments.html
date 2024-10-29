@@ -33,7 +33,7 @@
                         <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'customer'}">
                             <a class="nav-link" href="/customer" th:href="@{/customer}">Din Info</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'admin'}">
                             <a class="nav-link" href="/newcupcakeflavours" th:href="@{/newcupcakeflavours}">Tilføj ny flavour</a>
                         </li>
                         <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'admin'}">

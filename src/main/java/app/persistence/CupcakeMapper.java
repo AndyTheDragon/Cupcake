@@ -61,10 +61,6 @@ public class CupcakeMapper
     public static List<CupcakeFlavour> getAllFlavours(ConnectionPool dbConnection) throws DatabaseException
     {
         List<CupcakeFlavour> flavours = new ArrayList<>();
-        int flavourId = 0;
-        String flavourName = "";
-        boolean isEnabled = true;
-        int price = 0;
 
         String sql = "SELECT flavour_id, flavour_name, is_enabled, price FROM cupcake_flavours";
 
@@ -74,13 +70,14 @@ public class CupcakeMapper
             ResultSet rs = ps.executeQuery();
             while (rs.next())
             {
-                rs.getInt("flavour_id");
-                rs.getString("flavour_name");
-                rs.getBoolean("is_enabled");
-                rs.getInt("price");
+                int flavourId = rs.getInt("flavour_id");
+                String flavourName = rs.getString("flavour_name");
+                boolean isEnabled = rs.getBoolean("is_enabled");
+                int price = rs.getInt("price");
+                flavours.add(new CupcakeFlavour(flavourId, price, flavourName, "Available", CupcakeType.TOP));
+
             }
 
-            flavours.add(new CupcakeFlavour(flavourId, price, flavourName, "desc", CupcakeType.TOP));
 
         } catch (SQLException e) {
             throw new DatabaseException("Fejl ved at hente alle flavours fra db", e);
@@ -98,7 +95,7 @@ public class CupcakeMapper
         }
         else if (cupcakeType == CupcakeType.TOP) //dvs. (cupcakeType == CupcakeType.TOP)
         {
-            sql = "SELECT * FROM cupcake_flavours WHERE is_top_flavour = TRUE AND is_enabled = TRUE";
+            sql = "SELECT flavour_id, price, flavour_name FROM cupcake_flavours WHERE is_top_flavour = TRUE AND is_enabled = TRUE";
         }
         else
         {
@@ -114,7 +111,7 @@ public class CupcakeMapper
                 flavours.add(new CupcakeFlavour(rs.getInt("flavour_id"),
                                                 rs.getInt("price"),
                                                 rs.getString("flavour_name"),
-                                                rs.getString("flavour_name"),
+                                                "Available",
                                                 cupcakeType));
             }
         } catch (SQLException e)

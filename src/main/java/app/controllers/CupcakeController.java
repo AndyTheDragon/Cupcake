@@ -18,9 +18,10 @@ public class CupcakeController
         app.get("/", ctx ->  showFrontpage(ctx,dbConnection));
         app.get("/newcupcakeflavours", ctx -> ctx.render("newcupcakeflavours.html") );
         app.post("/newcupcakeflavours", ctx -> addCupcakeFlavour(ctx, dbConnection) );
-        //app.get("/editcupcakeflavour", ctx -> ctx.render("editcupcakeflavour.html") );
         app.get("/editcupcakeflavour", ctx -> showCupcakeFlavours(ctx,dbConnection));
         app.post("/deactivateflavour", ctx -> deactivateFlavour(ctx, dbConnection) );
+        app.post("/activateflavour", ctx -> activateFlavour(ctx, dbConnection) );
+
     }
 
     private static void deactivateFlavour(Context ctx, ConnectionPool dbConnection)
@@ -41,18 +42,27 @@ public class CupcakeController
 
     }
 
-
-    private static void editCupcakeFlavours(Context ctx, ConnectionPool dbConnection)
+    private static void activateFlavour(Context ctx, ConnectionPool dbConnection)
     {
-
+        String flavourIdString = ctx.formParam("dflavourId");
+        int flavourId = Integer.parseInt(flavourIdString);
+        try
+        {
+            CupcakeMapper.activateFlavour(true, flavourId, dbConnection);
+            ctx.attribute("message", "Flavour er ikke længere muligt at bestille.");
+            ctx.render("editcupcakeflavour.html");
+        } catch (DatabaseException e)
+        {
+            ctx.attribute("message", e.getMessage());
+            ctx.render("editcupcakeflavour.html");
+        }
 
 
     }
 
+
     private static void addCupcakeFlavour(Context ctx, ConnectionPool pool)
     {
-
-
         try
         {
             String flavourName = ctx.formParam("flavoursmag");
@@ -116,10 +126,24 @@ public class CupcakeController
 
         if ("admin".equals(role))
         {
-            try { // henter kun top flavours
-                List<CupcakeFlavour> flavours = CupcakeMapper.getFlavours(CupcakeType.TOP, dbConnection);
-                ctx.attribute("flavours", flavours);
+            try {
+                List<CupcakeFlavour> inactiveTopFlavours = CupcakeMapper.getFlavours(CupcakeType.TOP, dbConnection);
+                List<CupcakeFlavour> inactiveBottomFlavours = CupcakeMapper.getFlavours(CupcakeType.BOTTOM, dbConnection);
+                List<CupcakeFlavour> inactiveBothFlavours = CupcakeMapper.getFlavours(CupcakeType.BOTH, dbConnection);
+
+                List<CupcakeFlavour> activeTopFlavours = CupcakeMapper.getFlavours(CupcakeType.TOP, dbConnection);
+                List<CupcakeFlavour> activeBottomFlavors = CupcakeMapper.getFlavours(CupcakeType.BOTTOM, dbConnection);
+
+                //
+                ctx.attribute("activetopflavours", activeTopFlavours);
+                ctx.attribute("activebottomflavours", activeBottomFlavors);
+                //
+                ctx.attribute("inactivetopflavors", inactiveTopFlavours);
+                ctx.attribute("inactivebottomflavours", inactiveBottomFlavours);
+                ctx.attribute("inactivebothflavours", inactiveBothFlavours);
+
                 ctx.render("editcupcakeflavour.html");
+
             } catch (DatabaseException e) {
                 ctx.attribute("message", e.getMessage());
                 ctx.render("error.html");

@@ -57,6 +57,27 @@ public class CupcakeMapper
         }
     }
 
+    public static void activateFlavour(boolean isEnabled, int flavourId, ConnectionPool pool) throws DatabaseException
+    {
+        String sql = "UPDATE cupcake_flavours SET is_enabled = ? WHERE flavour_id = ?";
+
+        try (Connection connection = pool.getConnection())
+        {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setBoolean(1, isEnabled);
+            ps.setInt(2, flavourId);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1)
+            {
+                throw new DatabaseException("Fejl ved opdatering af tilgængelighed");
+            }
+        } catch (SQLException e)
+        {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
 
     public static List<CupcakeFlavour> getFlavours(CupcakeType cupcakeType, ConnectionPool dbConnection) throws DatabaseException
     {

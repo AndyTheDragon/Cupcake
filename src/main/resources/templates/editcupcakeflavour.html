@@ -19,11 +19,11 @@
             Fejlbeskeder vises her
         </div>
 
-        <!-- Vis en form til at redigere cupcake flavours -->
+        <!-- Vis en form til at deaktivere cupcake flavours -->
         <div class="content bg-light rounded-4 p-5">
-            <h1 class="display-4">Oversigt af alle aktive flavours</h1>
+            <h3 class="display-4">Vælg en bottom flavour du vil deaktivere</h3>
             <div class="row">
-                <div th:each="flavour : ${flavours}" class="col-md-4 mb-4">
+                <div th:each="flavour : ${activebottomflavours}" class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title" th:text="${flavour.cupcakeFlavourId}">Flavour ID</h5>
@@ -43,6 +43,105 @@
                 </div>
             </div>
         </div>
+
+
+        <!-- Vis en form til at aktivere cupcake flavours -->
+        <div class="content bg-light rounded-4 p-5">
+            <h3 class="display-4">Vælg en top flavour du vil deaktivere</h3>
+            <!-- Top flavours-->
+            <div class="row">
+                <div th:each="topflavour : ${activetopflavours}" class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${topflavour.cupcakeFlavourId}">Flavour ID</h5>
+                            <p class="card-text"> Pris: <span th:text="${topflavour.price}">Pris</span></p>
+                            <p class="card-text">flavour navn: <span th:text="${topflavour.name}">Navn</span></p>
+                            <p class="card-text">Flavour desc: <span th:text="${topflavour.flavourDesc}">Desc</span></p>
+                            <p class="card-text">Type: <span th:text="${topflavour.type}">Type</span></p>
+                            <form method="post" action="/activateflavour">
+                                <input type="hidden" name="dflavourId" th:value="${topflavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
+                                <label class="form-label" for="activateflavour">aktiver</label>
+                                <input class="form-check-label" id="isactivate"
+                                       name="activateflavour" type="checkbox"><br>
+                                <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="display-4">Vælg en top flavour du vil aktivere</h3>
+            <!-- top flavours-->
+            <div class="row">
+                <div th:each="flavour : ${inactivetopflavors}" class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${flavour.cupcakeFlavourId}">Flavour ID</h5>
+                            <p class="card-text"> Pris: <span th:text="${flavour.price}">Pris</span></p>
+                            <p class="card-text">flavour navn: <span th:text="${flavour.name}">Navn</span></p>
+                            <p class="card-text">Flavour desc: <span th:text="${flavour.flavourDesc}">Desc</span></p>
+                            <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
+                            <form method="post" action="/activateflavour">
+                                <input type="hidden" name="dflavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
+                                <label class="form-label" for="activateflavour">aktiver</label>
+                                <input class="form-check-label" id="isactivate"
+                                       name="activateflavour" type="checkbox"><br>
+                                <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        <!-- Bottom flavours-->
+        <h3 class="display-4">Vælg en bottom flavour du vil aktivere</h3>
+        <div class="row">
+            <div th:each="flavour : ${inactivebottomflavours}" class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${flavour.cupcakeFlavourId}">Flavour ID</h5>
+                        <p class="card-text"> Pris: <span th:text="${flavour.price}">Pris</span></p>
+                        <p class="card-text">flavour navn: <span th:text="${flavour.name}">Navn</span></p>
+                        <p class="card-text">Flavour desc: <span th:text="${flavour.flavourDesc}">Desc</span></p>
+                        <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
+                        <form method="post" action="/activateflavour">
+                            <input type="hidden" name="dflavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
+                            <label class="form-label" for="activateflavour">aktiver</label>
+                            <input class="form-check-label" id="isactivate"
+                                   name="activateflavour" type="checkbox"><br>
+                            <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- both flavours-->
+    <h3 class="display-4">Vælg en both flavour du vil aktivere</h3>
+    <div class="row">
+        <div th:each="flavour : ${inactivebothflavours}" class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${flavour.cupcakeFlavourId}">Flavour ID</h5>
+                    <p class="card-text"> Pris: <span th:text="${flavour.price}">Pris</span></p>
+                    <p class="card-text">flavour navn: <span th:text="${flavour.name}">Navn</span></p>
+                    <p class="card-text">Flavour desc: <span th:text="${flavour.flavourDesc}">Desc</span></p>
+                    <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
+                    <form method="post" action="/activateflavour">
+                        <input type="hidden" name="dflavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
+                        <label class="form-label" for="activateflavour">aktiver</label>
+                        <input class="form-check-label" id="isactivate"
+                               name="activateflavour" type="checkbox"><br>
+                        <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 
 
     </div>

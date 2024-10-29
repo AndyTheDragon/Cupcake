@@ -1,17 +1,14 @@
 package app.controllers;
 
-import app.entities.Cupcake;
 import app.entities.CupcakeFlavour;
 import app.entities.CupcakeType;
 import app.entities.User;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.CupcakeMapper;
-import app.persistence.UserMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CupcakeController
@@ -23,30 +20,22 @@ public class CupcakeController
         app.post("/newcupcakeflavours", ctx -> addCupcakeFlavour(ctx, dbConnection) );
         //app.get("/editcupcakeflavour", ctx -> ctx.render("editcupcakeflavour.html") );
         app.get("/editcupcakeflavour", ctx -> showCupcakeFlavours(ctx,dbConnection));
+        app.post("/deactivateflavour", ctx -> deactivateFlavour(ctx, dbConnection) );
     }
 
     private static void deactivateFlavour(Context ctx, ConnectionPool dbConnection)
     {
-        String isEnabledString = ctx.formParam("isenabled");
         String flavourIdString = ctx.formParam("flavourId");
-
-        if (isEnabledString == null || isEnabledString.isEmpty())
-        {
-            ctx.attribute("message", "Indtast en værdi ");
-            ctx.render("/");
-        }
-
-        boolean isEnabled = Boolean.parseBoolean(isEnabledString);
         int flavourId = Integer.parseInt(flavourIdString);
-
-
         try
         {
-            CupcakeMapper.deactivateFlavour(isEnabled, flavourId, dbConnection);
+            CupcakeMapper.deactivateFlavour(false, flavourId, dbConnection);
+            ctx.attribute("message", "Flavour er ikke længere muligt at bestille.");
+            ctx.render("editcupcakeflavour.html");
         } catch (DatabaseException e)
         {
             ctx.attribute("message", e.getMessage());
-            ctx.render("");
+            ctx.render("editcupcakeflavour.html");
         }
 
 

@@ -32,7 +32,7 @@
                             <p class="card-text">Flavour desc: <span th:text="${flavour.flavourDesc}">Desc</span></p>
                             <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
                             <form method="post" action="/deactivateflavour">
-                                <>
+                                <input type="hidden" name="flavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
                                 <label class="form-label" for="deactivateflavour">Deaktiver</label>
                                 <input class="form-check-label" id="isdeactivate"
                                        name="deactivateflavour" type="checkbox"><br>

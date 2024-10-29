@@ -32,10 +32,10 @@
                             <p class="card-text">Flavour desc: <span th:text="${flavour.flavourDesc}">Desc</span></p>
                             <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
                             <form method="post" action="/deactivateflavour">
-                                <input type="hidden" name="deactivateFlavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
+                                <input type="hidden" name="deactivateflavourid" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
                                 <label class="form-label" for="deactivateFlavourId">Deaktiver</label>
                                 <input class="form-check-label" id="deactivateflavourid"
-                                       name="deactivateflavour" type="checkbox"><br>
+                                       name="deactivateflavourid" type="checkbox"><br>
                                 <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
                             </form>
                         </div>
@@ -59,10 +59,10 @@
                             <p class="card-text">Flavour desc: <span th:text="${topflavour.flavourDesc}">Desc</span></p>
                             <p class="card-text">Type: <span th:text="${topflavour.type}">Type</span></p>
                             <form method="post" action="/deactivateflavour">
-                                <input type="hidden" name="deactivateFlavourId" th:value="${topflavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
-                                <label class="form-label" for="deactivateFlavourId">aktiver</label>
+                                <input type="hidden" name="deactivateflavourid" th:value="${topflavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
+                                <label class="form-label" for="deactivateflavourid">aktiver</label>
                                 <input class="form-check-label" id="deactivateflavourid"
-                                       name="deactivateflavour" type="checkbox"><br>
+                                       name="deactivateflavourid" type="checkbox"><br>
                                 <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
                             </form>
                         </div>
@@ -84,7 +84,7 @@
                                 <p class="card-text">Flavour desc: <span th:text="${flavour.flavourDesc}">Desc</span></p>
                                 <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
                                 <form method="post" action="/deactivateflavour">
-                                    <input type="hidden" name="deactivateFlavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
+                                    <input type="hidden" name="deactivateflavourid" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
                                     <label class="form-label" for="deactivateFlavourId">aktiver</label>
                                     <input class="form-check-label" id="deactivateFlavourId"
                                            name="deactivateflavour" type="checkbox"><br>
@@ -107,7 +107,7 @@
                             <p class="card-text">Flavour desc: <span th:text="${flavour.flavourDesc}">Desc</span></p>
                             <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
                             <form method="post" action="/activateflavour">
-                                <input type="hidden" name="activateFlavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
+                                <input type="hidden" name="activateflavourid" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
                                 <label class="form-label" for="activateFlavourId">aktiver</label>
                                 <input class="form-check-label" id="activateFlavourId"
                                        name="activateflavour" type="checkbox"><br>
@@ -131,7 +131,7 @@
                         <p class="card-text">Flavour desc: <span th:text="${flavour.flavourDesc}">Desc</span></p>
                         <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
                         <form method="post" action="/activateFlavourId">
-                            <input type="hidden" name="activateFlavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
+                            <input type="hidden" name="activateflavourid" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
                             <label class="form-label" for="activateFlavourId">aktiver</label>
                             <input class="form-check-label" id="activateFlavourId"
                                    name="activateflavour" type="checkbox"><br>
@@ -155,7 +155,7 @@
                     <p class="card-text">Flavour desc: <span th:text="${flavour.flavourDesc}">Desc</span></p>
                     <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
                     <form method="post" action="/activateFlavourId">
-                        <input type="hidden" name="activateFlavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
+                        <input type="hidden" name="activateflavourid" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
                         <label class="form-label" for="activateFlavourId">aktiver</label>
                         <input class="form-check-label" id="activateFlavourId"
                                name="activateflavour" type="checkbox"><br>

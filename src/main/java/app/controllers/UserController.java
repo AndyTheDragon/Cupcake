@@ -1,12 +1,14 @@
 package app.controllers;
 
-import app.exceptions.DatabaseException;
-import app.entities.User;
-import app.persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import app.entities.Order;
+import app.entities.User;
+import app.exceptions.DatabaseException;
+import app.persistence.ConnectionPool;
 import app.persistence.UserMapper;
-
+import app.persistence.OrderMapper;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserController
@@ -20,7 +22,44 @@ public class UserController
         app.get("/logout", ctx -> doLogout(ctx));
         app.get("/customer", ctx -> redirectUserByRole(ctx, dbConnection));
         app.get("/customer/{id}", ctx -> showCustomerPage(ctx, dbConnection));
+        app.post("/deposit", ctx -> depositToCustomerBalance(ctx, dbConnection));
     }
+
+    private static void depositToCustomerBalance(Context ctx, ConnectionPool pool)
+    {
+
+        try
+        {
+            // retrieve user id - to prevent money being paid to all users in db
+            String idString = ctx.formParam("userId");
+            int userId = Integer.parseInt(idString);
+
+            String balanceString = ctx.formParam("customerbalance");
+            // check if balance is null
+            if (balanceString == null || balanceString.isEmpty())
+            {
+                ctx.attribute("message", "Du skal indtaste et beløb for at opdatere kundens saldo");
+            }
+            else
+            {
+                int balance = 100*Integer.parseInt(balanceString);
+                UserMapper.increaseCustomerBalance(balance, userId, pool);
+                ctx.attribute("message", "Beløb er indbetalt.");
+            }
+        }
+        catch (DatabaseException e)
+        {
+            ctx.attribute("message", e.getMessage());
+        }
+        catch (NumberFormatException e)
+        {
+            ctx.attribute("message", "Du skal indtaste et gyldigt beløb");
+            ctx.render("login.html");
+        }
+        showAdminPage(ctx, pool);
+
+    }
+
 
     private static void createUser(Context ctx, ConnectionPool dbConnection)
     {
@@ -40,6 +79,7 @@ public class UserController
         {
             try
             {
+                username = username.toLowerCase();
                 UserMapper.createUser(username, password, dbConnection);
                 ctx.attribute("message", "du er nu oprettet");
                 CupcakeController.showFrontpage(ctx, dbConnection);
@@ -48,11 +88,12 @@ public class UserController
                 if (e.getMessage().contains("duplicate key value violates unique constraint"))
                 {
                     ctx.attribute("message", "Brugernavnet er allerede i brug. Prøv et andet.");
-                } else
+                }
+                else
                 {
                     ctx.attribute("message", e.getMessage());
-                    ctx.render("createuser.html");
                 }
+                ctx.render("createuser.html");
             }
         } else
         {
@@ -77,7 +118,8 @@ public class UserController
         if (password.length() >= 8 && hasNumber && hasSpecialChar)
         {
             return true; // Password meets all criteria
-        } else
+        }
+        else
         {
             ctx.attribute("message", "Kodeordet følger ikke op til krav. Check venligst: <br>" +
                     "Minimumslængde på 8 tegn, " +
@@ -91,6 +133,10 @@ public class UserController
     {
         String name = ctx.formParam("username");
         String password = ctx.formParam("password");
+        if (name !=null )
+        {
+            name = name.toLowerCase(); //Avoiding potential nullPointerExceptions
+        }
         try
         {
             User user = UserMapper.login(name, password, dbConnection);
@@ -127,7 +173,8 @@ public class UserController
             showAdminPage(ctx, dbConnection);
         } else
         {
-            showCustomerPage(ctx, dbConnection);
+            ctx.redirect("/customer/" + currentUser.getUserId());
+            //showCustomerPage(ctx, dbConnection);
         }
     }
 
@@ -148,23 +195,36 @@ public class UserController
     private static void showCustomerPage(Context ctx, ConnectionPool dbConnection)
     {
         User currentUser = ctx.sessionAttribute("currentUser");
+        List<Order> orderList;
         String userId = ctx.pathParam("id");
-        if (userId != null && currentUser != null && currentUser.getRole().equals("admin"))
+        if (currentUser != null)
         {
-            try
+            if (currentUser.getRole().equals("admin"))
             {
-                currentUser = UserMapper.getUser(Integer.parseInt(userId), dbConnection);
-            } catch (NumberFormatException e)
-            {
-                ctx.attribute("message", e.getMessage());
+                try
+                {
+                    currentUser = UserMapper.getUser(Integer.parseInt(userId), dbConnection);
+
+                } catch (NumberFormatException | DatabaseException e)
+                {
+                    ctx.attribute("message", e.getMessage());
+                }
+            }
+            try {
+                orderList = OrderMapper.getOrdersByUserId(currentUser,"date_placed",dbConnection);
             }
             catch (DatabaseException e)
             {
                 ctx.attribute("message", e.getMessage());
+                orderList = new ArrayList<>();
             }
-
+            ctx.attribute("orders", orderList);
+            ctx.attribute("user", currentUser);
+            ctx.render("customer_details.html");
+            return;
         }
-        ctx.attribute("user", currentUser);
-        ctx.render("customer_details.html");
+        ctx.attribute("message", "Du skal være logget ind for at se dette indhold.");
+        ctx.render("login.html");
+
     }
 }

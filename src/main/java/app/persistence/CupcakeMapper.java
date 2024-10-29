@@ -84,7 +84,7 @@ public class CupcakeMapper
                 flavours.add(new CupcakeFlavour(rs.getInt("flavour_id"),
                                                 rs.getInt("price"),
                                                 rs.getString("flavour_name"),
-                                                "Available",
+                                                rs.getString("flavour_name"),
                                                 cupcakeType));
             }
         } catch (SQLException e)
@@ -95,5 +95,32 @@ public class CupcakeMapper
         return flavours;
     }
 
+    public static CupcakeFlavour getCupcakeFlavour(String flavourName, CupcakeType cupcakeType, ConnectionPool connectionPool) throws DatabaseException
+    {
+        String sql = "SELECT * FROM cupcake_flavours WHERE flavour_name = ?";
 
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql))
+        {
+
+            ps.setString(1, flavourName);
+
+            try (ResultSet rs = ps.executeQuery())
+            {
+                if (rs.next())
+                {
+                    int flavourId = rs.getInt("flavour_id");
+                    int price = rs.getInt("price");
+                    String flavourDesc = "";
+                    return new CupcakeFlavour(flavourId, price, flavourName, flavourDesc, cupcakeType);
+                } else
+                {
+                    throw new DatabaseException("Flavour not found: " + flavourName);
+                }
+            }
+        } catch (SQLException e)
+        {
+            throw new DatabaseException("Error getting cupcake flavour from database", e);
+        }
+    }
 }

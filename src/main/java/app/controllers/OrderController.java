@@ -2,16 +2,13 @@ package app.controllers;
 
 import app.entities.*;
 import app.exceptions.DatabaseException;
-import app.persistence.ConnectionPool;
-import app.persistence.OrderMapper;
-import app.persistence.UserMapper;
+import app.persistence.*;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import org.jetbrains.annotations.Nullable;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 public class OrderController
 {
@@ -20,7 +17,7 @@ public class OrderController
     {
         app.get("/ordrehistory", ctx -> showOrderHistory(ctx, dbConnection));
         app.get("/order/delete", ctx -> deleteOrder(ctx,dbConnection));
-        app.get("/order/details/{id}", ctx -> showOrderHistory(ctx, dbConnection));
+        app.get("/order/details/{id}", ctx -> showOrderDetails(ctx, dbConnection));
         app.get("/order/finish/{id}", ctx -> showOrderHistory(ctx, dbConnection));
         app.post("/addcupcake", ctx -> addCupcakeToBasket(ctx, dbConnection));
         app.get("/removecupcake", OrderController::removeCupcakeFromBasket);
@@ -133,8 +130,8 @@ public class OrderController
 
         try
         {
-            CupcakeFlavour topFlavour = OrderMapper.getCupcakeFlavour(topFlavourName, CupcakeType.TOP, pool);
-            CupcakeFlavour bottomFlavour = OrderMapper.getCupcakeFlavour(bottomFlavourName, CupcakeType.BOTTOM, pool);
+            CupcakeFlavour topFlavour = CupcakeMapper.getCupcakeFlavour(topFlavourName, CupcakeType.TOP, pool);
+            CupcakeFlavour bottomFlavour = CupcakeMapper.getCupcakeFlavour(bottomFlavourName, CupcakeType.BOTTOM, pool);
             Cupcake cupcake = new Cupcake(topFlavour, bottomFlavour);
 
             int orderId = 0;
@@ -163,6 +160,12 @@ public class OrderController
 
     private static void showOrderHistory(Context ctx, ConnectionPool pool)
     {
+        if (ctx.sessionAttribute("currentUser") == null || !((User)ctx.sessionAttribute("currentUser")).isAdmin())
+        {
+            ctx.attribute("message", "Du skal være logget ind for at se dette indhold.");
+            ctx.render("login.html");
+            return;
+        }
         List<Order> orders = new ArrayList<>();
         String sortby = ctx.formParam("sort");
         try
@@ -212,6 +215,27 @@ public class OrderController
             orderLineList.remove(orderLineId);
         }
         ctx.render("/basket.html");
+    }
+
+    private static void showOrderDetails(Context ctx,ConnectionPool dbConnection ){
+
+        {
+            Order order;
+            try
+            {
+                String orderId = ctx.pathParam("id");
+                order = OrderMapper.getOrderDetails(Integer.parseInt(orderId), dbConnection);
+                ctx.attribute("order", order);
+                ctx.render("/showorderdetails.html");
+            }
+            catch (DatabaseException | NumberFormatException e)
+            {
+                ctx.attribute("message","Noget gik galt. " + e.getMessage());
+                showOrderHistory(ctx,dbConnection);
+            }
+            // Render Thymeleaf-skabelonen
+        }
+
     }
 
 }

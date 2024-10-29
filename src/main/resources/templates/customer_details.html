@@ -20,15 +20,36 @@
         </div>
 
         <h3>Ordrer:</h3>
-        <!--<ul class="list-group">
-            <li class="list-group-item" th:each="order : ${user.orders}">
-                <div>
-                    <h5>Ordre #<span th:text="${order.orderId}">0</span></h5>
-                    <p>Dato: <span th:text="${order.date}">01-01-2023</span></p>
-                    <p>Beløb: <span th:text="${order.total}">0</span> kr</p>
-                </div>
-            </li>
-        </ul>-->
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th><a th:href="@{/customer/{id}(id=${user.userId},sort=orderid)}">Order #</a></th>
+                <th><a th:href="@{/customer/{id}(id=${user.userId},sort=name)}">Navn</a></th>
+                <th><a th:href="@{/customer/{id}(id=${user.userId},sort=status)}">Status</a></th>
+                <th><a th:href="@{/customer/{id}(id=${user.userId},sort=user_id)}">Navn</a></th>
+                <th><a th:href="@{/customer/{id}(id=${user.userId},sort=date_created)}">Oprettet</a></th>
+                <th><a th:href="@{/customer/{id}(id=${user.userId},sort=date_paid)}">Betalt</a></th>
+                <th><a th:href="@{/customer/{id}(id=${user.userId},sort=date_completed)}">Afsluttet</a></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="" th:each="order : ${orders}">
+                <td><a class="" href="order/details" th:href="@{/order/details/{id}(id=${order.orderid})}" th:text="${order.orderid}">order id</a></td>
+                <td th:text="${order.name}">Navn</td>
+                <td>
+                    <a th:if="${order.user.userid}!=0" href="/customer" th:href="@{/customer/{id}(id=${order.user.userid})}" th:text="${order.user}">Bruger</a>
+                    <span th:if="${order.user.userid}==0" th:text="${order.user}">Gæst</span>
+                </td>
+                <td><span class="badge text-bg-info" th:text="${order.status}">Fullfilled</span></td>
+                <td th:text="${order.dateplaced}">Date</td>
+                <td th:text="${order.datepaid}">Date</td>
+                <td>
+                    <a class="" th:if="${order.datecompleted==null} and ${session.currentUser.isAdmin}" href="order/finish" th:href="@{/order/finish/{id}(id=${order.orderid})}">Afslut ordre</a>
+                    <span th:text="${order.datecompleted}">Date</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
         <a href="/index" class="btn btn-secondary mt-4">Tilbage til forsiden</a>
     </div>

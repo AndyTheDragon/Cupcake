@@ -2,8 +2,8 @@ package app.entities;
 
 public class Cupcake
 {
-    private CupcakeFlavour top;
-    private CupcakeFlavour bottom;
+    private final CupcakeFlavour top;
+    private final CupcakeFlavour bottom;
 
     public Cupcake(CupcakeFlavour top, CupcakeFlavour bottom)
     {

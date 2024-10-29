@@ -7,10 +7,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class OrderMapper
 {
@@ -19,7 +15,7 @@ public class OrderMapper
     {
         String sql = "INSERT INTO orders (name, date_placed, date_paid, status, user_id) VALUES (?,?,?,?,?)";
         try (Connection connection = pool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);)
+             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS))
         {
 
             ps.setString(1, name);
@@ -93,6 +89,24 @@ public class OrderMapper
         }
     }
 
+    public static void deleteOrder(int order_id, ConnectionPool connectionPool) throws DatabaseException
+    {
+        String sql = "DELETE FROM orders WHERE order_id = ?";
+        try (var connection = connectionPool.getConnection())
+        {
+            try (var prepareStatement = connection.prepareStatement(sql))
+            {
+                prepareStatement.setInt(1, order_id);
+
+                prepareStatement.executeUpdate();
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DatabaseException("Could not delete order from the database");
+        }
+    }
+
     public static List<Order> getOrders(String sortby, ConnectionPool pool) throws DatabaseException
     {
         String sql = "SELECT order_id, name, date_placed, date_paid, date_completed, status, orders.user_id, username, balance, role FROM orders LEFT JOIN users ON orders.user_id = users.user_id ORDER BY ?";
@@ -143,52 +157,93 @@ public class OrderMapper
         }
     }
 
-    public static CupcakeFlavour getCupcakeFlavour(String flavourName, CupcakeType cupcakeType, ConnectionPool connectionPool) throws DatabaseException
-    {
-        String sql = "SELECT * FROM cupcake_flavours WHERE flavour_name = ?";
 
-        try (Connection connection = connectionPool.getConnection();
+    public static List<Order> getOrdersByUserId(User user, String sortby, ConnectionPool dbConnection) throws DatabaseException
+    {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orders WHERE user_id = ? ORDER BY ?";
+        try (Connection connection = dbConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql))
         {
-
-            ps.setString(1, flavourName);
-
-            try (ResultSet rs = ps.executeQuery())
+            ps.setInt(1,user.getUserId());
+            ps.setString(2, sortby);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
             {
-                if (rs.next())
-                {
-                    int flavourId = rs.getInt("flavour_id");
-                    int price = rs.getInt("price");
-                    String flavourDesc = "";
-                    return new CupcakeFlavour(flavourId, price, flavourName, flavourDesc, cupcakeType);
-                } else
-                {
-                    throw new DatabaseException("Flavour not found: " + flavourName);
-                }
+                orders.add(new Order(
+                        rs.getInt("order_id"),
+                        rs.getString("name"),
+                        rs.getDate("date_placed"),
+                        rs.getDate("date_paid"),
+                        rs.getDate("date_completed"),
+                        rs.getString("status"),
+                        user
+                ));
             }
-        } catch (SQLException e)
-        {
-            throw new DatabaseException("Error getting cupcake flavour from database", e);
-        }
-    }
-
-
-    public static void deleteOrder(int order_id, ConnectionPool connectionPool) throws DatabaseException
-    {
-        String sql = "DELETE FROM orders WHERE order_id = ?";
-        try (var connection = connectionPool.getConnection())
-        {
-            try (var prepareStatement = connection.prepareStatement(sql))
-            {
-                prepareStatement.setInt(1, order_id);
-
-                prepareStatement.executeUpdate();
-            }
+            return orders;
         }
         catch (SQLException e)
         {
-            throw new DatabaseException("Could not delete order from the database");
+            throw new DatabaseException(e.getMessage());
         }
+    }
+
+ public  static Order getOrderDetails(int orderId, ConnectionPool pool)throws DatabaseException{
+        String sql = "SELECT u.*, o.*, ol.*, " +
+                "bottomf.flavour_name AS bot_flavour_name, bottomf.price AS bot_price, topf.flavour_name AS top_flavour_name, topf.price AS top_price " +
+                "FROM order_lines AS ol " +
+                "INNER JOIN cupcake_flavours AS bottomf ON bottomf.flavour_id = ol.bottom_flavour " +
+                "INNER JOIN cupcake_flavours AS topf ON topf.flavour_id = ol.top_flavour  " +
+                "INNER JOIN orders AS o ON o.order_id = ol.order_id " +
+                "LEFT JOIN users AS u ON u.user_id = o.user_id " +
+                "WHERE ol.order_id = ?";
+
+
+        try (Connection connection = pool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql))
+        {
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+            List<OrderLine> orderLines = new ArrayList<>();
+            String orderName = "";
+            String orderStatus = "";
+            User user = null;
+
+            while (rs.next()) {
+                CupcakeFlavour topFlavour = new CupcakeFlavour(
+                        rs.getInt("top_flavour"),
+                        rs.getInt("top_price"),
+                        rs.getString("top_flavour_name"),
+                        "",
+                        CupcakeType.TOP);
+                CupcakeFlavour bottomFlavour = new CupcakeFlavour(
+                        rs.getInt("bottom_flavour"),
+                        rs.getInt("bot_price"),
+                        rs.getString("bot_flavour_name"),
+                        "",
+                        CupcakeType.BOTTOM);
+                Cupcake cupcake = new Cupcake(topFlavour, bottomFlavour);
+                orderLines.add(new OrderLine(orderId, rs.getInt("quantity"), cupcake, rs.getInt("price") ));
+                orderName = rs.getString("name");
+                orderStatus = rs.getString("status");
+                if (rs.getInt("user_id")!=0)
+                {
+                    user = new User(rs.getInt("user_id"),rs.getString("username"),rs.getString("role"),rs.getInt("balance"));
+                }
+                else
+                {
+                    user = new User(0,"Gæst","guest",0);
+                }
+
+            }
+
+            return new Order(orderId, orderName, orderStatus, user, orderLines);
+        }
+        catch (SQLException e)
+        {
+            throw new DatabaseException(e.getMessage());
+        }
+
     }
 
 }

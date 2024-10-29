@@ -7,22 +7,7 @@
 .header {
     background: linear-gradient(#9013FE,#6A10F3);
 }
-#page-container {
-    /*border: 1px solid red;*/
-    display: flex;
-    justify-content: center;
-}
 
-#page-content {
-   /* border: 1px solid blue;*/
-    max-width: 800px;
-    min-height: 600px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-}
 .center-form form{
     /* border: 1px solid green;*/
     max-width: 400px;

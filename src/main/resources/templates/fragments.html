@@ -127,6 +127,41 @@
 
         </div>
 
+        <div th:fragment="orderlist">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th class="text-center"><i th:if="${session.currentUser.isAdmin}" class="bi bi-trash3"></i></th>
+                    <th><a th:href="@{(sort=orderid)}">Order #</a></th>
+                    <th><a th:href="@{(sort=name)}">Navn</a></th>
+                    <th><a th:href="@{(sort=user_id)}">Navn</a></th>
+                    <th><a th:href="@{(sort=status)}">Status</a></th>
+                    <th><a th:href="@{(sort=date_created)}">Oprettet</a></th>
+                    <th><a th:href="@{(sort=date_paid)}">Betalt</a></th>
+                    <th><a th:href="@{(sort=date_completed)}">Afsluttet</a></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="" th:each="order : ${orders}">
+                    <td class="text-center"><a th:if="${session.currentUser.isAdmin}" class="link-danger link-opacity-50-hover" href="/order/delete" th:href="@{/order/delete(order_id=${order.orderid})}" ><i class="bi bi-trash3"></i></a></td>
+                    <td><a class="" href="order/details" th:href="@{/order/details/{id}(id=${order.orderid})}" th:text="${order.orderid}">order id</a></td>
+                    <td th:text="${order.name}">Navn</td>
+                    <td>
+                        <a th:if="${order.user.userid}!=0" href="/customer" th:href="@{/customer/{id}(id=${order.user.userid})}" th:text="${order.user}">Bruger</a>
+                        <span th:if="${order.user.userid}==0" th:text="${order.user}">Gæst</span>
+                    </td>
+                    <td><span class="badge text-bg-info" th:text="${order.status}">Fullfilled</span></td>
+                    <td th:text="${order.dateplaced}">Date</td>
+                    <td th:text="${order.datepaid}">Date</td>
+                    <td>
+                        <a class="" th:if="${order.datecompleted==null} and ${session.currentUser.isAdmin}" href="order/finish" th:href="@{/order/finish/{id}(id=${order.orderid})}">Afslut ordre</a>
+                        <span th:text="${order.datecompleted}">Date</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
     <footer th:fragment="footer">
         Dette er så en footer.

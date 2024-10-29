@@ -1,6 +1,5 @@
 package app.persistence;
 
-import app.entities.Cupcake;
 import app.entities.CupcakeFlavour;
 import app.entities.CupcakeType;
 import app.exceptions.DatabaseException;
@@ -58,32 +57,6 @@ public class CupcakeMapper
         }
     }
 
-    public static List<CupcakeFlavour> getAllFlavours(ConnectionPool dbConnection) throws DatabaseException
-    {
-        List<CupcakeFlavour> flavours = new ArrayList<>();
-
-        String sql = "SELECT flavour_id, flavour_name, is_enabled, price FROM cupcake_flavours";
-
-        try (Connection connection = dbConnection.getConnection())
-        {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next())
-            {
-                int flavourId = rs.getInt("flavour_id");
-                String flavourName = rs.getString("flavour_name");
-                boolean isEnabled = rs.getBoolean("is_enabled");
-                int price = rs.getInt("price");
-                flavours.add(new CupcakeFlavour(flavourId, price, flavourName, "Available", CupcakeType.TOP));
-
-            }
-
-
-        } catch (SQLException e) {
-            throw new DatabaseException("Fejl ved at hente alle flavours fra db", e);
-        }
-        return flavours;
-    }
 
     public static List<CupcakeFlavour> getFlavours(CupcakeType cupcakeType, ConnectionPool dbConnection) throws DatabaseException
     {

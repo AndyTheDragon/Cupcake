@@ -34,7 +34,7 @@
                             <form method="post" action="/deactivateflavour">
                                 <input type="hidden" name="deactivateFlavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
                                 <label class="form-label" for="deactivateFlavourId">Deaktiver</label>
-                                <input class="form-check-label" id="isdeactivated"
+                                <input class="form-check-label" id="deactivateflavourid"
                                        name="deactivateflavour" type="checkbox"><br>
                                 <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
                             </form>
@@ -58,17 +58,42 @@
                             <p class="card-text">flavour navn: <span th:text="${topflavour.name}">Navn</span></p>
                             <p class="card-text">Flavour desc: <span th:text="${topflavour.flavourDesc}">Desc</span></p>
                             <p class="card-text">Type: <span th:text="${topflavour.type}">Type</span></p>
-                            <form method="post" action="/activateflavour">
+                            <form method="post" action="/deactivateflavour">
                                 <input type="hidden" name="deactivateFlavourId" th:value="${topflavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
                                 <label class="form-label" for="deactivateFlavourId">aktiver</label>
-                                <input class="form-check-label" id="isactivated"
-                                       name="activateflavour" type="checkbox"><br>
+                                <input class="form-check-label" id="deactivateflavourid"
+                                       name="deactivateflavour" type="checkbox"><br>
                                 <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Vis en form til at aktivere cupcake flavours -->
+            <div class="content bg-light rounded-4 p-5">
+                <h3 class="display-4">Vælg en both flavour du vil deaktivere</h3>
+                <!-- both flavours-->
+                <div class="row">
+                    <div th:each="flavour : ${activeBothFlavours}" class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${flavour.cupcakeFlavourId}">Flavour ID</h5>
+                                <p class="card-text"> Pris: <span th:text="${flavour.price}">Pris</span></p>
+                                <p class="card-text">flavour navn: <span th:text="${flavour.name}">Navn</span></p>
+                                <p class="card-text">Flavour desc: <span th:text="${flavour.flavourDesc}">Desc</span></p>
+                                <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
+                                <form method="post" action="/deactivateflavour">
+                                    <input type="hidden" name="deactivateFlavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
+                                    <label class="form-label" for="deactivateFlavourId">aktiver</label>
+                                    <input class="form-check-label" id="deactivateFlavourId"
+                                           name="deactivateflavour" type="checkbox"><br>
+                                    <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             <h3 class="display-4">Vælg en top flavour du vil aktivere</h3>
             <!-- top flavours-->
@@ -84,7 +109,7 @@
                             <form method="post" action="/activateflavour">
                                 <input type="hidden" name="activateFlavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
                                 <label class="form-label" for="activateFlavourId">aktiver</label>
-                                <input class="form-check-label" id="isactivated"
+                                <input class="form-check-label" id="activateFlavourId"
                                        name="activateflavour" type="checkbox"><br>
                                 <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
                             </form>
@@ -108,7 +133,7 @@
                         <form method="post" action="/activateFlavourId">
                             <input type="hidden" name="activateFlavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
                             <label class="form-label" for="activateFlavourId">aktiver</label>
-                            <input class="form-check-label" id="isactivated"
+                            <input class="form-check-label" id="activateFlavourId"
                                    name="activateflavour" type="checkbox"><br>
                             <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
                         </form>
@@ -132,7 +157,7 @@
                     <form method="post" action="/activateFlavourId">
                         <input type="hidden" name="activateFlavourId" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
                         <label class="form-label" for="activateFlavourId">aktiver</label>
-                        <input class="form-check-label" id="isactivated"
+                        <input class="form-check-label" id="activateFlavourId"
                                name="activateflavour" type="checkbox"><br>
                         <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
                     </form>

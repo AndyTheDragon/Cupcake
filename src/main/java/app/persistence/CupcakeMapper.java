@@ -36,7 +36,7 @@ public class CupcakeMapper
         }
     }
 
-    public static void deactivateFlavour(boolean isEnabled, int flavourId, ConnectionPool pool) throws DatabaseException
+    public static void updateFlavourAvailability(boolean isEnabled, int flavourId, ConnectionPool pool) throws DatabaseException
     {
         String sql = "UPDATE cupcake_flavours SET is_enabled = ? WHERE flavour_id = ?";
 
@@ -57,25 +57,80 @@ public class CupcakeMapper
         }
     }
 
-    public static void activateFlavour(boolean isEnabled, int flavourId, ConnectionPool pool) throws DatabaseException
+
+
+    public static List<CupcakeFlavour> getActiveFlavours(CupcakeType cupcakeType, ConnectionPool dbConnection) throws DatabaseException
     {
-        String sql = "UPDATE cupcake_flavours SET is_enabled = ? WHERE flavour_id = ?";
-
-        try (Connection connection = pool.getConnection())
+        List<CupcakeFlavour> flavours = new ArrayList<>();
+        String sql;
+        if (cupcakeType == CupcakeType.BOTTOM)
         {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setBoolean(1, isEnabled);
-            ps.setInt(2, flavourId);
+            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE AND is_enabled = TRUE";
+        }
+        else if (cupcakeType == CupcakeType.TOP) //dvs. (cupcakeType == CupcakeType.TOP)
+        {
+            sql = "SELECT flavour_id, price, flavour_name FROM cupcake_flavours WHERE is_top_flavour = TRUE AND is_enabled = TRUE";
+        }
+        else
+        {
+            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE AND is_top_flavour = TRUE AND is_enabled = TRUE";
+        }
 
-            int rowsAffected = ps.executeUpdate();
-            if (rowsAffected != 1)
+        try (Connection con = dbConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql))
+        {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
             {
-                throw new DatabaseException("Fejl ved opdatering af tilgængelighed");
+                flavours.add(new CupcakeFlavour(rs.getInt("flavour_id"),
+                        rs.getInt("price"),
+                        rs.getString("flavour_name"),
+                        rs.getString("flavour_name"),
+                        cupcakeType));
             }
         } catch (SQLException e)
         {
-            throw new DatabaseException(e.getMessage());
+            throw new DatabaseException("Could not get flavours from database.", e);
         }
+
+        return flavours;
+    }
+
+    public static List<CupcakeFlavour> getInactiveFlavours(CupcakeType cupcakeType, ConnectionPool dbConnection) throws DatabaseException
+    {
+        List<CupcakeFlavour> flavours = new ArrayList<>();
+        String sql;
+        if (cupcakeType == CupcakeType.BOTTOM)
+        {
+            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE AND is_enabled = FALSE";
+        }
+        else if (cupcakeType == CupcakeType.TOP) //dvs. (cupcakeType == CupcakeType.TOP)
+        {
+            sql = "SELECT flavour_id, price, flavour_name FROM cupcake_flavours WHERE is_top_flavour = TRUE AND is_enabled = FALSE";
+        }
+        else
+        {
+            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE AND is_top_flavour = TRUE AND is_enabled = FALSE";
+        }
+
+        try (Connection con = dbConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql))
+        {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                flavours.add(new CupcakeFlavour(rs.getInt("flavour_id"),
+                        rs.getInt("price"),
+                        rs.getString("flavour_name"),
+                        rs.getString("flavour_name"),
+                        cupcakeType));
+            }
+        } catch (SQLException e)
+        {
+            throw new DatabaseException("Could not get flavours from database.", e);
+        }
+
+        return flavours;
     }
 
 

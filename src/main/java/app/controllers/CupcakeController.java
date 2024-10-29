@@ -26,7 +26,7 @@ public class CupcakeController
 
     private static void deactivateFlavour(Context ctx, ConnectionPool dbConnection)
     {
-        String flavourIdString = ctx.formParam("flavourId");
+        String flavourIdString = ctx.formParam("deactivateFlavourId");
         int flavourId = Integer.parseInt(flavourIdString);
         try
         {
@@ -44,7 +44,7 @@ public class CupcakeController
 
     private static void activateFlavour(Context ctx, ConnectionPool dbConnection)
     {
-        String flavourIdString = ctx.formParam("dflavourId");
+        String flavourIdString = ctx.formParam("activateFlavourId");
         int flavourId = Integer.parseInt(flavourIdString);
         try
         {

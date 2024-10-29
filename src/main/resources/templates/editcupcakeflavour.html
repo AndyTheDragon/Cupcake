@@ -31,13 +31,11 @@
                             <p class="card-text">flavour navn: <span th:text="${flavour.name}">Navn</span></p>
                             <p class="card-text">Flavour desc: <span th:text="${flavour.flavourDesc}">Desc</span></p>
                             <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
-                            <form method="post" action="/activatedeactivate">
+                            <form method="post" action="/deactivateflavour">
+                                <>
                                 <label class="form-label" for="deactivateflavour">Deaktiver</label>
-                                <input class="form-control-lg form-control" id="deactivateflavour"
-                                       name="deactivateflavour" type="checkbox">
-                                <label class="form-label" for="activateflavour">Aktiver</label>
-                                <input class="form-control form-control-lg" id="activateflavour" name="activateflavour"
-                                       type="checkbox">
+                                <input class="form-check-label" id="isdeactivate"
+                                       name="deactivateflavour" type="checkbox"><br>
                                 <button class="btn btn-lg btn-primary" type="submit" value="submit">Opdater</button>
                             </form>
                         </div>

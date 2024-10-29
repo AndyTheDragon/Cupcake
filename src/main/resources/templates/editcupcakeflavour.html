@@ -154,7 +154,7 @@
                     <p class="card-text">flavour navn: <span th:text="${flavour.name}">Navn</span></p>
                     <p class="card-text">Flavour desc: <span th:text="${flavour.flavourDesc}">Desc</span></p>
                     <p class="card-text">Type: <span th:text="${flavour.type}">Type</span></p>
-                    <form method="post" action="/activateFlavourId">
+                    <form method="post" action="/activateflavour">
                         <input type="hidden" name="activateflavourid" th:value="${flavour.cupcakeFlavourId}"> <!-- Sends ID to controller-->
                         <label class="form-label" for="activateFlavourId">aktiver</label>
                         <input class="form-check-label" id="activateFlavourId"
@@ -170,14 +170,10 @@
 
 
     </div>
-</div>
-</div>
-</div>
-</div>
 
 
-</div>
-</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>

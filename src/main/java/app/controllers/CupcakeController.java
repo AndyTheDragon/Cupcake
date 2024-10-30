@@ -32,11 +32,11 @@ public class CupcakeController
             int flavourId = Integer.parseInt(flavourIdString);
             CupcakeMapper.updateFlavourAvailability(false, flavourId, dbConnection);
             ctx.attribute("message", "Flavour er ikke længere muligt at bestille.");
-            ctx.render("editcupcakeflavour.html");
+            showCupcakeFlavours(ctx, dbConnection);
         } catch (DatabaseException | NumberFormatException e)
         {
             ctx.attribute("message", e.getMessage());
-            ctx.render("editcupcakeflavour.html");
+            showCupcakeFlavours(ctx, dbConnection);
         }
 
 
@@ -51,11 +51,11 @@ public class CupcakeController
             int deactivateFlavourId = Integer.parseInt(deactivateFlavourIdString);
             CupcakeMapper.updateFlavourAvailability(true, deactivateFlavourId, dbConnection);
             ctx.attribute("message", "Flavour er nu muligt og bestille.");
-            ctx.render("editcupcakeflavour.html");
+            showCupcakeFlavours(ctx, dbConnection);
         } catch (DatabaseException | NumberFormatException e)
         {
             ctx.attribute("message", e.getMessage());
-            ctx.render("editcupcakeflavour.html");
+            showCupcakeFlavours(ctx, dbConnection);
         }
 
 

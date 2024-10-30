@@ -27,13 +27,13 @@ public class CupcakeController
     private static void deactivateFlavour(Context ctx, ConnectionPool dbConnection)
     {
         String flavourIdString = ctx.formParam("deactivateflavourid");
-        int flavourId = Integer.parseInt(flavourIdString);
         try
         {
+            int flavourId = Integer.parseInt(flavourIdString);
             CupcakeMapper.updateFlavourAvailability(false, flavourId, dbConnection);
             ctx.attribute("message", "Flavour er ikke længere muligt at bestille.");
             ctx.render("editcupcakeflavour.html");
-        } catch (DatabaseException e)
+        } catch (DatabaseException | NumberFormatException e)
         {
             ctx.attribute("message", e.getMessage());
             ctx.render("editcupcakeflavour.html");
@@ -45,14 +45,14 @@ public class CupcakeController
     private static void activateFlavour(Context ctx, ConnectionPool dbConnection)
     {
         String deactivateFlavourIdString = ctx.formParam("activateflavourid");
-        int deactivateFlavourId = Integer.parseInt(deactivateFlavourIdString);
 
         try
         {
+            int deactivateFlavourId = Integer.parseInt(deactivateFlavourIdString);
             CupcakeMapper.updateFlavourAvailability(true, deactivateFlavourId, dbConnection);
             ctx.attribute("message", "Flavour er nu muligt og bestille.");
             ctx.render("editcupcakeflavour.html");
-        } catch (DatabaseException e)
+        } catch (DatabaseException | NumberFormatException e)
         {
             ctx.attribute("message", e.getMessage());
             ctx.render("editcupcakeflavour.html");

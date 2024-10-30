@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+|Kunde|
+start
+:Afgiv ordre;
+
+|Ekspedient|
+:Tast ordre på kasseapparat;
+if (Har nok Cupcakes) then (Nej)
+  :Luk butikken for i dag;
+  stop
+else (Ja)
+  :Oplys kunden om pris;
+endif
+|Kunde|
+:Betal;
+
+|Ekspedient|
+:Registrer betaling;
+:Dekorer cupcakes;
+:Pak cupcakes;
+:Overdrag cupcakes;
+
+|Kunde|
+:Modtag cupcakes;
+
+stop
+@enduml

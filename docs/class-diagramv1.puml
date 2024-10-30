@@ -13,20 +13,15 @@ package entities {
         - final int cupakeFlavourId
         - final int price
         - final String flavourName
-        - final String flavourDesc
         - final CupcakeType type;
-        + int getCupcakeBottomId()
-        + int getPrice()
-        + String getFlavour()
-        + CupcakeType getType()
-        + String getCupcakeType()
+        + getters()
         'override
         + String toString()
     }
 
     class Cupcake {
-        - CupcakeFlavour top
-        - CupcakeFlavour bottom
+        - final CupcakeFlavour top
+        - final CupcakeFlavour bottom
         + Cupcake(top, bottom)
         + CupcakeFlavour getCupcakeBottom()
         + CupcakeFlavour getCupcakeTop()
@@ -41,14 +36,13 @@ package entities {
         - String password
         - String role
         - int balance
-        + User()
+        + User(userId, username, role, balance)
         + int getUserId()
         + String getUsername()
-        + String getPassword()
         + String getRole()
+        + boolean isAdmin()
         + int getBalance()
-        + void deposit()
-        + void buy()
+        + void pay()
     }
 
     class Order {
@@ -60,61 +54,106 @@ package entities {
         - String status
         - User user
         - List<OrderLine> orderLines
-        + getters()
-        + updateStatus(String)
+        + Order()
+        + int getOrderId()
+        + String getName()
+        + LocalDate getDatePlaced()
+        + LocalDate getDatePaid()
+        + LocalDate getDateCompleted()
+        + String getStatus()
+        + User getUser()
+        + List<OrderLine> getOrderLines()
+        + void updateStatus(String)
     }
     class OrderLine {
         - int orderId
         - int quantity
         - Cupcake cupcake
         - int price
-        + getters()
+        + int getOrderId()
+        + int getQuantity()
+        + Cupcake getCupcake()
+        + int getPrice()
     }
 }
 
 package controllers {
+    class CupcakeController {
+        + static void addRoutes()
+        + static void showFrontpage()
+        - static void activateFlavour()
+        - static void addCupcakeFlavour()
+        - static void deactivateFlavour()
+        - static void showCupcakeFlavours()
+
+    }
     class UserController {
         + static void addRoutes()
         - static void createUser()
-        + static void login()
-        - static void logout()
+        - static void depositToCustomerBalance()
+        - static void doLogin()
+        - static void doLogout()
+        - static void passwordCheck()
+        - static void redirectUserByRole()
+        - static void showAdminPage()
+        - static void showCustomerPage()
     }
     class OrderController {
         + static void addRoutes()
-        - static void addCupcakeToOrder()
-        - static void addOrder()
-        - static void showOrder()
-        - static void removeOrder()
+        - static void addCupcakeToBasket()
+        - static void checkout()
+        - static void deleteOrder()
+        - static void removeCupcakeFromBasket()
+        - static void showBasket()
+        - static void showOrderDetails()
+        - static void showOrderHistory()
     }
 }
 
 package persistence {
+    class ConnectionPool {
+    }
+    class CupcakeMapper {
+        + static void addCupcakeFlavour()
+        + static List<CupcakeFlavour> getActiveFlavours()
+        + static List<CupcakeFlavour> getInactiveFlavours()
+        + static CupcakeFlavour getCupcakeFlavour()
+        + static List<CupcakeFlavour> getFlavours()
+        + static void updateFlavourAvailability()
+
+    }
     class OrderMapper {
-        + static void newOrder()
+        + static int createOrderInDb()
+        + static void createOrderlinesInDb()
+        + static void deleteOrder()
         + static Order getOrder()
         + static List<Order> getOrders()
-        + static void removeOrder()
+        + static List<Order> getOrdersByUserId()
     }
 
     class UserMapper {
-        + static User login()
         + static void createUser()
+        + static List<User> getAllUsers()
+        + static User getUser()
+        + static void increaseCustomerBalance()
+        + static void payForOrder()
+        + static void login()
     }
 }
 
 package Test {
- class Test {
-    + userTestLoginValidLogin()
-    + userTestLoginInvalidLogin()
-    + orderTestNewOrderValidData()
-    + orderTestNewOrderInvalidData()
-
-
- }
+    class CupcakeMapperTest {
+        }
+    class OrderMapperTest {
+        }
+    class UserMapperTest {
+        }
 }
 
+Main -- CupcakeController
 Main -- OrderController
 Main -- UserController
+CupcakeController -- CupcakeMapper
 OrderController -- OrderMapper
 UserController -- UserMapper
 Cupcake *-- CupcakeFlavour

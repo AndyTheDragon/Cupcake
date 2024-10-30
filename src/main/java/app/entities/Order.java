@@ -1,17 +1,18 @@
 package app.entities;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
 public class Order
 {
-    private int orderId;
-    private String name;
-    private LocalDate datePlaced;
+    private final int orderId;
+    private final String name;
+    private final LocalDate datePlaced;
     private LocalDate datePaid;
     private LocalDate dateCompleted;
     private String status;
-    private User user;
+    private final User user;
     private List<OrderLine> orderLines;
 
     public Order(int orderId, String name, String status, User user, List<OrderLine> orderLines)
@@ -25,8 +26,29 @@ public class Order
         this.datePlaced = LocalDate.now();
     }
 
+    public  Order (int order_id, String name, Date date_placed, Date date_paid, Date date_completed, String status, User user){
+        this.orderId = order_id;
+        this.name = name;
+        this.datePlaced = date_placed.toLocalDate();
+        this.datePaid = date_paid==null?null:date_paid.toLocalDate();
+        this.dateCompleted = date_completed==null?null:date_completed.toLocalDate();
+        this.status = status;
+        this.user = user;
+
+    }
+
     public int getOrderId() {
         return orderId;
+    }
+
+    public int getOrderTotal()
+    {
+        int orderTotal = 0;
+        for (OrderLine orderLine : orderLines)
+        {
+            orderTotal += orderLine.getPrice();
+        }
+        return orderTotal;
     }
 
     public String getName() {

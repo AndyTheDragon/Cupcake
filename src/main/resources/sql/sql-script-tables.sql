@@ -2,17 +2,18 @@
 -- Please log an issue at https://github.com/pgadmin-org/pgadmin4/issues/new/choose if you find any bugs, including reproduction steps.
 BEGIN;
 
-DROP TABLE IF EXISTS public.users;
-DROP TABLE IF EXISTS public.orders;
-DROP TABLE IF EXISTS public.order_lines;
-DROP TABLE IF EXISTS public.cupcake_flavours;
+DROP TABLE IF EXISTS public.cupcake_flavours CASCADE;
+DROP TABLE IF EXISTS public.order_lines CASCADE;
+DROP TABLE IF EXISTS public.orders CASCADE;
+DROP TABLE IF EXISTS public.users CASCADE;
 
 
 CREATE TABLE IF NOT EXISTS public.users
 (
     user_id serial NOT NULL,
-    username character varying(64) NOT NULL,
+    username character varying(64) NOT NULL UNIQUE,
     password character varying(64) NOT NULL,
+    balance integer default 0,
     role character varying(12) NOT NULL,
     PRIMARY KEY (user_id)
 );
@@ -21,11 +22,11 @@ CREATE TABLE IF NOT EXISTS public.orders
 (
     order_id serial NOT NULL,
     name character varying(64) NOT NULL,
-    date_placed date NOT NULL,
+    date_placed date DEFAULT NOW(),
     date_paid date NULL,
     date_completed date NULL,
     status character varying(64) NOT NULL,
-    user_id integer NOT NULL,
+    user_id integer default NULL,
     PRIMARY KEY (order_id)
 );
 
@@ -35,6 +36,7 @@ CREATE TABLE IF NOT EXISTS public.cupcake_flavours
     flavour_name character varying(64) NOT NULL,
     is_top_flavour boolean NOT NULL,
     is_bottom_flavour boolean NOT NULL,
+    is_enabled boolean NOT NULL DEFAULT true,
     price int NOT NULL,
     PRIMARY KEY (flavour_id)
 );
@@ -62,7 +64,7 @@ ALTER TABLE IF EXISTS public.order_lines
     ADD CONSTRAINT fk FOREIGN KEY (order_id)
         REFERENCES public.orders (order_id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
         NOT VALID;
 
 ALTER TABLE IF EXISTS public.order_lines
@@ -94,5 +96,7 @@ INSERT INTO cupcake_flavours (flavour_name, is_top_flavour, is_bottom_flavour, p
                  ('Lemon', true,false,800),
                  ('Blue cheese', true,false,900);
 
+INSERT INTO users (username, password, balance, role) VALUES
+('admin@cph.dk', '$2a$10$d4at6bZlDljL1ZOEfx1zR.AkFTiWoaoW4X6np3YoNEH/O23SEKSay', 0, 'admin');
 
 END;

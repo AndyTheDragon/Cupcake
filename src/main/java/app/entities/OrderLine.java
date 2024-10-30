@@ -2,10 +2,11 @@ package app.entities;
 
 public class OrderLine
 {
-    private int orderId;
-    private int quantity;
-    private Cupcake cupcake;
-    private int price;
+    private final int orderId;
+    private final int quantity;
+    private final Cupcake cupcake;
+    private final int price;
+
 
     public OrderLine(int orderId, int quantity, Cupcake cupcake, int price)
     {
@@ -30,4 +31,6 @@ public class OrderLine
     public int getPrice() {
         return price;
     }
+
+
 }

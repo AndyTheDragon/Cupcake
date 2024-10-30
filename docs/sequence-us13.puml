@@ -7,7 +7,7 @@ skinparam backgroundColor #e3e3e3
 skinparam handwritten true
 
 actor Admin
-participant View as View
+participant View as V
 participant "UserController.deactivateFlavour()" as C
 participant "UserMapper.deactivateFlavour()" as M
 participant DB

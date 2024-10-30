@@ -24,14 +24,14 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav nav-underline mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="/ordrehistory" th:href="@{/ordrehistory}">Ordrer</a>
-                        </li>
-                        <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'admin'}">
-                            <a class="nav-link" href="/customer" th:href="@{/customer}">Kunder</a>
-                        </li>
                         <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'customer'}">
                             <a class="nav-link" href="/customer" th:href="@{/customer}">Din Info</a>
+                        </li>
+                        <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'admin'}">
+                            <a class="nav-link" aria-current="page" href="/ordrehistory" th:href="@{/ordrehistory}">Ordreoversigt</a>
+                        </li>
+                        <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'admin'}">
+                            <a class="nav-link" href="/customer" th:href="@{/customer}">Kundekartotek</a>
                         </li>
                         <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'admin'}">
                             <a class="nav-link" href="/newcupcakeflavours" th:href="@{/newcupcakeflavours}">Tilføj ny flavour</a>
@@ -62,9 +62,10 @@
                                     <a class="dropdown-item" th:href="@{/}">Kurven er tom, bestil nu</a>
                                 </li>
                                 <li th:each="orderline : ${session.orderlines}">
-                                    <a class="dropdown-item" href="#"
-                                       th:text="${orderline.quantity} + ' x ' + ${orderline.cupcake} + ' ' + ${(orderline.price)/100} + ' kr'">
-                                    </a>
+                                    <div class="dropdown-item">
+                                        <span th:text="${orderline.quantity} + ' x ' + ${orderline.cupcake} + ' ' + ${(orderline.price)/100} + ' kr'"></span>
+                                        <a class="link-danger ms-4" href="/removecupcake" th:href="@{/removecupcake(line_id=(${#lists.toList(session.orderlines).indexOf(orderline)}))}"><i class="bi bi-trash3"></i></a>
+                                    </div>
                                 </li>
                                 <li th:if="${session.orderlines != null and #lists.size(session.orderlines) > 0}">
                                     <hr class="dropdown-divider">

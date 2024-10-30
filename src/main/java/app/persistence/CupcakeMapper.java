@@ -36,18 +36,121 @@ public class CupcakeMapper
         }
     }
 
+    public static void updateFlavourAvailability(boolean isEnabled, int flavourId, ConnectionPool pool) throws DatabaseException
+    {
+        String sql = "UPDATE cupcake_flavours SET is_enabled = ? WHERE flavour_id = ?";
+
+        try (Connection connection = pool.getConnection())
+        {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setBoolean(1, isEnabled);
+            ps.setInt(2, flavourId);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected != 1)
+            {
+                throw new DatabaseException("Fejl ved opdatering af tilgængelighed");
+            }
+        } catch (SQLException e)
+        {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+
+
+    public static List<CupcakeFlavour> getActiveFlavours(CupcakeType cupcakeType, ConnectionPool dbConnection) throws DatabaseException
+    {
+        List<CupcakeFlavour> flavours = new ArrayList<>();
+        String sql;
+        if (cupcakeType == CupcakeType.BOTTOM)
+        {
+            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE AND is_enabled = TRUE";
+        }
+        else if (cupcakeType == CupcakeType.TOP) //dvs. (cupcakeType == CupcakeType.TOP)
+        {
+            sql = "SELECT flavour_id, price, flavour_name FROM cupcake_flavours WHERE is_top_flavour = TRUE AND is_enabled = TRUE";
+        }
+        else
+        {
+            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE AND is_top_flavour = TRUE AND is_enabled = TRUE";
+        }
+
+        try (Connection con = dbConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql))
+        {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                flavours.add(new CupcakeFlavour(rs.getInt("flavour_id"),
+                        rs.getInt("price"),
+                        rs.getString("flavour_name"),
+                        rs.getString("flavour_name"),
+                        cupcakeType));
+            }
+        } catch (SQLException e)
+        {
+            throw new DatabaseException("Could not get flavours from database.", e);
+        }
+
+        return flavours;
+    }
+
+    public static List<CupcakeFlavour> getInactiveFlavours(CupcakeType cupcakeType, ConnectionPool dbConnection) throws DatabaseException
+    {
+        List<CupcakeFlavour> flavours = new ArrayList<>();
+        String sql;
+        if (cupcakeType == CupcakeType.BOTTOM)
+        {
+            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE AND is_enabled = FALSE";
+        }
+        else if (cupcakeType == CupcakeType.TOP) //dvs. (cupcakeType == CupcakeType.TOP)
+        {
+            sql = "SELECT flavour_id, price, flavour_name FROM cupcake_flavours WHERE is_top_flavour = TRUE AND is_enabled = FALSE";
+        }
+        else
+        {
+            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE AND is_top_flavour = TRUE AND is_enabled = FALSE";
+        }
+
+        try (Connection con = dbConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql))
+        {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                flavours.add(new CupcakeFlavour(rs.getInt("flavour_id"),
+                        rs.getInt("price"),
+                        rs.getString("flavour_name"),
+                        rs.getString("flavour_name"),
+                        cupcakeType));
+            }
+        } catch (SQLException e)
+        {
+            throw new DatabaseException("Could not get flavours from database.", e);
+        }
+
+        return flavours;
+    }
+
+
     public static List<CupcakeFlavour> getFlavours(CupcakeType cupcakeType, ConnectionPool dbConnection) throws DatabaseException
     {
         List<CupcakeFlavour> flavours = new ArrayList<>();
         String sql;
         if (cupcakeType == CupcakeType.BOTTOM)
         {
-            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE";
+            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE AND is_enabled = TRUE";
         }
-        else //dvs. (cupcakeType == CupcakeType.TOP)
+        else if (cupcakeType == CupcakeType.TOP) //dvs. (cupcakeType == CupcakeType.TOP)
         {
-            sql = "SELECT * FROM cupcake_flavours WHERE is_top_flavour = TRUE";
+            sql = "SELECT flavour_id, price, flavour_name FROM cupcake_flavours WHERE is_top_flavour = TRUE AND is_enabled = TRUE";
         }
+        else
+        {
+            sql = "SELECT * FROM cupcake_flavours WHERE is_bottom_flavour = TRUE AND is_top_flavour = TRUE AND is_enabled = TRUE";
+        }
+
         try (Connection con = dbConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql))
         {

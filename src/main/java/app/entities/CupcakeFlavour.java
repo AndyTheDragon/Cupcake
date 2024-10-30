@@ -30,6 +30,8 @@ public class CupcakeFlavour
         return flavourName;
     }
 
+    public String getFlavourDesc() { return flavourDesc; }
+
     public String getFlavour()
     {
         return "Smag navn: " + flavourName +

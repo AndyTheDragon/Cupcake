@@ -42,7 +42,7 @@ public class CupcakeMapperTest
             // Creating tables
             statement.execute("CREATE TABLE test_schema.users (user_id serial PRIMARY KEY, username VARCHAR(64) NOT NULL UNIQUE, password VARCHAR(64) NOT NULL, balance INTEGER DEFAULT 0, role VARCHAR(12) NOT NULL);");
             statement.execute("CREATE TABLE test_schema.orders (order_id serial PRIMARY KEY, name VARCHAR(64) NOT NULL, date_placed DATE DEFAULT NOW(), date_paid DATE, date_completed DATE, status VARCHAR(64) NOT NULL, user_id INTEGER REFERENCES test_schema.users(user_id));");
-            statement.execute("CREATE TABLE test_schema.cupcake_flavours (flavour_id serial PRIMARY KEY, flavour_name VARCHAR(64) NOT NULL, is_top_flavour BOOLEAN NOT NULL, is_bottom_flavour BOOLEAN NOT NULL, price INTEGER NOT NULL);");
+            statement.execute("CREATE TABLE test_schema.cupcake_flavours (flavour_id serial PRIMARY KEY, flavour_name VARCHAR(64) NOT NULL, is_top_flavour BOOLEAN NOT NULL, is_bottom_flavour BOOLEAN NOT NULL, price INTEGER NOT NULL, is_enabled BOOLEAN NOT NULL DEFAULT true);");
             statement.execute("CREATE TABLE test_schema.order_lines (order_line_id serial PRIMARY KEY, quantity INTEGER NOT NULL, top_flavour INTEGER REFERENCES test_schema.cupcake_flavours(flavour_id), bottom_flavour INTEGER REFERENCES test_schema.cupcake_flavours(flavour_id), price INTEGER NOT NULL, order_id INTEGER REFERENCES test_schema.orders(order_id) ON DELETE CASCADE);");
 
             // Insert test data

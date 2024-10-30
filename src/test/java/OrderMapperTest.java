@@ -1,3 +1,4 @@
+import app.persistence.CupcakeMapper;
 import app.persistence.OrderMapper;
 import app.exceptions.DatabaseException;
 import app.entities.*;
@@ -51,7 +52,7 @@ public class OrderMapperTest
             // Creating tables
             statement.execute("CREATE TABLE test_schema.users (user_id serial PRIMARY KEY, username VARCHAR(64) NOT NULL UNIQUE, password VARCHAR(64) NOT NULL, balance INTEGER DEFAULT 0, role VARCHAR(12) NOT NULL);");
             statement.execute("CREATE TABLE test_schema.orders (order_id serial PRIMARY KEY, name VARCHAR(64) NOT NULL, date_placed DATE DEFAULT NOW(), date_paid DATE, date_completed DATE, status VARCHAR(64) NOT NULL, user_id INTEGER REFERENCES test_schema.users(user_id));");
-            statement.execute("CREATE TABLE test_schema.cupcake_flavours (flavour_id serial PRIMARY KEY, flavour_name VARCHAR(64) NOT NULL, is_top_flavour BOOLEAN NOT NULL, is_bottom_flavour BOOLEAN NOT NULL, price INTEGER NOT NULL);");
+            statement.execute("CREATE TABLE test_schema.cupcake_flavours (flavour_id serial PRIMARY KEY, flavour_name VARCHAR(64) NOT NULL, is_top_flavour BOOLEAN NOT NULL, is_bottom_flavour BOOLEAN NOT NULL, price INTEGER NOT NULL, is_enabled BOOLEAN NOT NULL DEFAULT true);");
             statement.execute("CREATE TABLE test_schema.order_lines (order_line_id serial PRIMARY KEY, quantity INTEGER NOT NULL, top_flavour INTEGER REFERENCES test_schema.cupcake_flavours(flavour_id), bottom_flavour INTEGER REFERENCES test_schema.cupcake_flavours(flavour_id), price INTEGER NOT NULL, order_id INTEGER REFERENCES test_schema.orders(order_id) ON DELETE CASCADE);");
 
             // Insert test data
@@ -76,23 +77,24 @@ public class OrderMapperTest
     }
 
     @Test
-    public void testNewOrdersToOrdersTable() throws DatabaseException
+    public void testCreateOrderInDb() throws DatabaseException
     {
         // Arrange
         String name = "Test Order";
         LocalDate datePlaced = LocalDate.now();
+        LocalDate datePaid = null;
         String status = "pending";
-        User user = new User(1, "testuser", "qwer", "customer", 1000);
+        User user = new User(1, "testuser", "customer", 1000);
 
         // Act
-        int orderId = OrderMapper.newOrdersToOrdersTable(name, datePlaced, status, user, testPool);
+        int orderId = OrderMapper.createOrderInDb(name, datePlaced, datePaid, status, user, testPool);
 
         // Assert
         Assertions.assertTrue(orderId > 0, "Order ID should be greater than 0.");
     }
 
     @Test
-    public void testNewOrderToOrderLines() throws DatabaseException
+    public void testCreateOrderlinesInDb() throws DatabaseException
     {
         // Arrange
         int orderId = 1;
@@ -103,7 +105,7 @@ public class OrderMapperTest
         orderLines.add(new OrderLine(orderId, 2, cupcake, 1000));
 
         // Act
-        OrderMapper.newOrderToOrderLines(orderId, orderLines, testPool);
+        OrderMapper.createOrderlinesInDb(orderId, orderLines, testPool);
 
         // Assert
         try (Connection connection = testPool.getConnection(); Statement statement = connection.createStatement())
@@ -125,10 +127,11 @@ public class OrderMapperTest
         // Arrange
         String name = "Test Order";
         LocalDate datePlaced = LocalDate.now();
+        LocalDate datePaid = null;
         String status = "pending";
-        User user = new User(1, "testuser", "", "customer", 1000);
+        User user = new User(1, "testuser", "customer", 1000);
 
-        int orderId = OrderMapper.newOrdersToOrdersTable(name, datePlaced, status, user, testPool);
+        int orderId = OrderMapper.createOrderInDb(name, datePlaced, datePaid, status, user, testPool);
 
         // Act
         List<Order> orders = OrderMapper.getOrders("date_placed", testPool);
@@ -142,7 +145,7 @@ public class OrderMapperTest
     public void testGetCupcakeFlavour() throws DatabaseException
     {
         // Act
-        CupcakeFlavour flavour = OrderMapper.getCupcakeFlavour("Chocolate", CupcakeType.TOP, testPool);
+        CupcakeFlavour flavour = CupcakeMapper.getCupcakeFlavour("Chocolate", CupcakeType.TOP, testPool);
 
         // Assert
         Assertions.assertNotNull(flavour, "Cupcake flavour should not be null.");

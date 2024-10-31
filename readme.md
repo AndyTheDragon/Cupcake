@@ -1,6 +1,7 @@
 Dette er et skoleprojekt for 2. semester datamatiker på Copenhagen Business Academy Lyngby.
 
 Du finder rapporten for projektet i /report/report.pdf
+Video af systemet i aktion: https://cphbusiness.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=f28f3163-7c56-4404-8aba-b21a0090d49c
 
 Vi er hold Dat2F24 gruppe D.
 

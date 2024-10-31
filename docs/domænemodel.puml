@@ -1,0 +1,20 @@
+@startuml
+
+object User{
+
+}
+object Cupcake
+object Order
+object OrderLine
+object CupcakeFlavour{
+
+}
+
+
+User "1 " o-- "* " Order : Places
+Order "1 " -- "1.. " OrderLine : Contains
+OrderLine "1 " -- "1 " Cupcake : Includes
+Cupcake "1 "-- "1 " CupcakeFlavour : Is Type top
+Cupcake "1 " *-- "1 " CupcakeFlavour : Is Type  bottom
+
+@enduml

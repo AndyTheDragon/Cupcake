@@ -1,5 +1,7 @@
 Dette er et skoleprojekt for 2. semester datamatiker på Copenhagen Business Academy Lyngby.
 
+Du finder rapporten for projektet i /report/report.pdf
+
 Vi er hold Dat2F24 gruppe D.
 
 ## Installation

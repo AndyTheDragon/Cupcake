@@ -1,0 +1,37 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+skinparam backgroundColor #EEEBDC
+skinparam handwritten true
+
+actor Admin
+participant View as V
+participant "OrderController.showOrderHistory()" as C
+participant "OrderMapper.getOrders" as M
+participant "Order" as A
+participant DB
+
+Admin -> V: kontrollere bruger rettigheder
+activate V
+
+
+
+
+V -> C:  Get request til /orderhistory"
+activate C
+C -> C: Validate form data
+C -> M: getOrders(sortby,db)
+activate M
+M --> DB: execute sql
+DB --> M: ResultSet
+M-> A: new Order()
+M -> C: List<Order> orders
+deactivate M
+C -> C : sæt message attributten til\n success-message eller error-message
+C -> V: render / order history table
+deactivate C
+
+
+deactivate V
+
+@enduml
